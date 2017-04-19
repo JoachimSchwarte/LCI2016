@@ -14,5 +14,6 @@ public enum FlussEinheit {
 	kg,
 	g,
 	Stk,
-	kWh
+	kWh,
+	m
 }
