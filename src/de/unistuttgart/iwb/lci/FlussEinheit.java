@@ -7,7 +7,7 @@ package de.unistuttgart.iwb.lci;
 
 /**
  * @author Dr.-Ing. Joachim Schwarte
- * @version 0.9
+ * @version 0.903
  */
 
 public enum FlussEinheit {

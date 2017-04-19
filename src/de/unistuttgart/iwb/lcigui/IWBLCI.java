@@ -314,7 +314,7 @@ public class IWBLCI {
 		JLabel lblInfo4 = new JLabel("Universität Stuttgart");
 		lblInfo4.setFont(new Font("Tahoma", Font.BOLD, 14));
 		panel_4.add(lblInfo4, "cell 1 5,alignx center,aligny top");
-		JLabel lblInfo5 = new JLabel("Version 0.902   30.03.2017");
+		JLabel lblInfo5 = new JLabel("Version 0.903   19.04.2017");
 		lblInfo5.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		panel_4.add(lblInfo5, "cell 1 7,alignx center,aligny top");
 
