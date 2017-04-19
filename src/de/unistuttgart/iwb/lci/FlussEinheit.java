@@ -13,5 +13,6 @@ package de.unistuttgart.iwb.lci;
 public enum FlussEinheit {
 	kg,
 	g,
-	Stk
+	Stk,
+	kWh
 }
