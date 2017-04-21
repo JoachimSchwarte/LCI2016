@@ -12,5 +12,6 @@ package de.unistuttgart.iwb.lci;
 
 public enum FlussTyp {
 	Elementar,
-	Produkt
+	Produkt,
+	Wirkung
 }
