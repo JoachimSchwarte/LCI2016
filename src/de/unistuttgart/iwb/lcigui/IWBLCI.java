@@ -9,6 +9,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import miglayout-swing.*;
 
 import java.awt.BorderLayout;
 import javax.swing.JLabel;
@@ -28,7 +29,6 @@ import javax.swing.table.TableColumnModel;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 
-import net.miginfocom.swing.MigLayout;
 import javax.swing.JButton;
 import javax.swing.JTable;
 import java.awt.event.MouseAdapter;
