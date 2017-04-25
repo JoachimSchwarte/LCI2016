@@ -9,7 +9,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import miglayout-swing.*;
+import net.miginfocom.swing.MigLayout;
 
 import java.awt.BorderLayout;
 import javax.swing.JLabel;
