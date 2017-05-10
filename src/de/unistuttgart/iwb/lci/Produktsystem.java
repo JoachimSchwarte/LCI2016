@@ -6,9 +6,7 @@
 package de.unistuttgart.iwb.lci;
 import java.util.HashMap;
 import java.util.LinkedList;
-
 import Jama.Matrix;
-
 
 /**
  * @author Dr.-Ing. Joachim Schwarte

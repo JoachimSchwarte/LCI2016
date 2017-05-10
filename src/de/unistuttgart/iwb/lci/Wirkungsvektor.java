@@ -4,14 +4,13 @@
  */
 
 package de.unistuttgart.iwb.lci;
+import java.util.HashMap;
 
 /**
  * @author Dr.-Ing. Joachim Schwarte
  * @version 0.910
  */
 
-public enum Wirkungsindikator {
-	kgCO2Aeqv,
-	kgSO2Aeqv,
-	kgR11Aeqv
+public interface Wirkungsvektor {
+	public HashMap<Wirkungskategorie, Double> getWirkungsvektor(Bewertungsmethode bm);
 }
