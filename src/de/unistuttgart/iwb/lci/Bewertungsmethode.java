@@ -5,6 +5,7 @@
 
 package de.unistuttgart.iwb.lci;
 
+import java.util.HashSet;
 import java.util.LinkedList;
 
 /**
@@ -39,12 +40,10 @@ public class Bewertungsmethode {
 		faktorSet.add(cv);
 	}
 	
-	public LinkedList<Wirkungskategorie> kategorieListe() {
-		LinkedList<Wirkungskategorie> kl = new LinkedList<Wirkungskategorie>();
+	public HashSet<Wirkungskategorie> kategorieListe() {
+		HashSet<Wirkungskategorie> kl = new HashSet<Wirkungskategorie>();
 		for (CharakterFaktor cvl : faktorSet) {
-			if (kl.contains(cvl.getWirkung()) == false) {
-				kl.add(cvl.getWirkung());
-			}			
+			kl.add(cvl.getWirkung());		
 		}		
 		return kl;
 	}
