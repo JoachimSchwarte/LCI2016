@@ -1,5 +1,5 @@
 /*	
- * Beispielprojekt / Wirkungsabschätzung
+ * Beispielprojekt / Wirkungsabschï¿½tzung
  * Sommersemester 2017
  */
 
@@ -67,15 +67,15 @@ public class InterneKoppelprodukteTest {
 		HashMap<Fluss, Double> f = new HashMap<Fluss, Double>();
 		LinkedList<Fluss>vkp = new LinkedList<Fluss>();
 		f.put(V, 1.);
-		Produktsystem EinsBisFünf = 
+		Produktsystem EinsBisFuenf = 
 				new Produktsystem("", f, vkp);
-		EinsBisFünf.addProzessmodul(Modul1);
-		EinsBisFünf.addProzessmodul(Modul2);
-		EinsBisFünf.addProzessmodul(Modul3);
-		EinsBisFünf.addProzessmodul(Modul4);
-		EinsBisFünf.addProzessmodul(Modul5);
+		EinsBisFuenf.addProzessmodul(Modul1);
+		EinsBisFuenf.addProzessmodul(Modul2);
+		EinsBisFuenf.addProzessmodul(Modul3);
+		EinsBisFuenf.addProzessmodul(Modul4);
+		EinsBisFuenf.addProzessmodul(Modul5);
 		HashMap<Fluss, Double> g = 
-				EinsBisFünf.getElementarflussvektor();
+				EinsBisFuenf.getElementarflussvektor();
 		double uA = g.get(A);
 		double uB = g.get(B);
 		double uC = g.get(C);
