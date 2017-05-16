@@ -204,7 +204,7 @@ public class IWBLCI {
 		txtMenge.setColumns(10);
 		txtMenge.setEnabled(false);
 		
-		JButton btnAddFluss = new JButton("Fluss hinzufügen");
+		JButton btnAddFluss = new JButton("Fluss hinzuf\u00fcgen");
 		btnAddFluss.setEnabled(false);
 		panel_2.add(btnAddFluss, "cell 1 5,alignx center");
 		
@@ -242,7 +242,7 @@ public class IWBLCI {
 		txtModName2.setColumns(10);
 		txtModName2.setEnabled(false);
 		
-		JButton btnAddMod = new JButton("Modul/System hinzufügen");
+		JButton btnAddMod = new JButton("Modul/System hinzuf\u00fcgen");
 		btnAddMod.setEnabled(false);
 		panel_3.add(btnAddMod, "cell 1 4,alignx center");
 		
@@ -268,7 +268,7 @@ public class IWBLCI {
 		txtBVMenge.setColumns(10);
 		txtBVMenge.setEnabled(false);
 		
-		JButton btnAddBed = new JButton("Bedarfsvektor egänzen");
+		JButton btnAddBed = new JButton("Bedarfsvektor eg\u00e4nzen");
 		btnAddBed.setEnabled(false);
 		panel_3.add(btnAddBed, "cell 1 7,alignx center");
 		
@@ -285,7 +285,7 @@ public class IWBLCI {
 		txtVKName.setColumns(10);
 		txtVKName.setEnabled(false);
 		
-		JButton btnAddVK = new JButton("VK-Fluss hinzufügen");
+		JButton btnAddVK = new JButton("VK-Fluss hinzuf\u00fcgen");
 		btnAddVK.setEnabled(false);
 		panel_3.add(btnAddVK, "cell 1 9,alignx center");
 		
@@ -308,10 +308,10 @@ public class IWBLCI {
 		JLabel lblInfo2 = new JLabel("Dr.-Ing. Joachim Schwarte");
 		lblInfo2.setFont(new Font("Tahoma", Font.BOLD, 14));
 		panel_4.add(lblInfo2, "cell 1 3,alignx center,aligny top");
-		JLabel lblInfo3 = new JLabel("Insitut für Werkstoffe im Bauwesen");
+		JLabel lblInfo3 = new JLabel("Insitut f\u00fcr Werkstoffe im Bauwesen");
 		lblInfo3.setFont(new Font("Tahoma", Font.BOLD, 14));
 		panel_4.add(lblInfo3, "cell 1 4,alignx center,aligny top");
-		JLabel lblInfo4 = new JLabel("Universität Stuttgart");
+		JLabel lblInfo4 = new JLabel("Universit\u00e4t Stuttgart");
 		lblInfo4.setFont(new Font("Tahoma", Font.BOLD, 14));
 		panel_4.add(lblInfo4, "cell 1 5,alignx center,aligny top");
 		JLabel lblInfo5 = new JLabel("Version 0.903   19.04.2017");
@@ -443,7 +443,7 @@ public class IWBLCI {
 		mnHilfe.add(mntmNewMenuItem_2);
 		
 		/*
-		 * Aktivit�ten der Schaltfl�chen
+		 * Aktivit\u00dcten der Schaltfl\u00dcchen
 		 */
 		
 		btnSpeichern.addMouseListener(new MouseAdapter() {
@@ -523,7 +523,7 @@ public class IWBLCI {
 					menge = 0.0;
 				}
 				if (fname.equals("") || (menge == 0.0)) {
-					lblStatus2.setText(">>> unvollst�ndige Eingabe <<<");
+					lblStatus2.setText(">>> unvollst\u00dcndige Eingabe <<<");
 				} else {
 					boolean nameVorhanden = false;
 					for(Fluss pf : allFlows) {
@@ -548,7 +548,7 @@ public class IWBLCI {
 						int anzEFluss = allModules.get(mname).getElementarflussvektor().size();
 						int anzGesamt = anzPFluss + anzEFluss;
 						lblStatus2.setText(">>> Prozessmodul " + mname + " besitzt " +
-								anzGesamt + " Flüsse <<<");
+								anzGesamt + " Fl\u00fcsse <<<");
 						
 					} else {
 						lblStatus2.setText(">>> unbekannter Flussname <<<");
@@ -618,10 +618,10 @@ public class IWBLCI {
 				String modname = txtModName2.getText();
 				if (modname.equals("") || modname.equals(txtPSName.getText())) {
 					if (modname.equals("")) {
-						lblStatus3.setText(">>> unvollständige Eingabe <<<");
+						lblStatus3.setText(">>> unvollst\u00e4ndige Eingabe <<<");
 					}
 					if (modname.equals(txtPSName.getText())) {
-						lblStatus3.setText(">>> unzulässige Rekursion <<<");
+						lblStatus3.setText(">>> unzul\u00e4ssige Rekursion <<<");
 					}
 				} else {
 					boolean nameVorhanden = false;
@@ -690,7 +690,7 @@ public class IWBLCI {
 					menge = 0.0;
 				}
 				if (fname.equals("") || (menge == 0.0)) {
-					lblStatus3.setText(">>> unvollständige Eingabe <<<");
+					lblStatus3.setText(">>> unvollst\u00e4ndige Eingabe <<<");
 				} else {
 					boolean nameVorhanden = false;
 					for(Fluss pf : allFlows) {
@@ -710,8 +710,8 @@ public class IWBLCI {
 							setBedarfsvektor(allBVs.get(txtPSName.getText()).getBV());
 						tm3.addRow(new Object[] {"" ,"Bedarf" 
 								,"" + akFluss.getName() + " ("+ menge + " " + akFluss.getEinheit()+")"});
-						lblStatus3.setText(">>> Der Bedarfsvektor enthält " + 
-								allBVs.get(txtPSName.getText()).getBV().size() + " Fl�sse <<<");
+						lblStatus3.setText(">>> Der Bedarfsvektor enth\u00e4lt " + 
+								allBVs.get(txtPSName.getText()).getBV().size() + " Fl\u00dcsse <<<");
 						btnWei2.setEnabled(true);						
 					} else {
 						lblStatus3.setText(">>> unbekannter Flussname <<<");
@@ -746,7 +746,7 @@ public class IWBLCI {
 			public void mouseClicked(MouseEvent arg0) {
 				String vkname = txtVKName.getText();
 				if (vkname.equals("")) {
-					lblStatus3.setText(">>> unvollständige Eingabe <<<");
+					lblStatus3.setText(">>> unvollst\u00e4ndige Eingabe <<<");
 				} else {
 					boolean nameVorhanden = false;
 					for(Fluss pf : allFlows) {
@@ -767,8 +767,8 @@ public class IWBLCI {
 							setVorUndKoppelProdukte(allVKs.get(txtPSName.getText()).getVk());
 						tm3.addRow(new Object[] {"" ,"Vor- oder Koppelpr." 
 								,akFluss.getName()});
-						lblStatus3.setText(">>> Der VK-Vektor enthält " + 
-								allVKs.get(txtPSName.getText()).getVk().size() + " Flüsse <<<");										
+						lblStatus3.setText(">>> Der VK-Vektor enth\u00e4lt " + 
+								allVKs.get(txtPSName.getText()).getVk().size() + " Fl\u00fcsse <<<");										
 					} else {
 						lblStatus3.setText(">>> unbekannter Flussname <<<");
 					}					
@@ -803,7 +803,7 @@ public class IWBLCI {
 	}
 	
 	/*
-	 * Aktivit�ten der Menupunkte
+	 * Aktivit\u00dcten der Menupunkte
 	 */
 
 	private class SwingAction extends AbstractAction {
@@ -840,7 +840,7 @@ public class IWBLCI {
 		private static final long serialVersionUID = 3929527112031439132L;
 		public SwingAction_3() {
 			putValue(NAME, "Fl\u00FCsse");
-			putValue(SHORT_DESCRIPTION, "Liste aller Flüsse");
+			putValue(SHORT_DESCRIPTION, "Liste aller Fl\u00fcsse");
 		}
 		public void actionPerformed(ActionEvent e) {
 			cl.show(panel, "listeFluss");
@@ -1105,7 +1105,7 @@ public class IWBLCI {
 	private class SwingAction_9 extends AbstractAction {
 		private static final long serialVersionUID = 8545097902506476895L;
 		public SwingAction_9() {
-			putValue(NAME, "�ber");
+			putValue(NAME, "\u00dcber");
 			putValue(SHORT_DESCRIPTION, "Info");
 		}
 		public void actionPerformed(ActionEvent e) {
