@@ -8,6 +8,9 @@ package de.unistuttgart.iwb.lci;
 /**
  * @author Dr.-Ing. Joachim Schwarte
  * @version 0.910
+ * 
+ * Test
+ * 
  */
 
 public class CharakterFaktor {
