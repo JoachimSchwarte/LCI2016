@@ -8,7 +8,7 @@ import java.util.HashMap;
 
 /**
  * @author Dr.-Ing. Joachim Schwarte
- * @version 0.910
+ * @version 0.911
  */
 
 public class ProduktBilanziert 
@@ -19,38 +19,34 @@ implements Wirkungsvektor {
 	// Instanzvariablen:
 	
 	private String name;
-	private HashMap<Wirkungskategorie, Double> wv;
-	private Bewertungsmethode bm;
+	private HashMap<Wirkungskategorie, Double> wvAlle;
 	
 	// Konstruktor:
 
-	public ProduktBilanziert(String name, HashMap<Wirkungskategorie, Double> wv) {
+	public ProduktBilanziert(String name) {
 		super();
 		this.name = name;
-		this.wv = wv;
 	}
 
 	// Methoden:
 	
-	
 	public void addWirkung(Wirkungskategorie wk, Double wert){
-		wv.put(wk, wert);
+		wvAlle.put(wk, wert);
 		}
 
 	public String getName() {
 		return name;
 	}
 
-	public Bewertungsmethode getBm() {
-		return bm;
-	}
-
 	@Override
 	public HashMap<Wirkungskategorie, Double> getWirkungsvektor(Bewertungsmethode bm1) {
-		if (bm.equals(bm1)) {
-			return wv;
-		} else {
-			return null;
-		}		
+		HashMap<Wirkungskategorie, Double> wvAktuell =
+				new HashMap<Wirkungskategorie, Double>();
+		for(Wirkungskategorie key : wvAlle.keySet()) {
+			if (bm1.kategorieListe().contains(key)) {
+				wvAktuell.put(key, wvAlle.get(key));
+			}
+		}
+		return wvAktuell;	
 	}
 }
