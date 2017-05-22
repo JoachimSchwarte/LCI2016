@@ -19,7 +19,7 @@ implements Wirkungsvektor {
 	// Instanzvariablen:
 	
 	private String name;
-	private HashMap<Wirkungskategorie, Double> wvAlle;
+	private HashMap<Wirkungskategorie, Double> wvAlle = new HashMap<Wirkungskategorie, Double>();
 	
 	// Konstruktor:
 
