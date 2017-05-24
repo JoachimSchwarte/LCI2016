@@ -10,11 +10,11 @@ import Jama.Matrix;
 
 /**
  * @author Dr.-Ing. Joachim Schwarte
- * @version 0.901
+ * @version 0.913
  */
 
 public class Produktsystem 
-implements Flussvektoren {
+implements Flussvektoren, Wirkungsvektor {
 	
 	// Diese Klasse besitzt keine Klassenvariablen
 	
@@ -152,6 +152,28 @@ implements Flussvektoren {
 	
 	public void setVorUndKoppelProdukte(LinkedList<Fluss> vk) {
 		vorUndKoppelProdukte = vk;
+	}
+
+	/*
+	 * neue Methoden Version 0.913 (24.05.2017)
+	 * vgl. Prozessmodul.java (0.912)
+	 */
+	
+	@Override
+	public HashMap<Wirkungskategorie, Double> getWirkungsvektor(Bewertungsmethode bm) {
+		aktualisiere();
+		HashMap<Wirkungskategorie, Double> wv =
+				new HashMap<Wirkungskategorie, Double>();
+		for (Wirkungskategorie wk : bm.kategorieListe()){
+			wv.put(wk, 0.);
+		}
+		for (CharakterFaktor cf : bm.getFaktorSet()){
+			if (efv.containsKey(cf.getFluss())) {
+				wv.put(cf.getWirkung(), wv.get(cf.getWirkung())+
+						cf.getWert()*efv.get(cf.getFluss()));
+			}			
+		}
+		return wv;
 	}
 
 }

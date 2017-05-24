@@ -7,7 +7,7 @@ package de.unistuttgart.iwb.lcitest;
 
 /**
  * @author Dr.-Ing. Joachim Schwarte
- * @version 0.912
+ * @version 0.913
  */
 
 import static org.junit.Assert.*;
@@ -267,5 +267,16 @@ public class IwbLciTest {
 		assertEquals(50., wv.get(W1), .001);
 		assertEquals(7.5, wv.get(W2), .001);
 		assertEquals(-300., wv.get(W3), .001);		
+	}
+	
+	@Test
+	public void ProduktsystemWVTest3() {
+		initialize1();
+		initialize2();
+		HashMap<Wirkungskategorie, Double> wv = EinsBisFuenf.getWirkungsvektor(BM1);
+		assertEquals(3, wv.size());
+		assertEquals(42., wv.get(W1), .001);
+		assertEquals(35.+0.15*42., wv.get(W2), .001);
+		assertEquals(6.+0.25*35., wv.get(W3), .001);		
 	}
 }

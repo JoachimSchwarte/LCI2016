@@ -44,6 +44,10 @@ implements Flussvektoren, Wirkungsvektor {
 		}
 	}
 	
+	/*
+	 * neue Methoden Version 0.912 (24.05.2017)
+	 */
+	
 	@Override
 	public HashMap<Wirkungskategorie, Double> getWirkungsvektor(Bewertungsmethode bm) {
 		HashMap<Wirkungskategorie, Double> wv =
