@@ -7,7 +7,7 @@ package de.unistuttgart.iwb.lcitest;
 
 /**
  * @author Dr.-Ing. Joachim Schwarte
- * @version 0.911
+ * @version 0.912
  */
 
 import static org.junit.Assert.*;
@@ -153,7 +153,8 @@ public class IwbLciTest {
 		PB1.addWirkung(W1, 3.);
 		PB1.addWirkung(W2, 5.);
 		PB1.addWirkung(W3, 7.);
-	}
+	}	
+
 	
 	@Test
 	public void ProzessModulTest() {
@@ -235,5 +236,36 @@ public class IwbLciTest {
 		assertEquals(3, PB1.getWirkungsvektor(BM1).size());
 		assertEquals(1, PB1.getWirkungsvektor(BM2).size());
 		assertEquals(5., PB1.getWirkungsvektor(BM1).get(W2), .001);
+	}
+	
+	@Test
+	public void ProzessmodulWVTest1() {
+		initialize1();
+		initialize2();
+		HashMap<Wirkungskategorie, Double> wv = Modul2.getWirkungsvektor(BM1);
+		assertEquals(3, wv.size());
+		assertEquals(30., wv.get(W1), .001);
+		assertEquals(19.5, wv.get(W2), .001);
+		assertEquals(-146.25, wv.get(W3), .001);		
+	}
+	
+	@Test
+	public void ProzessmodulWVTest2() {
+		initialize1();
+		initialize2();
+		HashMap<Wirkungskategorie, Double> wv = Modul2.getWirkungsvektor(BM2);
+		assertEquals(1, wv.size());
+		assertEquals(19.5, wv.get(W2), .001);		
+	}
+	
+	@Test
+	public void ProzessmodulWVTest3() {
+		initialize1();
+		initialize2();
+		HashMap<Wirkungskategorie, Double> wv = Modul1.getWirkungsvektor(BM1);
+		assertEquals(3, wv.size());
+		assertEquals(50., wv.get(W1), .001);
+		assertEquals(7.5, wv.get(W2), .001);
+		assertEquals(-300., wv.get(W3), .001);		
 	}
 }

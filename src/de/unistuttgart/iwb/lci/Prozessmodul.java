@@ -8,10 +8,11 @@ import java.util.HashMap;
 
 /**
  * @author Dr.-Ing. Joachim Schwarte
- * @version 0.9
+ * @version 0.912
  */
 
-public class Prozessmodul implements Flussvektoren {
+public class Prozessmodul 
+implements Flussvektoren, Wirkungsvektor {
 	
 	// Diese Klasse besitzt keine Klassenvariablen
 	
@@ -41,5 +42,21 @@ public class Prozessmodul implements Flussvektoren {
 		} else {
 			pfv.put(fluss, wert);
 		}
+	}
+	
+	@Override
+	public HashMap<Wirkungskategorie, Double> getWirkungsvektor(Bewertungsmethode bm) {
+		HashMap<Wirkungskategorie, Double> wv =
+				new HashMap<Wirkungskategorie, Double>();
+		for (Wirkungskategorie wk : bm.kategorieListe()){
+			wv.put(wk, 0.);
+		}
+		for (CharakterFaktor cf : bm.getFaktorSet()){
+			if (efv.containsKey(cf.getFluss())) {
+				wv.put(cf.getWirkung(), wv.get(cf.getWirkung())+
+						cf.getWert()*efv.get(cf.getFluss()));
+			}			
+		}
+		return wv;
 	}
 }

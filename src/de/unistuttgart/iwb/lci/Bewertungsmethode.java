@@ -10,7 +10,7 @@ import java.util.LinkedList;
 
 /**
  * @author Dr.-Ing. Joachim Schwarte
- * @version 0.910
+ * @version 0.912
  */
 
 public class Bewertungsmethode {
@@ -46,6 +46,10 @@ public class Bewertungsmethode {
 			kl.add(cvl.getWirkung());		
 		}		
 		return kl;
+	}
+	
+	public LinkedList<CharakterFaktor> getFaktorSet() {
+		return faktorSet;
 	}
 
 }
