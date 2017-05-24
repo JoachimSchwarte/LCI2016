@@ -7,7 +7,7 @@ package de.unistuttgart.iwb.lcitest;
 
 /**
  * @author Dr.-Ing. Joachim Schwarte
- * @version 0.913
+ * @version 0.914
  */
 
 import static org.junit.Assert.*;
@@ -69,6 +69,7 @@ public class IwbLciTest {
 	Bewertungsmethode BM1 = new Bewertungsmethode("TestMethode1");
 	Bewertungsmethode BM2 = new Bewertungsmethode("TestMethode2");
 	ProduktBilanziert PB1 = new ProduktBilanziert("TestProdukt1");
+	Produktkomposition PK1 = new Produktkomposition("TestKomposition1");
 	private void initialize1() {
 		Modul1.addFluss(a, 50.);
 		Modul1.addFluss(c, -300.);
@@ -153,8 +154,11 @@ public class IwbLciTest {
 		PB1.addWirkung(W1, 3.);
 		PB1.addWirkung(W2, 5.);
 		PB1.addWirkung(W3, 7.);
-	}	
-
+	}
+	private void initialize3() {
+		PK1.addKomponente(PB1, 5.);
+		PK1.addKomponente(EinsBisFuenf, 2.);
+	}
 	
 	@Test
 	public void ProzessModulTest() {
@@ -278,5 +282,17 @@ public class IwbLciTest {
 		assertEquals(42., wv.get(W1), .001);
 		assertEquals(35.+0.15*42., wv.get(W2), .001);
 		assertEquals(6.+0.25*35., wv.get(W3), .001);		
+	}
+	
+	@Test
+	public void ProduktkompositionTest1() {
+		initialize1();
+		initialize2();
+		initialize3();
+		HashMap<Wirkungskategorie, Double> wv = PK1.getWirkungsvektor(BM1);
+		assertEquals(3, wv.size());
+		assertEquals(2*42.+5*3., wv.get(W1), .001);
+		assertEquals(2*(35.+0.15*42.)+5*5., wv.get(W2), .001);
+		assertEquals(2*(6.+0.25*35.)+5*7., wv.get(W3), .001);
 	}
 }
