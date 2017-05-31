@@ -5,10 +5,11 @@
 
 package de.unistuttgart.iwb.lci;
 import java.util.HashMap;
+import java.util.LinkedList;
 
 /**
  * @author Dr.-Ing. Joachim Schwarte
- * @version 0.914
+ * @version 0.92
  */
 
 public class Produktkomposition implements Wirkungsvektor {
@@ -18,8 +19,8 @@ public class Produktkomposition implements Wirkungsvektor {
 	// Instanzvariablen:
 	
 	private String name;
-	private HashMap<Wirkungsvektor, Double> zusammensetzung 
-			= new HashMap<Wirkungsvektor, Double>();
+	private LinkedList<Wirkungsvektor> zusammensetzung 
+			= new LinkedList<Wirkungsvektor>();
 	
 	// Konstruktor:
 	
@@ -34,9 +35,8 @@ public class Produktkomposition implements Wirkungsvektor {
 		return name;
 	}
 	
-	public void addKomponente(Wirkungsvektor teilprodukt,
-			Double menge) {
-		zusammensetzung.put(teilprodukt, menge);
+	public void addKomponente(Wirkungsvektor teilprodukt) {
+		zusammensetzung.add(teilprodukt);
 	}
 
 	@Override
@@ -46,10 +46,9 @@ public class Produktkomposition implements Wirkungsvektor {
 		for (Wirkungskategorie wk : bm.kategorieListe()){
 			wv.put(wk, 0.);
 		}
-		for (Wirkungsvektor wvKomponente : zusammensetzung.keySet()){
+		for (Wirkungsvektor wvKomponente : zusammensetzung){
 			for (Wirkungskategorie kategorie : wvKomponente.getWirkungsvektor(bm).keySet()){
-				wv.put(kategorie, wv.get(kategorie) + 
-						zusammensetzung.get(wvKomponente)*wvKomponente.getWirkungsvektor(bm).get(kategorie));
+				wv.put(kategorie, wv.get(kategorie) + wvKomponente.getWirkungsvektor(bm).get(kategorie));
 			}
 		}
 		return wv;

@@ -7,7 +7,7 @@ package de.unistuttgart.iwb.lcitest;
 
 /**
  * @author Dr.-Ing. Joachim Schwarte
- * @version 0.914
+ * @version 0.92
  */
 
 import static org.junit.Assert.*;
@@ -69,7 +69,13 @@ public class IwbLciTest {
 	Bewertungsmethode BM1 = new Bewertungsmethode("TestMethode1");
 	Bewertungsmethode BM2 = new Bewertungsmethode("TestMethode2");
 	ProduktBilanziert PB1 = new ProduktBilanziert("TestProdukt1");
+	Produktkomponente Komponente1 = new Produktkomponente("Modul3doppelt", Modul3, 2.);
+	Produktkomponente Komponente2 = new Produktkomponente("Modul4vierfach", Modul4, 4.);
+	Produktkomponente Komponente3 = new Produktkomponente("GesamtDreifach", Gesamt, 3.);
+	Produktkomponente Komponente4 = new Produktkomponente("PB1fünffach", PB1, 5.);
 	Produktkomposition PK1 = new Produktkomposition("TestKomposition1");
+	Produktkomponente Komponente5 = new Produktkomponente("PK1sechsfach", PK1, 6.);
+	Produktkomponente Komponente6 = new Produktkomponente("EinsBisFuenfDoppelt", EinsBisFuenf, 2.);
 	private void initialize1() {
 		Modul1.addFluss(a, 50.);
 		Modul1.addFluss(c, -300.);
@@ -156,8 +162,8 @@ public class IwbLciTest {
 		PB1.addWirkung(W3, 7.);
 	}
 	private void initialize3() {
-		PK1.addKomponente(PB1, 5.);
-		PK1.addKomponente(EinsBisFuenf, 2.);
+		PK1.addKomponente(Komponente4);
+		PK1.addKomponente(Komponente6);
 	}
 	
 	@Test
@@ -282,6 +288,78 @@ public class IwbLciTest {
 		assertEquals(42., wv.get(W1), .001);
 		assertEquals(35.+0.15*42., wv.get(W2), .001);
 		assertEquals(6.+0.25*35., wv.get(W3), .001);		
+	}
+	
+	@Test
+	public void ProduktkomponenteTest1() {
+		initialize1();
+		initialize2();
+		HashMap<Wirkungskategorie, Double> wv1a = Modul3.getWirkungsvektor(BM1);
+		HashMap<Wirkungskategorie, Double> wv1b = Komponente1.getWirkungsvektor(BM1);
+		assertEquals(3, wv1a.size());
+		assertEquals(3, wv1b.size());
+		assertEquals(wv1a.get(W1)*Komponente1.getMenge(), wv1b.get(W1), .001);
+		assertEquals(wv1a.get(W2)*2., wv1b.get(W2), .001);
+		assertEquals(wv1a.get(W3)*Komponente1.getMenge(), wv1b.get(W3), .001);
+		HashMap<Wirkungskategorie, Double> wv1c = Modul3.getWirkungsvektor(BM2);
+		HashMap<Wirkungskategorie, Double> wv1d = Komponente1.getWirkungsvektor(BM2);
+		assertEquals(1, wv1c.size());
+		assertEquals(1, wv1d.size());
+		assertEquals(wv1c.get(W2)*2., wv1d.get(W2), .001);		
+	}
+	
+	@Test
+	public void ProduktkomponenteTest2() {
+		initialize1();
+		initialize2();
+		HashMap<Wirkungskategorie, Double> wv1a = Modul4.getWirkungsvektor(BM1);
+		HashMap<Wirkungskategorie, Double> wv1b = Komponente2.getWirkungsvektor(BM1);
+		assertEquals(3, wv1a.size());
+		assertEquals(3, wv1b.size());
+		assertEquals(wv1a.get(W1)*Komponente2.getMenge(), wv1b.get(W1), .001);
+		assertEquals(wv1a.get(W2)*4., wv1b.get(W2), .001);
+		assertEquals(wv1a.get(W3)*Komponente2.getMenge(), wv1b.get(W3), .001);
+		HashMap<Wirkungskategorie, Double> wv1c = Modul4.getWirkungsvektor(BM2);
+		HashMap<Wirkungskategorie, Double> wv1d = Komponente2.getWirkungsvektor(BM2);
+		assertEquals(1, wv1c.size());
+		assertEquals(1, wv1d.size());
+		assertEquals(wv1c.get(W2)*4., wv1d.get(W2), .001);		
+	}
+	
+	@Test
+	public void ProduktkomponenteTest3() {
+		initialize1();
+		initialize2();
+		HashMap<Wirkungskategorie, Double> wv1a = Gesamt.getWirkungsvektor(BM1);
+		HashMap<Wirkungskategorie, Double> wv1b = Komponente3.getWirkungsvektor(BM1);
+		assertEquals(3, wv1a.size());
+		assertEquals(3, wv1b.size());
+		assertEquals(wv1a.get(W1)*Komponente3.getMenge(), wv1b.get(W1), .001);
+		assertEquals(wv1a.get(W2)*3., wv1b.get(W2), .001);
+		assertEquals(wv1a.get(W3)*Komponente3.getMenge(), wv1b.get(W3), .001);
+		HashMap<Wirkungskategorie, Double> wv1c = Gesamt.getWirkungsvektor(BM2);
+		HashMap<Wirkungskategorie, Double> wv1d = Komponente3.getWirkungsvektor(BM2);
+		assertEquals(1, wv1c.size());
+		assertEquals(1, wv1d.size());
+		assertEquals(wv1c.get(W2)*3., wv1d.get(W2), .001);		
+	}
+	
+	@Test
+	public void ProduktkomponenteTest4() {
+		initialize1();
+		initialize2();
+		HashMap<Wirkungskategorie, Double> wv1a = PB1.getWirkungsvektor(BM1);
+		HashMap<Wirkungskategorie, Double> wv1b = Komponente4.getWirkungsvektor(BM1);
+		assertEquals(3, wv1a.size());
+		assertEquals(3, wv1b.size());
+		assertEquals(wv1a.get(W1)*Komponente4.getMenge(), wv1b.get(W1), .001);
+		assertEquals(wv1a.get(W2)*5., wv1b.get(W2), .001);
+		assertEquals(wv1a.get(W3)*Komponente4.getMenge(), wv1b.get(W3), .001);
+		HashMap<Wirkungskategorie, Double> wv1c = PB1.getWirkungsvektor(BM2);
+		HashMap<Wirkungskategorie, Double> wv1d = Komponente4.getWirkungsvektor(BM2);
+		assertEquals(1, wv1c.size());
+		assertEquals(1, wv1d.size());
+		assertEquals(wv1c.get(W2)*5., wv1d.get(W2), .001);		
 	}
 	
 	@Test
