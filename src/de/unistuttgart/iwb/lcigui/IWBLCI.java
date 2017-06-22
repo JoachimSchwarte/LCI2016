@@ -1,3 +1,8 @@
+/*	
+ * Beispielprojekt 
+ * Sommersemester 2017
+ */
+
 package de.unistuttgart.iwb.lcigui;
 
 import java.awt.EventQueue;
@@ -40,6 +45,11 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
+/**
+ * @author Dr.-Ing. Joachim Schwarte
+ * @version 0.921
+ */
+
 public class IWBLCI {
 	
 	/*
@@ -49,19 +59,28 @@ public class IWBLCI {
 	private JFrame frmIwblciVersion;
 	private JPanel panel = new JPanel();
 	private CardLayout cl = new CardLayout(0, 0);
-	private LinkedList<Fluss>allFlows = new LinkedList<Fluss>();
-	private HashMap<String, Prozessmodul>allModules = new HashMap<String, Prozessmodul>();
-	private HashMap<String, Produktsystem>allProSys = new HashMap<String, Produktsystem>();
-	private HashMap<String, Bedarfsvektor>allBVs = new HashMap<String, Bedarfsvektor>();
-	private HashMap<String, VorUndKoppelprodukte>allVKs = new HashMap<String, VorUndKoppelprodukte>();
-	private HashMap<String, ModulNamenListe>allMNLs = new HashMap<String, ModulNamenListe>();
-	private final Action newFlowAction = new SwingAction();
-	private final Action newModuleAction = new SwingAction_1();
-	private final Action newProductAction = new SwingAction_2();
-	private final Action listFlowAction = new SwingAction_3();
-	private final Action listModuleAction = new SwingAction_4();
-	private final Action listProductAction = new SwingAction_5();
-	private final Action calculateAction = new SwingAction_6();
+	private LinkedList<Fluss>allFlows 
+			= new LinkedList<Fluss>();
+	private HashMap<String, Prozessmodul>allModules 
+			= new HashMap<String, Prozessmodul>();
+	private HashMap<String, Produktsystem>allProSys 
+			= new HashMap<String, Produktsystem>();
+	private HashMap<String, Bedarfsvektor>allBVs 
+			= new HashMap<String, Bedarfsvektor>();
+	private HashMap<String, VorUndKoppelprodukte>allVKs 
+			= new HashMap<String, VorUndKoppelprodukte>();
+	private HashMap<String, ModulNamenListe>allMNLs 
+			= new HashMap<String, ModulNamenListe>();
+	private final Action newFlowAction 		= new newFlowAction();
+	private final Action newModuleAction 	= new newModuleAction();
+	private final Action newProductAction 	= new newProductAction();
+	private final Action listFlowAction 	= new listFlowAction();
+	private final Action listModuleAction 	= new listModuleAction();
+	private final Action listProductAction 	= new listProductAction();
+	private final Action calculateAction 	= new calculateAction();
+	private final Action saveAction 		= new saveAction();
+	private final Action loadAction 		= new loadAction();
+	private final Action aboutAction 		= new aboutAction();
 	private JTextField txtName;
 	private JTextField txtModName;
 	private JTextField txtModName2;
@@ -71,17 +90,15 @@ public class IWBLCI {
 	private JTextField txtPSName;
 	private JTextField txtBV;
 	private JTextField txtBVMenge;
-	private JTable table = new JTable();
-	private JTable table2 = new JTable();
-	private JTable table3 = new JTable();
-	private JTable table4 = new JTable();
-	DefaultTableModel tm = new DefaultTableModel(0,3);
-	DefaultTableModel tm2 = new DefaultTableModel(0,3);
-	DefaultTableModel tm3 = new DefaultTableModel(0,3);
-	DefaultTableModel tm4 = new DefaultTableModel(0,3);
-	private final Action action = new SwingAction_7();
-	private final Action action_1 = new SwingAction_8();
-	private final Action action_2 = new SwingAction_9();
+	private JTable flowsTable 		= new JTable();
+	private JTable modulesTable 	= new JTable();
+	private JTable productsTable 	= new JTable();
+	private JTable resultsTable 	= new JTable();
+	DefaultTableModel flowsTableModel 		= new DefaultTableModel(0,3);
+	DefaultTableModel modulesTableModel 	= new DefaultTableModel(0,3);
+	DefaultTableModel productsTableModel 	= new DefaultTableModel(0,3);
+	DefaultTableModel resultsTableModel 	= new DefaultTableModel(0,3);
+	
 
 
 	/**
@@ -112,7 +129,7 @@ public class IWBLCI {
 	 */
 	private void initialize() {
 		frmIwblciVersion = new JFrame();
-		frmIwblciVersion.setTitle("IWB-LCI   Version 0.9");
+		frmIwblciVersion.setTitle("IWB-LCI   Version 0.921");
 		frmIwblciVersion.setBounds(100, 100, 600, 480);
 		frmIwblciVersion.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);		
 		
@@ -314,7 +331,7 @@ public class IWBLCI {
 		JLabel lblInfo4 = new JLabel("Universit\u00e4t Stuttgart");
 		lblInfo4.setFont(new Font("Tahoma", Font.BOLD, 14));
 		panel_4.add(lblInfo4, "cell 1 5,alignx center,aligny top");
-		JLabel lblInfo5 = new JLabel("Version 0.903   19.04.2017");
+		JLabel lblInfo5 = new JLabel("Version 0.921   22.06.2017");
 		lblInfo5.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		panel_4.add(lblInfo5, "cell 1 7,alignx center,aligny top");
 
@@ -326,12 +343,12 @@ public class IWBLCI {
 		JLabel lblListeDerFlsse = new JLabel("Liste der Fl\u00FCsse");
 		lblListeDerFlsse.setFont(new Font("Tahoma", Font.BOLD, 14));
 		panel_5.add(lblListeDerFlsse, "cell 0 0,alignx center,aligny top");		
-		table.setModel(tm);
-		TableColumnModel tcm = table.getColumnModel();
+		flowsTable.setModel(flowsTableModel);
+		TableColumnModel tcm = flowsTable.getColumnModel();
 		tcm.getColumn(0).setHeaderValue("Name");
 		tcm.getColumn(1).setHeaderValue("Typ");
 		tcm.getColumn(2).setHeaderValue("Einheit");
-		panel_5.add(new JScrollPane(table), "cell 0 1,alignx center,aligny top");
+		panel_5.add(new JScrollPane(flowsTable), "cell 0 1,alignx center,aligny top");
 		
 		// Panel 6
 	
@@ -341,12 +358,12 @@ public class IWBLCI {
 		JLabel lblListeDerProzessmodule = new JLabel("Liste der Prozessmodule");
 		lblListeDerProzessmodule.setFont(new Font("Tahoma", Font.BOLD, 14));
 		panel_6.add(lblListeDerProzessmodule, "cell 0 0,alignx center,aligny top");		
-		table2.setModel(tm2);
-		TableColumnModel tcm2 = table2.getColumnModel();
+		modulesTable.setModel(modulesTableModel);
+		TableColumnModel tcm2 = modulesTable.getColumnModel();
 		tcm2.getColumn(0).setHeaderValue("Prozessmodul");
 		tcm2.getColumn(1).setHeaderValue("Flussname");
 		tcm2.getColumn(2).setHeaderValue("Menge");
-		panel_6.add(new JScrollPane(table2), "cell 0 1,alignx center,aligny top");
+		panel_6.add(new JScrollPane(modulesTable), "cell 0 1,alignx center,aligny top");
 		
 		// Panel 7
 		
@@ -356,12 +373,12 @@ public class IWBLCI {
 		JLabel lblListeDerProduktsysteme = new JLabel("Liste der Produktsysteme");
 		lblListeDerProduktsysteme.setFont(new Font("Tahoma", Font.BOLD, 14));
 		panel_7.add(lblListeDerProduktsysteme, "cell 0 0,alignx center,aligny top");
-		table3.setModel(tm3);
-		TableColumnModel tcm3 = table3.getColumnModel();
+		productsTable.setModel(productsTableModel);
+		TableColumnModel tcm3 = productsTable.getColumnModel();
 		tcm3.getColumn(0).setHeaderValue("Produktsystem");
 		tcm3.getColumn(1).setHeaderValue("Elementtyp");
 		tcm3.getColumn(2).setHeaderValue("Elementname");
-		panel_7.add(new JScrollPane(table3), "cell 0 1,alignx center,aligny top");
+		panel_7.add(new JScrollPane(productsTable), "cell 0 1,alignx center,aligny top");
 		
 		// Panel 8
 		
@@ -371,12 +388,12 @@ public class IWBLCI {
 		JLabel lblBerechnung = new JLabel("Umweltvektoren der Produktsysteme");
 		lblBerechnung.setFont(new Font("Tahoma", Font.BOLD, 14));
 		panel_8.add(lblBerechnung, "cell 0 0,alignx center,aligny top");
-		table4.setModel(tm4);
-		TableColumnModel tcm4 = table4.getColumnModel();
+		resultsTable.setModel(resultsTableModel);
+		TableColumnModel tcm4 = resultsTable.getColumnModel();
 		tcm4.getColumn(0).setHeaderValue("Produktsystem");
 		tcm4.getColumn(1).setHeaderValue("Fluss");
 		tcm4.getColumn(2).setHeaderValue("Menge");
-		panel_8.add(new JScrollPane(table4), "cell 0 1,alignx center,aligny top");
+		panel_8.add(new JScrollPane(resultsTable), "cell 0 1,alignx center,aligny top");
 		
 		cl.show(panel, "leer");
 		
@@ -391,11 +408,11 @@ public class IWBLCI {
 		menuBar.add(mnDatei);
 		
 		JMenuItem mntmNewMenuItem = new JMenuItem("New menu item");
-		mntmNewMenuItem.setAction(action);
+		mntmNewMenuItem.setAction(saveAction);
 		mnDatei.add(mntmNewMenuItem);
 		
 		JMenuItem mntmNewMenuItem_1 = new JMenuItem("New menu item");
-		mntmNewMenuItem_1.setAction(action_1);
+		mntmNewMenuItem_1.setAction(loadAction);
 		mnDatei.add(mntmNewMenuItem_1);
 		
 		JMenu mnNew = new JMenu("Neu");
@@ -439,7 +456,7 @@ public class IWBLCI {
 		menuBar.add(mnHilfe);
 		
 		JMenuItem mntmNewMenuItem_2 = new JMenuItem("New menu item");
-		mntmNewMenuItem_2.setAction(action_2);
+		mntmNewMenuItem_2.setAction(aboutAction);
 		mnHilfe.add(mntmNewMenuItem_2);
 		
 		/*
@@ -466,7 +483,7 @@ public class IWBLCI {
 					} else {
 						allFlows.add(new Fluss(name, typ, einheit));
 						lblStatusmeldung.setText(">>> Anzahl Flussobjekte: " + allFlows.size() + " <<<");
-						tm.addRow(new Object[] {name, typ, einheit});
+						flowsTableModel.addRow(new Object[] {name, typ, einheit});
 						txtName.setText("");
 						comboBox.setSelectedIndex(0);
 						comboBox_1.setSelectedIndex(0);
@@ -499,7 +516,7 @@ public class IWBLCI {
 						lblStatus2.setText(">>> Der angegebene Name ist bereits vorhanden. <<<");
 					} else {
 						allModules.put(name, new Prozessmodul());
-						tm2.addRow(new Object[] {name, "", ""});
+						modulesTableModel.addRow(new Object[] {name, "", ""});
 						lblStatus2.setText(">>> Anzahl Prozessmodule: " + allModules.size() + " <<<");
 						btnSpei2.setEnabled(false);
 						txtModName.setEnabled(false);
@@ -540,7 +557,7 @@ public class IWBLCI {
 						}
 						String mname = txtModName.getText();
 						allModules.get(mname).addFluss(akFluss, menge);
-						tm2.addRow(new Object[] {"" ,akFluss.getName() ,menge});
+						modulesTableModel.addRow(new Object[] {"" ,akFluss.getName() ,menge});
 						txtFlussName.setText("");
 						txtMenge.setText("");
 						btnFertig.setEnabled(true);
@@ -597,7 +614,7 @@ public class IWBLCI {
 					} else {
 						allProSys.put(name, new Produktsystem(name, new HashMap<Fluss, Double>(), 
 								new LinkedList<Fluss>()));
-						tm3.addRow(new Object[] {name, "", ""});
+						productsTableModel.addRow(new Object[] {name, "", ""});
 						allMNLs.put(name, new ModulNamenListe());
 						allBVs.put(name, new Bedarfsvektor());
 						allVKs.put(name, new VorUndKoppelprodukte());
@@ -643,10 +660,10 @@ public class IWBLCI {
 					if (nameVorhanden == true) {
 						if (typmod == true){
 							allProSys.get(txtPSName.getText()).addProzessmodul(allModules.get(modname));
-							tm3.addRow(new Object[] {"","Prozessmodul", modname});							
+							productsTableModel.addRow(new Object[] {"","Prozessmodul", modname});							
 						} else {
 							allProSys.get(txtPSName.getText()).addProzessmodul(allProSys.get(modname));
-							tm3.addRow(new Object[] {"","Subsystem", modname});	
+							productsTableModel.addRow(new Object[] {"","Subsystem", modname});	
 						}
 						allMNLs.get(txtPSName.getText()).addName(modname);
 //						allMNLs.put(txtPSName.getText(), new ModulNamenListe());
@@ -708,7 +725,7 @@ public class IWBLCI {
 						allBVs.get(txtPSName.getText()).addFluss(akFluss, menge);
 						allProSys.get(txtPSName.getText()).
 							setBedarfsvektor(allBVs.get(txtPSName.getText()).getBV());
-						tm3.addRow(new Object[] {"" ,"Bedarf" 
+						productsTableModel.addRow(new Object[] {"" ,"Bedarf" 
 								,"" + akFluss.getName() + " ("+ menge + " " + akFluss.getEinheit()+")"});
 						lblStatus3.setText(">>> Der Bedarfsvektor enth\u00e4lt " + 
 								allBVs.get(txtPSName.getText()).getBV().size() + " Fl\u00dcsse <<<");
@@ -765,7 +782,7 @@ public class IWBLCI {
 						allVKs.get(txtPSName.getText()).addFluss(akFluss);
 						allProSys.get(txtPSName.getText()).
 							setVorUndKoppelProdukte(allVKs.get(txtPSName.getText()).getVk());
-						tm3.addRow(new Object[] {"" ,"Vor- oder Koppelpr." 
+						productsTableModel.addRow(new Object[] {"" ,"Vor- oder Koppelpr." 
 								,akFluss.getName()});
 						lblStatus3.setText(">>> Der VK-Vektor enth\u00e4lt " + 
 								allVKs.get(txtPSName.getText()).getVk().size() + " Fl\u00fcsse <<<");										
@@ -803,12 +820,12 @@ public class IWBLCI {
 	}
 	
 	/*
-	 * Aktivit\u00dcten der Menupunkte
+	 * Actions der Menupunkte
 	 */
 
-	private class SwingAction extends AbstractAction {
+	private class newFlowAction extends AbstractAction {
 		private static final long serialVersionUID = 3159283296670804375L;
-		public SwingAction() {
+		public newFlowAction() {
 			putValue(NAME, "Fluss");
 			putValue(SHORT_DESCRIPTION, "neues Flussobjekt erfassen");
 		}
@@ -816,9 +833,9 @@ public class IWBLCI {
 			cl.show(panel, "neuFluss");
 		}
 	}
-	private class SwingAction_1 extends AbstractAction {
+	private class newModuleAction extends AbstractAction {
 		private static final long serialVersionUID = 6190606710625748526L;
-		public SwingAction_1() {
+		public newModuleAction() {
 			putValue(NAME, "Prozessmodul");
 			putValue(SHORT_DESCRIPTION, "neues Prozessmodul erfassen");
 		}
@@ -826,9 +843,9 @@ public class IWBLCI {
 			cl.show(panel, "neuModul");
 		}
 	}
-	private class SwingAction_2 extends AbstractAction {
+	private class newProductAction extends AbstractAction {
 		private static final long serialVersionUID = -7757652453649226474L;
-		public SwingAction_2() {
+		public newProductAction() {
 			putValue(NAME, "Produktsystem");
 			putValue(SHORT_DESCRIPTION, "neues Produktsystem erfassen");
 		}
@@ -836,9 +853,9 @@ public class IWBLCI {
 			cl.show(panel, "neuProdukt");
 		}
 	}
-	private class SwingAction_3 extends AbstractAction {
+	private class listFlowAction extends AbstractAction {
 		private static final long serialVersionUID = 3929527112031439132L;
-		public SwingAction_3() {
+		public listFlowAction() {
 			putValue(NAME, "Fl\u00FCsse");
 			putValue(SHORT_DESCRIPTION, "Liste aller Fl\u00fcsse");
 		}
@@ -846,9 +863,9 @@ public class IWBLCI {
 			cl.show(panel, "listeFluss");
 		}
 	}
-	private class SwingAction_4 extends AbstractAction {
+	private class listModuleAction extends AbstractAction {
 		private static final long serialVersionUID = -23206034834972545L;
-		public SwingAction_4() {
+		public listModuleAction() {
 			putValue(NAME, "Prozessmodule");
 			putValue(SHORT_DESCRIPTION, "Liste aller Prozessmodule");
 		}
@@ -856,9 +873,9 @@ public class IWBLCI {
 			cl.show(panel, "listeModul");
 		}
 	}
-	private class SwingAction_5 extends AbstractAction {
+	private class listProductAction extends AbstractAction {
 		private static final long serialVersionUID = 9038442522125086919L;
-		public SwingAction_5() {
+		public listProductAction() {
 			putValue(NAME, "Produktsysteme");
 			putValue(SHORT_DESCRIPTION, "Liste aller Produktsysteme");
 		}
@@ -866,24 +883,24 @@ public class IWBLCI {
 			cl.show(panel, "listeProdukt");
 		}
 	}
-	private class SwingAction_6 extends AbstractAction {
+	private class calculateAction extends AbstractAction {
 		private static final long serialVersionUID = 7449057427765901652L;
-		public SwingAction_6() {
+		public calculateAction() {
 			putValue(NAME, "Sachbilanz berechnen");
 			putValue(SHORT_DESCRIPTION, "Sachbilanz aller Produktsysteme");
 		}
 		public void actionPerformed(ActionEvent e) {
 			cl.show(panel, "berechnen");
-			tm4.setRowCount(0);
+			resultsTableModel.setRowCount(0);
 			HashMap<Fluss, Double> sysErgebnis = new HashMap<Fluss, Double>();
 			if (allProSys.size() > 0) {
 				for(String sysName : allProSys.keySet()) {
-					tm4.addRow(new Object[] {sysName,"",""});
+					resultsTableModel.addRow(new Object[] {sysName,"",""});
 					Produktsystem sysAktuell = allProSys.get(sysName);
 					if (sysAktuell.getElementarflussvektor().size() > 0) {
 						sysErgebnis = sysAktuell.getElementarflussvektor();
 						for(Fluss sysFluss : sysErgebnis.keySet()){
-							tm4.addRow(new Object[] {"",sysFluss.getName(),"" + 
+							resultsTableModel.addRow(new Object[] {"",sysFluss.getName(),"" + 
 								sysErgebnis.get(sysFluss) + " " + sysFluss.getEinheit() + ""});
 						}
 					}					 
@@ -891,9 +908,9 @@ public class IWBLCI {
 			}
 		}
 	}
-	private class SwingAction_7 extends AbstractAction {
+	private class saveAction extends AbstractAction {
 		private static final long serialVersionUID = -8513272127372924276L;
-		public SwingAction_7() {
+		public saveAction() {
 			putValue(NAME, "Save");
 			putValue(SHORT_DESCRIPTION, "Abspeichern aller Objekte");
 		}
@@ -955,9 +972,9 @@ public class IWBLCI {
 			
 		}
 	}
-	private class SwingAction_8 extends AbstractAction {
+	private class loadAction extends AbstractAction {
 		private static final long serialVersionUID = -8070002616229474706L;
-		public SwingAction_8() {
+		public loadAction() {
 			putValue(NAME, "Load");
 			putValue(SHORT_DESCRIPTION, "Laden eines Objektbestandes");
 		}
@@ -971,22 +988,22 @@ public class IWBLCI {
 					FileInputStream fs = new FileInputStream(chooser.getSelectedFile());
 					ObjectInputStream os = new ObjectInputStream(fs);
 					allFlows.clear();
-					tm.setRowCount(0);
+					flowsTableModel.setRowCount(0);
 					int nrFlows = os.readInt();
 					for (Integer i=0; i<nrFlows; i++){
 						String name = os.readObject().toString();
 						FlussTyp typ = (FlussTyp)os.readObject();
 						FlussEinheit einheit = (FlussEinheit)os.readObject();
 						allFlows.add(new Fluss(name, typ, einheit));
-						tm.addRow(new Object[] {name, typ, einheit});
+						flowsTableModel.addRow(new Object[] {name, typ, einheit});
 					}		
 					allModules.clear();
-					tm2.setRowCount(0);
+					modulesTableModel.setRowCount(0);
 					int nrMods = os.readInt();
 					for (Integer i=0; i<nrMods; i++) {
 						String mn = (String)os.readObject();
 						allModules.put(mn, new Prozessmodul());
-						tm2.addRow(new Object[] {mn, "", ""});
+						modulesTableModel.addRow(new Object[] {mn, "", ""});
 						int esize = os.readInt();
 						for (int j=0; j<(esize); j++) {
 							String fname = (String)os.readObject();
@@ -998,7 +1015,7 @@ public class IWBLCI {
 							}								
 							Double menge = (Double)os.readObject();
 							allModules.get(mn).addFluss(akFluss, menge);
-							tm2.addRow(new Object[] {"", akFluss.getName(), menge});						
+							modulesTableModel.addRow(new Object[] {"", akFluss.getName(), menge});						
 						}
 						int psize = os.readInt();
 						for (int j=0; j<(psize); j++) {
@@ -1011,14 +1028,14 @@ public class IWBLCI {
 							}								
 							Double menge = (Double)os.readObject();
 							allModules.get(mn).addFluss(akFluss, menge);
-							tm2.addRow(new Object[] {"", akFluss.getName(), menge});						
+							modulesTableModel.addRow(new Object[] {"", akFluss.getName(), menge});						
 						}
 					}
 					allProSys.clear();
 					allMNLs.clear();
 					allBVs.clear();
 					allVKs.clear();
-					tm3.setRowCount(0);
+					productsTableModel.setRowCount(0);
 					int nrSys = os.readInt();
 					
 					for (Integer i=0; i<nrSys; i++) {
@@ -1028,7 +1045,7 @@ public class IWBLCI {
 							allProSys.put(name, new Produktsystem(name, new HashMap<Fluss, Double>(), 
 									new LinkedList<Fluss>()));							
 						}						
-						tm3.addRow(new Object[] {name, "", ""});
+						productsTableModel.addRow(new Object[] {name, "", ""});
 						allMNLs.put(name, new ModulNamenListe());
 						allBVs.put(name, new Bedarfsvektor());
 						allVKs.put(name, new VorUndKoppelprodukte());
@@ -1042,14 +1059,14 @@ public class IWBLCI {
 							}
 							if (typmod == true){
 								allProSys.get(name).addProzessmodul(allModules.get(mni));
-								tm3.addRow(new Object[] {"","Prozessmodul", mni});							
+								productsTableModel.addRow(new Object[] {"","Prozessmodul", mni});							
 							} else {
 								if (allProSys.containsKey(mni) == false) {
 									allProSys.put(mni, new Produktsystem(mni, new HashMap<Fluss, Double>(), 
 											new LinkedList<Fluss>()));							
 								}	
 								allProSys.get(name).addProzessmodul(allProSys.get(mni));
-								tm3.addRow(new Object[] {"","Subsystem", mni});	
+								productsTableModel.addRow(new Object[] {"","Subsystem", mni});	
 							}
 							allMNLs.get(name).addName(mni);
 							
@@ -1068,7 +1085,7 @@ public class IWBLCI {
 							allBVs.get(name).addFluss(akFluss, bvwert);
 							allProSys.get(name).
 								setBedarfsvektor(allBVs.get(name).getBV());
-							tm3.addRow(new Object[] {"" ,"Bedarf" 
+							productsTableModel.addRow(new Object[] {"" ,"Bedarf" 
 									,"" + bvname + " ("+ bvwert + " " + akFluss.getEinheit()+")"});							
 						}
 						int nrvk = os.readInt();
@@ -1082,7 +1099,7 @@ public class IWBLCI {
 							}
 							allVKs.get(name).addFluss(akFluss);
 							allProSys.get(name).setVorUndKoppelProdukte(allVKs.get(name).getVk());
-							tm3.addRow(new Object[] {"" ,"Vor- oder Koppelpr." ,vkname});
+							productsTableModel.addRow(new Object[] {"" ,"Vor- oder Koppelpr." ,vkname});
 							
 						}					
 					}
@@ -1102,9 +1119,9 @@ public class IWBLCI {
 			
 		}
 	}
-	private class SwingAction_9 extends AbstractAction {
+	private class aboutAction extends AbstractAction {
 		private static final long serialVersionUID = 8545097902506476895L;
-		public SwingAction_9() {
+		public aboutAction() {
 			putValue(NAME, "\u00dcber");
 			putValue(SHORT_DESCRIPTION, "Info");
 		}
