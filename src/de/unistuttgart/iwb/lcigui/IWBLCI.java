@@ -74,6 +74,8 @@ public class IWBLCI {
 	private final Action newFlowAction 		= new newFlowAction();
 	private final Action newModuleAction 	= new newModuleAction();
 	private final Action newProductAction 	= new newProductAction();
+	private final Action newWKAction 		= new newWKAction();
+	private final Action newPBAction 		= new newPBAction();
 	private final Action listFlowAction 	= new listFlowAction();
 	private final Action listModuleAction 	= new listModuleAction();
 	private final Action listProductAction 	= new listProductAction();
@@ -407,28 +409,36 @@ public class IWBLCI {
 		JMenu mnDatei = new JMenu("Datei");
 		menuBar.add(mnDatei);
 		
-		JMenuItem mntmNewMenuItem = new JMenuItem("New menu item");
+		JMenuItem mntmNewMenuItem = new JMenuItem();
 		mntmNewMenuItem.setAction(saveAction);
 		mnDatei.add(mntmNewMenuItem);
 		
-		JMenuItem mntmNewMenuItem_1 = new JMenuItem("New menu item");
+		JMenuItem mntmNewMenuItem_1 = new JMenuItem();
 		mntmNewMenuItem_1.setAction(loadAction);
 		mnDatei.add(mntmNewMenuItem_1);
 		
 		JMenu mnNew = new JMenu("Neu");
 		menuBar.add(mnNew);
 		
-		JMenuItem mntmFlow = new JMenuItem("Fluss");
+		JMenuItem mntmFlow = new JMenuItem();
 		mntmFlow.setAction(newFlowAction);
 		mnNew.add(mntmFlow);
 		
-		JMenuItem mntmProcessModule = new JMenuItem("Prozessmodul");
+		JMenuItem mntmProcessModule = new JMenuItem();
 		mntmProcessModule.setAction(newModuleAction);
 		mnNew.add(mntmProcessModule);
 		
-		JMenuItem mntmProductSystem = new JMenuItem("Produktsystem");
+		JMenuItem mntmProductSystem = new JMenuItem();
 		mntmProductSystem.setAction(newProductAction);
 		mnNew.add(mntmProductSystem);
+		
+		JMenuItem mntmWK = new JMenuItem("Wirkungskategorie");
+		mntmWK.setAction(newWKAction);
+		mnNew.add(mntmWK);
+		
+		JMenuItem mntmPB = new JMenuItem("ProduktBilanziert");
+		mntmPB.setAction(newPBAction);
+		mnNew.add(mntmPB);
 		
 		JMenu mnListe = new JMenu("Liste");
 		menuBar.add(mnListe);
@@ -853,6 +863,27 @@ public class IWBLCI {
 			cl.show(panel, "neuProdukt");
 		}
 	}
+	private class newWKAction extends AbstractAction {	
+		private static final long serialVersionUID = 226480034134794912L;
+		public newWKAction() {
+			putValue(NAME, "Wirkungskategorie");
+			putValue(SHORT_DESCRIPTION, "neue Wirkungskategorie erfassen");
+		}
+		public void actionPerformed(ActionEvent e) {
+			cl.show(panel, "neuProdukt");
+		}
+	}
+	private class newPBAction extends AbstractAction {
+		private static final long serialVersionUID = -7489938933445684497L;
+		public newPBAction() {
+			putValue(NAME, "Produkt-Deklaration");
+			putValue(SHORT_DESCRIPTION, "neues Produkt-Deklaration erfassen");
+		}
+		public void actionPerformed(ActionEvent e) {
+			cl.show(panel, "neuProdukt");
+		}
+	}
+	
 	private class listFlowAction extends AbstractAction {
 		private static final long serialVersionUID = 3929527112031439132L;
 		public listFlowAction() {
