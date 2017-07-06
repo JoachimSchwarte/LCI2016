@@ -10,7 +10,7 @@ import Jama.Matrix;
 
 /**
  * @author Dr.-Ing. Joachim Schwarte
- * @version 0.913
+ * @version 0.922
  */
 
 public class Produktsystem 
@@ -31,7 +31,6 @@ implements Flussvektoren, Wirkungsvektor {
 			= new HashMap<Fluss, Double>();
 	private HashMap<Fluss, Double> pfv 
 			= new HashMap<Fluss, Double>();
-	private boolean aktuell = false;
 	
 	// Konstruktor:
 
@@ -50,7 +49,6 @@ implements Flussvektoren, Wirkungsvektor {
 	}
 	public void addProzessmodul(Flussvektoren modul) {
 		modulliste.add(modul);
-		aktuell = false;
 	}
 	private void aktualisiere() throws ArithmeticException {
 		LinkedList<Fluss> produktFlussliste = new LinkedList<Fluss>();
@@ -125,16 +123,15 @@ implements Flussvektoren, Wirkungsvektor {
 		for(Fluss pf : produktFlussliste) {
 			pfv.put(pf, matrixG1.get(produktFlussliste.indexOf(pf),0));
 		}			
-		aktuell = true;
 	}
 	
-	public HashMap<Fluss, Double> getElementarflussvektor() {
-		if (aktuell == false) aktualisiere();
+	public HashMap<Fluss, Double> getElementarflussvektor() throws ArithmeticException {
+		aktualisiere();
 		return efv;
 	}
 
 	public HashMap<Fluss, Double> getProduktflussvektor() {
-		if (aktuell == false) aktualisiere();
+		aktualisiere();
 		return pfv;
 	}
 	

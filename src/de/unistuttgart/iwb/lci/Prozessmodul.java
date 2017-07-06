@@ -63,4 +63,13 @@ implements Flussvektoren, Wirkungsvektor {
 		}
 		return wv;
 	}
+	
+	/*
+	 * neue Methoden Version 0.922 (06.07.2017)
+	 */
+	
+	public void removeFluss(Fluss fluss) {
+		efv.remove(fluss);
+		pfv.remove(fluss);
+	}
 }

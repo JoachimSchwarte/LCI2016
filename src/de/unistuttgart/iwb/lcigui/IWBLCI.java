@@ -31,6 +31,7 @@ import java.awt.Font;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
+
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 
@@ -47,7 +48,7 @@ import java.io.ObjectOutputStream;
 
 /**
  * @author Dr.-Ing. Joachim Schwarte
- * @version 0.921
+ * @version 0.922
  */
 
 public class IWBLCI {
@@ -74,8 +75,9 @@ public class IWBLCI {
 	private final Action newFlowAction 		= new newFlowAction();
 	private final Action newModuleAction 	= new newModuleAction();
 	private final Action newProductAction 	= new newProductAction();
-	private final Action newWKAction 		= new newWKAction();
-	private final Action newPBAction 		= new newPBAction();
+//	private final Action newWKAction 		= new newWKAction();
+//	private final Action newPBAction 		= new newPBAction();
+	private final Action editModuleAction 	= new editModuleAction();
 	private final Action listFlowAction 	= new listFlowAction();
 	private final Action listModuleAction 	= new listModuleAction();
 	private final Action listProductAction 	= new listProductAction();
@@ -86,9 +88,12 @@ public class IWBLCI {
 	private JTextField txtName;
 	private JTextField txtModName;
 	private JTextField txtModName2;
+	private JTextField txtModName3;
 	private JTextField txtFlussName;
+	private JTextField txtFlussName2;
 	private JTextField txtVKName;
 	private JTextField txtMenge;
+	private JTextField txtMenge2;
 	private JTextField txtPSName;
 	private JTextField txtBV;
 	private JTextField txtBVMenge;
@@ -131,7 +136,7 @@ public class IWBLCI {
 	 */
 	private void initialize() {
 		frmIwblciVersion = new JFrame();
-		frmIwblciVersion.setTitle("IWB-LCI   Version 0.921");
+		frmIwblciVersion.setTitle("IWB-LCI   Version 0.922");
 		frmIwblciVersion.setBounds(100, 100, 600, 480);
 		frmIwblciVersion.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);		
 		
@@ -333,7 +338,7 @@ public class IWBLCI {
 		JLabel lblInfo4 = new JLabel("Universit\u00e4t Stuttgart");
 		lblInfo4.setFont(new Font("Tahoma", Font.BOLD, 14));
 		panel_4.add(lblInfo4, "cell 1 5,alignx center,aligny top");
-		JLabel lblInfo5 = new JLabel("Version 0.921   22.06.2017");
+		JLabel lblInfo5 = new JLabel("Version 0.922   06.07.2017");
 		lblInfo5.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		panel_4.add(lblInfo5, "cell 1 7,alignx center,aligny top");
 
@@ -397,6 +402,80 @@ public class IWBLCI {
 		tcm4.getColumn(2).setHeaderValue("Menge");
 		panel_8.add(new JScrollPane(resultsTable), "cell 0 1,alignx center,aligny top");
 		
+		// Panel 9
+		
+		JPanel panel_9 = new JPanel();
+		panel.add(panel_9, "todo");
+		panel_9.setLayout(new MigLayout("", "[108px,grow][200px][108px,grow]", 
+				"[20px][20px][40px][20px][20px][20px][20px,grow][20px]"));
+		JLabel lblTodo1 = new JLabel("IWB-LCI");
+		lblTodo1.setFont(new Font("Tahoma", Font.BOLD, 26));
+		panel_9.add(lblTodo1, "cell 1 2,alignx center,aligny top");
+		JLabel lblTodo2 = new JLabel("");
+		lblTodo2.setFont(new Font("Tahoma", Font.BOLD, 14));
+		panel_9.add(lblTodo2, "cell 1 3,alignx center,aligny top");
+		JLabel lblTodo3 = new JLabel("Diese Funktion ist noch nicht verfügbar");		
+		lblTodo3.setFont(new Font("Tahoma", Font.ITALIC, 14));
+		panel_9.add(lblTodo3, "cell 1 4,alignx center,aligny top");
+		JLabel lblTodo4 = new JLabel("");
+		lblTodo4.setFont(new Font("Tahoma", Font.BOLD, 14));
+		panel_9.add(lblTodo4, "cell 1 5,alignx center,aligny top");
+		JLabel lblTodo5 = new JLabel("Version 0.922   06.07.2017");
+		lblTodo5.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		panel_9.add(lblTodo5, "cell 1 7,alignx center,aligny top");
+		
+		// Panel 10
+		
+		JPanel panel_10 = new JPanel();
+		panel.add(panel_10, "editModul");
+		panel_10.setLayout(new MigLayout("", "[108px,grow][108px][108px][108px,grow]", 
+				"[20px][20px][20px][20px][20px][20px][20px][20px][20px,grow]"));
+		JLabel lblEditProzessmodul = new JLabel("Prozessmodul editieren");
+		lblEditProzessmodul.setFont(new Font("Tahoma", Font.BOLD, 14));
+		panel_10.add(lblEditProzessmodul, "flowy,cell 1 0 2 1,alignx center,growy");
+		
+		JLabel lblModName3 = new JLabel("Name des Prozessmoduls");
+		panel_10.add(lblModName3, "cell 1 1,grow");
+		
+		txtModName3 = new JTextField();
+		txtModName3.setText("");
+		panel_10.add(txtModName3, "cell 2 1,grow");
+		txtModName3.setColumns(10);
+		
+		JLabel lblStatus4 = new JLabel(">>> ... <<<");
+		panel_10.add(lblStatus4, "cell 0 6 4 1,alignx center");
+		
+		JButton btnEditModul = new JButton("vorhandene Flussdaten des Moduls bearbeiten");
+		panel_10.add(btnEditModul, "cell 1 2 2 1,alignx center");
+		
+		JLabel lblFlussName1 = new JLabel("Name des Flusses");
+		panel_10.add(lblFlussName1, "cell 1 3,grow");
+		
+		txtFlussName2 = new JTextField();
+		txtFlussName2.setText("");
+		panel_10.add(txtFlussName2, "cell 2 3,grow");
+		txtFlussName2.setColumns(10);
+		txtFlussName2.setEnabled(false);
+		
+		JLabel lblMenge2 = new JLabel("Menge");
+		panel_10.add(lblMenge2, "cell 1 4,grow");
+		
+		txtMenge2 = new JTextField();
+		txtMenge2.setText("");
+		panel_10.add(txtMenge2, "cell 2 4,grow");
+		txtMenge2.setColumns(10);
+		txtMenge2.setEnabled(false);
+		
+		JButton btnEditFluss = new JButton("Fluss hinzuf\u00fcgen oder bearbeiten");
+		btnEditFluss.setEnabled(false);
+		panel_10.add(btnEditFluss, "cell 1 5,alignx center");
+		
+		JButton btnFertig3 = new JButton("fertig");
+		btnFertig3.setEnabled(false);
+		panel_10.add(btnFertig3, "cell 2 5,alignx center");
+				
+
+		
 		cl.show(panel, "leer");
 		
 		/*
@@ -431,7 +510,7 @@ public class IWBLCI {
 		JMenuItem mntmProductSystem = new JMenuItem();
 		mntmProductSystem.setAction(newProductAction);
 		mnNew.add(mntmProductSystem);
-		
+		/*
 		JMenuItem mntmWK = new JMenuItem("Wirkungskategorie");
 		mntmWK.setAction(newWKAction);
 		mnNew.add(mntmWK);
@@ -439,6 +518,14 @@ public class IWBLCI {
 		JMenuItem mntmPB = new JMenuItem("ProduktBilanziert");
 		mntmPB.setAction(newPBAction);
 		mnNew.add(mntmPB);
+		*/
+		
+		JMenu mnEdit = new JMenu("Edit");
+		menuBar.add(mnEdit);
+		
+		JMenuItem mntmEditPM = new JMenuItem("Prozessmodule");
+		mntmEditPM.setAction(editModuleAction);
+		mnEdit.add(mntmEditPM);
 		
 		JMenu mnListe = new JMenu("Liste");
 		menuBar.add(mnListe);
@@ -470,7 +557,11 @@ public class IWBLCI {
 		mnHilfe.add(mntmNewMenuItem_2);
 		
 		/*
-		 * Aktivit\u00dcten der Schaltfl\u00dcchen
+		 * Aktivitäten der Schaltflächen
+		 */
+		
+		/*
+		 * neuer Fluss
 		 */
 		
 		btnSpeichern.addMouseListener(new MouseAdapter() {
@@ -502,7 +593,10 @@ public class IWBLCI {
 			}
 		});
 
-
+		/*
+		 * neues Prozessmodul
+		 */
+		
 		btnSpei2.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
@@ -550,7 +644,7 @@ public class IWBLCI {
 					menge = 0.0;
 				}
 				if (fname.equals("") || (menge == 0.0)) {
-					lblStatus2.setText(">>> unvollst\u00dcndige Eingabe <<<");
+					lblStatus2.setText(">>> unvollst\u00e4ndige Eingabe <<<");
 				} else {
 					boolean nameVorhanden = false;
 					for(Fluss pf : allFlows) {
@@ -599,6 +693,10 @@ public class IWBLCI {
 				lblStatus2.setText(">>> ... <<<");
 			}
 		});
+
+		/*
+		 * neues Produktsystem
+		 */
 		
 		btnSpei3.addMouseListener(new MouseAdapter() {
 			@Override
@@ -827,6 +925,115 @@ public class IWBLCI {
 				lblStatus3.setText(">>> ... <<<");
 			}
 		});
+	
+		/*
+		 * Produktsystem editieren
+		 */
+	
+		btnEditModul.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				String name = txtModName3.getText();	
+				if (name.equals("")) {
+					lblStatus4.setText(">>> Es wurde kein Name angegeben. <<<");
+				} else {
+					boolean nameModules = false;			
+					
+					for(String mod : allModules.keySet()) {
+						if (name.equals(mod)) {
+							nameModules = true;
+						}
+					}
+					if (nameModules == false) {
+						lblStatus4.setText(">>> Es gibt kein Modul mit diesem Namen. <<<");
+					} else {
+						modulesTableModel.addRow(new Object[] {name, "", ""});
+						lblStatus4.setText(">>> Mengenangabe 0 l\u00f6scht einen vorhandenen Fluss. <<<");
+						btnEditModul.setEnabled(false);
+						txtModName3.setEnabled(false);
+						btnEditFluss.setEnabled(true);
+						btnFertig3.setEnabled(true);
+						txtFlussName2.setEnabled(true);
+						txtMenge2.setEnabled(true);
+						
+					}				
+				}			
+			}		
+		});
+		
+		btnEditFluss.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				String fname = txtFlussName2.getText();
+				String fmenge = txtMenge2.getText();
+				Double menge = 0.0;
+				Boolean mengeZahl = true;
+				try {
+						menge = Double.parseDouble(fmenge);
+					} catch (NumberFormatException e){
+						mengeZahl = false;
+				}
+				if (fname.equals("") || (mengeZahl == false)) {
+					lblStatus4.setText(">>> unkorrekte oder unvollst\u00e4ndige Eingabe <<<");
+				} else {
+					boolean nameVorhanden = false;
+					Fluss fo = allFlows.getFirst();
+					for(Fluss pf : allFlows) {
+						if (fname.equals(pf.getName())) {
+							nameVorhanden = true;
+							fo = pf;
+						}
+					}
+					if (nameVorhanden == true) {
+						Boolean nameInModul = false;
+						String mname = txtModName3.getText();
+						if (allModules.get(mname).getElementarflussvektor().
+								containsKey(fo)){
+							nameInModul = true;
+						}
+						if (allModules.get(mname).getProduktflussvektor().
+								containsKey(fo)){
+							nameInModul = true;
+						}
+						if (nameInModul==true) {
+							if (menge == 0.0) {
+								allModules.get(mname).removeFluss(fo);
+								lblStatus4.setText(">>> Der angegebene Fluss wurde aus dem Modul gel\u00f6scht. <<<");
+							} else {
+								allModules.get(mname).removeFluss(fo);
+								allModules.get(mname).addFluss(fo, menge);
+								lblStatus4.setText(">>> Die Mengenangabe wurde ge\u00e4ndert. <<<");
+							}
+						} else {
+							if (menge == 0.0) {
+								lblStatus4.setText(">>> Mengenangabe fehlt. <<<");
+							} else {
+								allModules.get(mname).addFluss(fo, menge);
+								lblStatus4.setText(">>> Der Fluss wurde hinzugef\u00dcgt. <<<");								
+							}							
+						}				
+					} else {
+						lblStatus4.setText(">>> unbekannter Flussname <<<");
+					}					
+				}
+			}
+		});
+		
+		btnFertig3.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				btnEditModul.setEnabled(true);
+				txtFlussName2.setText("");
+				txtMenge2.setText("");
+				txtModName3.setText("");
+				btnEditFluss.setEnabled(false);
+				btnFertig3.setEnabled(false);
+				txtModName3.setEnabled(true);
+				txtFlussName2.setEnabled(false);
+				txtMenge2.setEnabled(false);
+				lblStatus4.setText(">>> ... <<<");
+			}
+		});
 	}
 	
 	/*
@@ -863,6 +1070,7 @@ public class IWBLCI {
 			cl.show(panel, "neuProdukt");
 		}
 	}
+	/*
 	private class newWKAction extends AbstractAction {	
 		private static final long serialVersionUID = 226480034134794912L;
 		public newWKAction() {
@@ -870,7 +1078,7 @@ public class IWBLCI {
 			putValue(SHORT_DESCRIPTION, "neue Wirkungskategorie erfassen");
 		}
 		public void actionPerformed(ActionEvent e) {
-			cl.show(panel, "neuProdukt");
+			cl.show(panel, "todo");
 		}
 	}
 	private class newPBAction extends AbstractAction {
@@ -880,10 +1088,22 @@ public class IWBLCI {
 			putValue(SHORT_DESCRIPTION, "neues Produkt-Deklaration erfassen");
 		}
 		public void actionPerformed(ActionEvent e) {
-			cl.show(panel, "neuProdukt");
+			cl.show(panel, "todo");
 		}
 	}
+	*/
 	
+	private class editModuleAction extends AbstractAction {
+		private static final long serialVersionUID = -4615227267646047497L;
+		public editModuleAction() {
+			putValue(NAME, "Prozessmodul");
+			putValue(SHORT_DESCRIPTION, "Prozessmodul editieren");
+		}
+		public void actionPerformed(ActionEvent e) {
+			cl.show(panel, "editModul");
+		}
+	}
+
 	private class listFlowAction extends AbstractAction {
 		private static final long serialVersionUID = 3929527112031439132L;
 		public listFlowAction() {
@@ -901,6 +1121,20 @@ public class IWBLCI {
 			putValue(SHORT_DESCRIPTION, "Liste aller Prozessmodule");
 		}
 		public void actionPerformed(ActionEvent e) {
+
+			modulesTableModel.setRowCount(0);
+			for(String mn : allModules.keySet()) {
+				Prozessmodul akModul = allModules.get(mn);
+				modulesTableModel.addRow(new Object[] {mn, "", ""});
+				for(Fluss pf : akModul.getElementarflussvektor().keySet()){
+					modulesTableModel.addRow(new Object[] {"", pf.getName(), 
+							akModul.getElementarflussvektor().get(pf)});
+				}						
+				for(Fluss pf : akModul.getProduktflussvektor().keySet()){
+					modulesTableModel.addRow(new Object[] {"", pf.getName(), 
+							akModul.getProduktflussvektor().get(pf)});				
+				}
+			}		
 			cl.show(panel, "listeModul");
 		}
 	}
@@ -920,23 +1154,28 @@ public class IWBLCI {
 			putValue(NAME, "Sachbilanz berechnen");
 			putValue(SHORT_DESCRIPTION, "Sachbilanz aller Produktsysteme");
 		}
-		public void actionPerformed(ActionEvent e) {
-			cl.show(panel, "berechnen");
+		public void actionPerformed(ActionEvent e) {		
 			resultsTableModel.setRowCount(0);
 			HashMap<Fluss, Double> sysErgebnis = new HashMap<Fluss, Double>();
 			if (allProSys.size() > 0) {
 				for(String sysName : allProSys.keySet()) {
 					resultsTableModel.addRow(new Object[] {sysName,"",""});
 					Produktsystem sysAktuell = allProSys.get(sysName);
-					if (sysAktuell.getElementarflussvektor().size() > 0) {
-						sysErgebnis = sysAktuell.getElementarflussvektor();
-						for(Fluss sysFluss : sysErgebnis.keySet()){
-							resultsTableModel.addRow(new Object[] {"",sysFluss.getName(),"" + 
-								sysErgebnis.get(sysFluss) + " " + sysFluss.getEinheit() + ""});
+					try {
+						if (sysAktuell.getElementarflussvektor().size() > 0) {
+							sysErgebnis = sysAktuell.getElementarflussvektor();
+							for(Fluss sysFluss : sysErgebnis.keySet()){
+								resultsTableModel.addRow(new Object[] {"",sysFluss.getName(),"" + 
+									sysErgebnis.get(sysFluss) + " " + sysFluss.getEinheit() + ""});
+							}
 						}
+					} catch (ArithmeticException vz) {
+							resultsTableModel.addRow(new Object[] 
+									{"",vz.getMessage(),""});					
 					}					 
 				}
 			}
+			cl.show(panel, "berechnen");
 		}
 	}
 	private class saveAction extends AbstractAction {
