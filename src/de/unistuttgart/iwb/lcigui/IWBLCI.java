@@ -48,7 +48,7 @@ import java.io.ObjectOutputStream;
 
 /**
  * @author Dr.-Ing. Joachim Schwarte
- * @version 0.922
+ * @version 0.923
  */
 
 public class IWBLCI {
@@ -136,7 +136,7 @@ public class IWBLCI {
 	 */
 	private void initialize() {
 		frmIwblciVersion = new JFrame();
-		frmIwblciVersion.setTitle("IWB-LCI   Version 0.922");
+		frmIwblciVersion.setTitle("IWB-LCI   Version 0.923");
 		frmIwblciVersion.setBounds(100, 100, 600, 480);
 		frmIwblciVersion.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);		
 		
@@ -338,7 +338,7 @@ public class IWBLCI {
 		JLabel lblInfo4 = new JLabel("Universit\u00e4t Stuttgart");
 		lblInfo4.setFont(new Font("Tahoma", Font.BOLD, 14));
 		panel_4.add(lblInfo4, "cell 1 5,alignx center,aligny top");
-		JLabel lblInfo5 = new JLabel("Version 0.922   06.07.2017");
+		JLabel lblInfo5 = new JLabel("Version 0.923   10.07.2017");
 		lblInfo5.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		panel_4.add(lblInfo5, "cell 1 7,alignx center,aligny top");
 
@@ -420,7 +420,7 @@ public class IWBLCI {
 		JLabel lblTodo4 = new JLabel("");
 		lblTodo4.setFont(new Font("Tahoma", Font.BOLD, 14));
 		panel_9.add(lblTodo4, "cell 1 5,alignx center,aligny top");
-		JLabel lblTodo5 = new JLabel("Version 0.922   06.07.2017");
+		JLabel lblTodo5 = new JLabel("Version 0.923   10.07.2017");
 		lblTodo5.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		panel_9.add(lblTodo5, "cell 1 7,alignx center,aligny top");
 		
@@ -584,7 +584,6 @@ public class IWBLCI {
 					} else {
 						allFlows.add(new Fluss(name, typ, einheit));
 						lblStatusmeldung.setText(">>> Anzahl Flussobjekte: " + allFlows.size() + " <<<");
-						flowsTableModel.addRow(new Object[] {name, typ, einheit});
 						txtName.setText("");
 						comboBox.setSelectedIndex(0);
 						comboBox_1.setSelectedIndex(0);
@@ -620,7 +619,6 @@ public class IWBLCI {
 						lblStatus2.setText(">>> Der angegebene Name ist bereits vorhanden. <<<");
 					} else {
 						allModules.put(name, new Prozessmodul());
-						modulesTableModel.addRow(new Object[] {name, "", ""});
 						lblStatus2.setText(">>> Anzahl Prozessmodule: " + allModules.size() + " <<<");
 						btnSpei2.setEnabled(false);
 						txtModName.setEnabled(false);
@@ -661,7 +659,6 @@ public class IWBLCI {
 						}
 						String mname = txtModName.getText();
 						allModules.get(mname).addFluss(akFluss, menge);
-						modulesTableModel.addRow(new Object[] {"" ,akFluss.getName() ,menge});
 						txtFlussName.setText("");
 						txtMenge.setText("");
 						btnFertig.setEnabled(true);
@@ -722,7 +719,6 @@ public class IWBLCI {
 					} else {
 						allProSys.put(name, new Produktsystem(name, new HashMap<Fluss, Double>(), 
 								new LinkedList<Fluss>()));
-						productsTableModel.addRow(new Object[] {name, "", ""});
 						allMNLs.put(name, new ModulNamenListe());
 						allBVs.put(name, new Bedarfsvektor());
 						allVKs.put(name, new VorUndKoppelprodukte());
@@ -768,10 +764,8 @@ public class IWBLCI {
 					if (nameVorhanden == true) {
 						if (typmod == true){
 							allProSys.get(txtPSName.getText()).addProzessmodul(allModules.get(modname));
-							productsTableModel.addRow(new Object[] {"","Prozessmodul", modname});							
 						} else {
 							allProSys.get(txtPSName.getText()).addProzessmodul(allProSys.get(modname));
-							productsTableModel.addRow(new Object[] {"","Subsystem", modname});	
 						}
 						allMNLs.get(txtPSName.getText()).addName(modname);
 //						allMNLs.put(txtPSName.getText(), new ModulNamenListe());
@@ -833,8 +827,6 @@ public class IWBLCI {
 						allBVs.get(txtPSName.getText()).addFluss(akFluss, menge);
 						allProSys.get(txtPSName.getText()).
 							setBedarfsvektor(allBVs.get(txtPSName.getText()).getBV());
-						productsTableModel.addRow(new Object[] {"" ,"Bedarf" 
-								,"" + akFluss.getName() + " ("+ menge + " " + akFluss.getEinheit()+")"});
 						lblStatus3.setText(">>> Der Bedarfsvektor enth\u00e4lt " + 
 								allBVs.get(txtPSName.getText()).getBV().size() + " Fl\u00dcsse <<<");
 						btnWei2.setEnabled(true);						
@@ -890,8 +882,6 @@ public class IWBLCI {
 						allVKs.get(txtPSName.getText()).addFluss(akFluss);
 						allProSys.get(txtPSName.getText()).
 							setVorUndKoppelProdukte(allVKs.get(txtPSName.getText()).getVk());
-						productsTableModel.addRow(new Object[] {"" ,"Vor- oder Koppelpr." 
-								,akFluss.getName()});
 						lblStatus3.setText(">>> Der VK-Vektor enth\u00e4lt " + 
 								allVKs.get(txtPSName.getText()).getVk().size() + " Fl\u00fcsse <<<");										
 					} else {
@@ -947,7 +937,6 @@ public class IWBLCI {
 					if (nameModules == false) {
 						lblStatus4.setText(">>> Es gibt kein Modul mit diesem Namen. <<<");
 					} else {
-						modulesTableModel.addRow(new Object[] {name, "", ""});
 						lblStatus4.setText(">>> Mengenangabe 0 l\u00f6scht einen vorhandenen Fluss. <<<");
 						btnEditModul.setEnabled(false);
 						txtModName3.setEnabled(false);
@@ -1111,6 +1100,11 @@ public class IWBLCI {
 			putValue(SHORT_DESCRIPTION, "Liste aller Fl\u00fcsse");
 		}
 		public void actionPerformed(ActionEvent e) {
+			flowsTableModel.setRowCount(0);
+			for(Fluss fluss : allFlows) {
+				flowsTableModel.addRow(new Object[] {fluss.getName(), fluss.getTyp(), fluss.getEinheit()});
+			}
+			
 			cl.show(panel, "listeFluss");
 		}
 	}
@@ -1121,7 +1115,6 @@ public class IWBLCI {
 			putValue(SHORT_DESCRIPTION, "Liste aller Prozessmodule");
 		}
 		public void actionPerformed(ActionEvent e) {
-
 			modulesTableModel.setRowCount(0);
 			for(String mn : allModules.keySet()) {
 				Prozessmodul akModul = allModules.get(mn);
@@ -1145,6 +1138,28 @@ public class IWBLCI {
 			putValue(SHORT_DESCRIPTION, "Liste aller Produktsysteme");
 		}
 		public void actionPerformed(ActionEvent e) {
+			productsTableModel.setRowCount(0);
+			for(String psn : allProSys.keySet()) {
+				productsTableModel.addRow(new Object[] {psn, "", ""});
+				for (String mni : allMNLs.get(psn).getMnl()){
+					boolean typmod = false;
+					for(String modn2 : allModules.keySet()) {
+						if (mni.equals(modn2)) {
+							typmod = true;
+						}
+					}
+					if (typmod == true){
+						productsTableModel.addRow(new Object[] {"","Prozessmodul", mni});							
+					} else {
+						productsTableModel.addRow(new Object[] {"","Subsystem", mni});	
+					}					
+				}
+				for (Fluss bvf : allBVs.get(psn).getBV().keySet()) {
+					productsTableModel.addRow(new Object[] {"" ,"Bedarf" 
+							,"" + bvf.getName() + " (" + allBVs.get(psn).getBV().get(bvf) + 
+							" " + bvf.getEinheit()+")"});		
+				}			
+			}			
 			cl.show(panel, "listeProdukt");
 		}
 	}
@@ -1258,22 +1273,18 @@ public class IWBLCI {
 					FileInputStream fs = new FileInputStream(chooser.getSelectedFile());
 					ObjectInputStream os = new ObjectInputStream(fs);
 					allFlows.clear();
-					flowsTableModel.setRowCount(0);
 					int nrFlows = os.readInt();
 					for (Integer i=0; i<nrFlows; i++){
 						String name = os.readObject().toString();
 						FlussTyp typ = (FlussTyp)os.readObject();
 						FlussEinheit einheit = (FlussEinheit)os.readObject();
 						allFlows.add(new Fluss(name, typ, einheit));
-						flowsTableModel.addRow(new Object[] {name, typ, einheit});
 					}		
 					allModules.clear();
-					modulesTableModel.setRowCount(0);
 					int nrMods = os.readInt();
 					for (Integer i=0; i<nrMods; i++) {
 						String mn = (String)os.readObject();
 						allModules.put(mn, new Prozessmodul());
-						modulesTableModel.addRow(new Object[] {mn, "", ""});
 						int esize = os.readInt();
 						for (int j=0; j<(esize); j++) {
 							String fname = (String)os.readObject();
@@ -1285,7 +1296,6 @@ public class IWBLCI {
 							}								
 							Double menge = (Double)os.readObject();
 							allModules.get(mn).addFluss(akFluss, menge);
-							modulesTableModel.addRow(new Object[] {"", akFluss.getName(), menge});						
 						}
 						int psize = os.readInt();
 						for (int j=0; j<(psize); j++) {
@@ -1298,14 +1308,12 @@ public class IWBLCI {
 							}								
 							Double menge = (Double)os.readObject();
 							allModules.get(mn).addFluss(akFluss, menge);
-							modulesTableModel.addRow(new Object[] {"", akFluss.getName(), menge});						
 						}
 					}
 					allProSys.clear();
 					allMNLs.clear();
 					allBVs.clear();
 					allVKs.clear();
-					productsTableModel.setRowCount(0);
 					int nrSys = os.readInt();
 					
 					for (Integer i=0; i<nrSys; i++) {
@@ -1315,7 +1323,6 @@ public class IWBLCI {
 							allProSys.put(name, new Produktsystem(name, new HashMap<Fluss, Double>(), 
 									new LinkedList<Fluss>()));							
 						}						
-						productsTableModel.addRow(new Object[] {name, "", ""});
 						allMNLs.put(name, new ModulNamenListe());
 						allBVs.put(name, new Bedarfsvektor());
 						allVKs.put(name, new VorUndKoppelprodukte());
@@ -1329,14 +1336,12 @@ public class IWBLCI {
 							}
 							if (typmod == true){
 								allProSys.get(name).addProzessmodul(allModules.get(mni));
-								productsTableModel.addRow(new Object[] {"","Prozessmodul", mni});							
 							} else {
 								if (allProSys.containsKey(mni) == false) {
 									allProSys.put(mni, new Produktsystem(mni, new HashMap<Fluss, Double>(), 
 											new LinkedList<Fluss>()));							
 								}	
 								allProSys.get(name).addProzessmodul(allProSys.get(mni));
-								productsTableModel.addRow(new Object[] {"","Subsystem", mni});	
 							}
 							allMNLs.get(name).addName(mni);
 							
@@ -1355,8 +1360,6 @@ public class IWBLCI {
 							allBVs.get(name).addFluss(akFluss, bvwert);
 							allProSys.get(name).
 								setBedarfsvektor(allBVs.get(name).getBV());
-							productsTableModel.addRow(new Object[] {"" ,"Bedarf" 
-									,"" + bvname + " ("+ bvwert + " " + akFluss.getEinheit()+")"});							
 						}
 						int nrvk = os.readInt();
 						for (int j=0; j<nrvk; j++) {
@@ -1368,9 +1371,7 @@ public class IWBLCI {
 								}
 							}
 							allVKs.get(name).addFluss(akFluss);
-							allProSys.get(name).setVorUndKoppelProdukte(allVKs.get(name).getVk());
-							productsTableModel.addRow(new Object[] {"" ,"Vor- oder Koppelpr." ,vkname});
-							
+							allProSys.get(name).setVorUndKoppelProdukte(allVKs.get(name).getVk());							
 						}					
 					}
 					os.close();
