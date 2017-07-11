@@ -7,8 +7,10 @@ package de.unistuttgart.iwb.lci;
 import java.util.HashMap;
 
 /**
+ * Diese Klasse dient zur Erzeugung von Prozessmodulen.
+ * 
  * @author Dr.-Ing. Joachim Schwarte
- * @version 0.912
+ * @version 0.924
  */
 
 public class Prozessmodul 
@@ -23,19 +25,48 @@ implements Flussvektoren, Wirkungsvektor {
 	private HashMap<Fluss, Double> pfv = 
 			new HashMap<Fluss, Double>(); //Produktflüsse
 	
-	// Diese Klasse besitzt keinen expliziten Konstruktor, 
-	// d. h. Objekte dieser Klassen können nur mit dem parameterlosen
-	// Standardkonstrukter Fluss() erzeugt werden.
-	// Die beiden Flussvektoren sind hierbei zunächst leer.
+	// Konstruktor:
+	
+	/**
+	 * Der parameterlos Konstruktor erzeugt ein leeres und
+	 * unbenanntes Prozessmodul.
+	 */
+	
+	public Prozessmodul() {
+		super();
+	}
 	
 	// Methoden:
+		
+	/**
+	 * @return
+	 * ... den Elementarflussvektor des Prozessmoduls
+	 */
 	
 	public HashMap<Fluss, Double> getElementarflussvektor() {
 		return efv; 
 	}	
+	
+	/**
+	 * @return
+	 * ... den Produktflussvektor des Prozessmoduls
+	 */
+	
 	public HashMap<Fluss, Double> getProduktflussvektor() {
 		return pfv; 
 	}
+	
+	/**
+	 * Fügt dem Prozessmodul einen quantifizierten Fluss hinzu.
+	 * Die Methode kann für alle Flusstypen verwendet werden.
+	 * @param fluss
+	 * Der Fluss, der dem Prozessmodul hinzugefügt werden soll
+	 * @param wert
+	 * Die Menge, die in das Prozessmodul hinein (negatives
+	 * Vorzeichen) oder aus dem Prozessmodul hinaus (positives 
+	 * Vorzeichen) fliest.
+	 */
+	
 	public void addFluss(Fluss fluss,Double wert) {
 		if (fluss.getTyp() == FlussTyp.Elementar) {
 			efv.put(fluss, wert);
@@ -44,8 +75,12 @@ implements Flussvektoren, Wirkungsvektor {
 		}
 	}
 	
-	/*
-	 * neue Methoden Version 0.912 (24.05.2017)
+	/**
+	 * @param bm
+	 * bezeichnet die zu verwendende Bewertungsmethode
+	 * @return
+	 * ... den Wirkungsvektor, der sich für die angegebene
+	 * Bewertungsmethode ergibt.
 	 */
 	
 	@Override
@@ -64,8 +99,11 @@ implements Flussvektoren, Wirkungsvektor {
 		return wv;
 	}
 	
-	/*
-	 * neue Methoden Version 0.922 (06.07.2017)
+	/**
+	 * Entfernt einen Fluss aus dem betroffenen Flussvektor.
+	 * 
+	 * @param fluss
+	 * der zu entfernende Fluß
 	 */
 	
 	public void removeFluss(Fluss fluss) {

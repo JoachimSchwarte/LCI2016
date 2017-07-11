@@ -6,8 +6,11 @@
 package de.unistuttgart.iwb.lci;
 
 /**
+ * Zusammenstellung derjenigen Werte, die der Parameter "typ"
+ * eines Flussobjekts annehmen darf.
+ * 
  * @author Dr.-Ing. Joachim Schwarte
- * @version 0.9
+ * @version 0.924
  */
 
 public enum FlussTyp {
