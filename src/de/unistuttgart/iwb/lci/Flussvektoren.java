@@ -30,5 +30,6 @@ public interface Flussvektoren {
 	 * @return
 	 * ... den Produktflussvektor des Objekts.
 	 */
+	
 	public HashMap<Fluss, Double> getProduktflussvektor();
 }

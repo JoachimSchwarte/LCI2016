@@ -9,8 +9,10 @@ import java.util.LinkedList;
 import Jama.Matrix;
 
 /**
+ * Diese Klasse dient zur Erzeugung von Produktsystemen.
+ * 
  * @author Dr.-Ing. Joachim Schwarte
- * @version 0.922
+ * @version 0.924
  */
 
 public class Produktsystem 
@@ -33,6 +35,19 @@ implements Flussvektoren, Wirkungsvektor {
 			= new HashMap<Fluss, Double>();
 	
 	// Konstruktor:
+	
+	/**
+	 * Der dreiparametrige Konstruktor erzeugt ein neues
+	 * Produktsystem.
+	 * @param string
+	 * übergibt der Namen des Produktsystems. Dieser kann frei 
+	 * gewählt werden.
+	 * Auf Anwendungsebene ist Namenseindeutigkeit anzustreben. 
+	 * @param f
+	 * ist der Bedarfsvektor
+	 * @param vk
+	 * ist die Liste der Vor- und Koppelprodukte
+	 */
 
 	public Produktsystem(String string, 
 			HashMap<Fluss, Double> f,
@@ -44,12 +59,59 @@ implements Flussvektoren, Wirkungsvektor {
 	
 	// Methoden:
 	
+	/**
+	 * @return
+	 * ... den Namen des Produktsystems.
+	 */
+	
 	public String getName() {
 		return name;
 	}
+	
+	/**
+	 * Fügt dem Produktsystem ein weiteres Modul hinzu.
+	 * Dies kann ein Prozessmodul oder ein anderes Produktsystem
+	 * (Subsystem) sein.
+	 * @param modul
+	 * ist ein Objekt einer Klasse, die das Interface 
+	 * Flussvektoren implementiert.
+	 */
+	
 	public void addProzessmodul(Flussvektoren modul) {
 		modulliste.add(modul);
 	}
+	
+	
+	/**
+	 * @return
+	 * ... den Elementarflussvektor des Produktsystems
+	 * @throws ArithmeticException
+	 * wenn im Skalierungsvektor ein Element mit negativem
+	 * Vorzeichen auftritt. Fehlertext: "Vorzeichenfehler 
+	 * im Skalierungsvektor"
+	 */
+	
+	@Override
+	public HashMap<Fluss, Double> getElementarflussvektor() throws ArithmeticException {
+		aktualisiere();		// siehe unten
+		return efv;
+	}
+	
+	/**
+	 * @return
+	 * ... den Produktflussvektor des Produktsystems
+	 * @throws ArithmeticException
+	 * wenn im Skalierungsvektor ein Element mit negativem
+	 * Vorzeichen auftritt. Fehlertext: "Vorzeichenfehler 
+	 * im Skalierungsvektor"
+	 */
+
+	@Override
+	public HashMap<Fluss, Double> getProduktflussvektor() throws ArithmeticException {
+		aktualisiere();		// siehe unten
+		return pfv;
+	}
+	
 	private void aktualisiere() throws ArithmeticException {
 		LinkedList<Fluss> produktFlussliste = new LinkedList<Fluss>();
 		for(Flussvektoren m : modulliste){
@@ -125,35 +187,40 @@ implements Flussvektoren, Wirkungsvektor {
 		}			
 	}
 	
-	public HashMap<Fluss, Double> getElementarflussvektor() throws ArithmeticException {
-		aktualisiere();
-		return efv;
-	}
-
-	public HashMap<Fluss, Double> getProduktflussvektor() {
-		aktualisiere();
-		return pfv;
-	}
-	
-	/*
-	 * neue Methoden für die GUI-Kommunikation (09.03.2017)
+	/**
+	 * @return
+	 * ... die Anzahl der Module (Prozessmodule und Subsysteme) 
+	 * aus denen sich das Produktsystem zusammensetzt.
 	 */
 	
 	public int getModulAnzahl() {
 		return modulliste.size();
 	}
 	
+	/**
+	 * Überschreibt den vorhandenen Bedarfsvektor
+	 * @param bv
+	 * ist der neue Bedarfsvektor
+	 */
+	
 	public void setBedarfsvektor(HashMap<Fluss, Double> bv) {
 		bedarfsvektor = bv;
 	}
+	
+	/**
+	 * Überschreibt die vorhandene Liste der Vor- und
+	 * Koppelprodukte
+	 * @param vk
+	 * ist die neue Liste der Vor- und Koppelprodukte
+	 */
 	
 	public void setVorUndKoppelProdukte(LinkedList<Fluss> vk) {
 		vorUndKoppelProdukte = vk;
 	}
 
-	/*
-	 * neue Methoden Version 0.913 (24.05.2017)
-	 * vgl. Prozessmodul.java (0.912)
+	/**
+	 * @return
+	 * ... den Wirkungsvektor des Produktsystems
 	 */
 	
 	@Override
