@@ -81,16 +81,13 @@ implements Flussvektoren, Wirkungsvektor {
 		modulliste.add(modul);
 	}
 	
-	
 	/**
-	 * @return
-	 * ... den Elementarflussvektor des Produktsystems
 	 * @throws ArithmeticException
 	 * wenn im Skalierungsvektor ein Element mit negativem
 	 * Vorzeichen auftritt. Fehlertext: "Vorzeichenfehler 
 	 * im Skalierungsvektor"
 	 */
-	
+
 	@Override
 	public HashMap<Fluss, Double> getElementarflussvektor() throws ArithmeticException {
 		aktualisiere();		// siehe unten
@@ -98,8 +95,6 @@ implements Flussvektoren, Wirkungsvektor {
 	}
 	
 	/**
-	 * @return
-	 * ... den Produktflussvektor des Produktsystems
 	 * @throws ArithmeticException
 	 * wenn im Skalierungsvektor ein Element mit negativem
 	 * Vorzeichen auftritt. Fehlertext: "Vorzeichenfehler 
@@ -217,11 +212,6 @@ implements Flussvektoren, Wirkungsvektor {
 	public void setVorUndKoppelProdukte(LinkedList<Fluss> vk) {
 		vorUndKoppelProdukte = vk;
 	}
-
-	/**
-	 * @return
-	 * ... den Wirkungsvektor des Produktsystems
-	 */
 	
 	@Override
 	public HashMap<Wirkungskategorie, Double> getWirkungsvektor(Bewertungsmethode bm) {

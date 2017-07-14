@@ -21,14 +21,14 @@ public interface Flussvektoren {
 	
 	/**
 	 * @return
-	 * ... den Elementarflussvektor des Objekts.
+	 * ... den Elementarflussvektor des aktuellen Objekts.
 	 */
 	
 	public HashMap<Fluss, Double> getElementarflussvektor();
 	
 	/**
 	 * @return
-	 * ... den Produktflussvektor des Objekts.
+	 * ... den Produktflussvektor des aktuellen Objekts.
 	 */
 	
 	public HashMap<Fluss, Double> getProduktflussvektor();

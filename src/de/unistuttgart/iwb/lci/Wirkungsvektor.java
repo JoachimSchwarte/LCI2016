@@ -21,9 +21,9 @@ public interface Wirkungsvektor {
 	/**
 	 * @param bm
 	 * bezeichnet die für die Wirkungsabschätzung zu verwendende
-	 * Bewertungsmethode
+	 * oder bereits verwendete Bewertungsmethode.
 	 * @return
-	 * ... den Wirkungsvektor des Objekts.
+	 * ... den Wirkungsvektor des aktuellen Objekts.
 	 */
 	
 	public HashMap<Wirkungskategorie, Double> getWirkungsvektor(Bewertungsmethode bm);

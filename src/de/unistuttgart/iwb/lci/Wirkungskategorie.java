@@ -6,8 +6,11 @@
 package de.unistuttgart.iwb.lci;
 
 /**
+ * Diese Klasse dient zur Erzeugung von Objekten, die
+ * Wirkungskategorien repräsentieren.
+ * 
  * @author Dr.-Ing. Joachim Schwarte
- * @version 0.910
+ * @version 0.924
  */
 
 public class Wirkungskategorie {
@@ -21,6 +24,17 @@ public class Wirkungskategorie {
 	
 	// Konstruktor basierend auf den Instanzvariablen:
 	
+	/**
+	 * Der zweiparametrige Konstruktor erzeugt ein 
+	 * vollständiges Objekt Klasse Wirkungskategorie.
+	 * @param name
+	 * kann frei gewählt werden.
+	 * Auf Anwendungsebene ist Namenseindeutigkeit anzustreben. 
+	 * @param einheit
+	 * legt die Einheit fest, in der die Wirkungskategorie
+	 * quantifiziert wird.
+	 */
+	
 	public Wirkungskategorie(String name, Wirkungsindikator einheit) {
 		super();
 		this.name = name;
@@ -29,12 +43,22 @@ public class Wirkungskategorie {
 	
 	// Methoden (Getter für die Instanzvariablen):
 
+	/**
+	 * @return
+	 * ... den Namen der Wirkungskategorie.
+	 */
+	
 	public String getName() {
 		return name;
 	}
+	
+	/**
+	 * @return
+	 * ... die Einheit, in der die Wirkungskategorie
+	 * quantifiziert wird.
+	 */
 
 	public Wirkungsindikator getEinheit() {
 		return einheit;
 	}
-
 }

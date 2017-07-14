@@ -37,21 +37,13 @@ implements Flussvektoren, Wirkungsvektor {
 	}
 	
 	// Methoden:
-		
-	/**
-	 * @return
-	 * ... den Elementarflussvektor des Prozessmoduls
-	 */
 	
+	@Override
 	public HashMap<Fluss, Double> getElementarflussvektor() {
 		return efv; 
 	}	
 	
-	/**
-	 * @return
-	 * ... den Produktflussvektor des Prozessmoduls
-	 */
-	
+	@Override
 	public HashMap<Fluss, Double> getProduktflussvektor() {
 		return pfv; 
 	}
@@ -74,14 +66,6 @@ implements Flussvektoren, Wirkungsvektor {
 			pfv.put(fluss, wert);
 		}
 	}
-	
-	/**
-	 * @param bm
-	 * bezeichnet die zu verwendende Bewertungsmethode
-	 * @return
-	 * ... den Wirkungsvektor, der sich für die angegebene
-	 * Bewertungsmethode ergibt.
-	 */
 	
 	@Override
 	public HashMap<Wirkungskategorie, Double> getWirkungsvektor(Bewertungsmethode bm) {
