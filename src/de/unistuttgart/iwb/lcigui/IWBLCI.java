@@ -48,7 +48,7 @@ import java.io.ObjectOutputStream;
 
 /**
  * @author Dr.-Ing. Joachim Schwarte
- * @version 0.923
+ * @version 0.925
  */
 
 public class IWBLCI {
@@ -72,20 +72,28 @@ public class IWBLCI {
 			= new HashMap<String, VorUndKoppelprodukte>();
 	private HashMap<String, ModulNamenListe>allMNLs 
 			= new HashMap<String, ModulNamenListe>();
+	private LinkedList<Wirkungskategorie>allWKs
+			= new LinkedList<Wirkungskategorie>();
 	private final Action newFlowAction 		= new newFlowAction();
 	private final Action newModuleAction 	= new newModuleAction();
 	private final Action newProductAction 	= new newProductAction();
-//	private final Action newWKAction 		= new newWKAction();
-//	private final Action newPBAction 		= new newPBAction();
+	private final Action newWKAction 		= new newWKAction();
+	private final Action newPBAction 		= new newPBAction();
+//	private final Action newCFAction 		= new newCFAction();
+//	private final Action newBMAction 		= new newBMAction();
+//	private final Action newPKenteAction 	= new newPKenteAction();
+//	private final Action newPKtionAction 	= new newPKationAction();
 	private final Action editModuleAction 	= new editModuleAction();
 	private final Action listFlowAction 	= new listFlowAction();
 	private final Action listModuleAction 	= new listModuleAction();
 	private final Action listProductAction 	= new listProductAction();
+	private final Action listWKsAction 	  	= new listWKsAction();
 	private final Action calculateAction 	= new calculateAction();
 	private final Action saveAction 		= new saveAction();
 	private final Action loadAction 		= new loadAction();
 	private final Action aboutAction 		= new aboutAction();
 	private JTextField txtName;
+	private JTextField txtNameWK;
 	private JTextField txtModName;
 	private JTextField txtModName2;
 	private JTextField txtModName3;
@@ -100,13 +108,13 @@ public class IWBLCI {
 	private JTable flowsTable 		= new JTable();
 	private JTable modulesTable 	= new JTable();
 	private JTable productsTable 	= new JTable();
+	private JTable wksTable 		= new JTable();
 	private JTable resultsTable 	= new JTable();
 	DefaultTableModel flowsTableModel 		= new DefaultTableModel(0,3);
 	DefaultTableModel modulesTableModel 	= new DefaultTableModel(0,3);
 	DefaultTableModel productsTableModel 	= new DefaultTableModel(0,3);
+	DefaultTableModel wksTableModel 		= new DefaultTableModel(0,2);
 	DefaultTableModel resultsTableModel 	= new DefaultTableModel(0,3);
-	
-
 
 	/**
 	 * Launch the application.
@@ -136,7 +144,7 @@ public class IWBLCI {
 	 */
 	private void initialize() {
 		frmIwblciVersion = new JFrame();
-		frmIwblciVersion.setTitle("IWB-LCI   Version 0.923");
+		frmIwblciVersion.setTitle("IWB-LCI   Version 0.925");
 		frmIwblciVersion.setBounds(100, 100, 600, 480);
 		frmIwblciVersion.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);		
 		
@@ -338,7 +346,7 @@ public class IWBLCI {
 		JLabel lblInfo4 = new JLabel("Universit\u00e4t Stuttgart");
 		lblInfo4.setFont(new Font("Tahoma", Font.BOLD, 14));
 		panel_4.add(lblInfo4, "cell 1 5,alignx center,aligny top");
-		JLabel lblInfo5 = new JLabel("Version 0.923   10.07.2017");
+		JLabel lblInfo5 = new JLabel("Version 0.925   17.07.2017");
 		lblInfo5.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		panel_4.add(lblInfo5, "cell 1 7,alignx center,aligny top");
 
@@ -420,7 +428,7 @@ public class IWBLCI {
 		JLabel lblTodo4 = new JLabel("");
 		lblTodo4.setFont(new Font("Tahoma", Font.BOLD, 14));
 		panel_9.add(lblTodo4, "cell 1 5,alignx center,aligny top");
-		JLabel lblTodo5 = new JLabel("Version 0.923   10.07.2017");
+		JLabel lblTodo5 = new JLabel("Version 0.925   17.07.2017");
 		lblTodo5.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		panel_9.add(lblTodo5, "cell 1 7,alignx center,aligny top");
 		
@@ -474,7 +482,60 @@ public class IWBLCI {
 		btnFertig3.setEnabled(false);
 		panel_10.add(btnFertig3, "cell 2 5,alignx center");
 				
+		// Panel 11
+		
+		JPanel panel_11 = new JPanel();
+		panel.add(panel_11, "neuWK");
+		panel_11.setLayout(new MigLayout("", "[108px,grow][108px][108px][108px,grow]", 
+				"[20px][20px][20px][20px][20px][20px][20px][20px][20px,grow]"));
+		JLabel lblNewWK = new JLabel("Neue Wirkungskategorie");
+		lblNewWK.setFont(new Font("Tahoma", Font.BOLD, 14));
+		panel_11.add(lblNewWK, "flowy,cell 1 0 2 1,alignx center,growy");	
 
+		JLabel lblName2 = new JLabel("Name der Wirkungskategorie");
+		panel_11.add(lblName2, "cell 1 1,grow");
+		
+		txtNameWK = new JTextField();
+		txtNameWK.setText("");
+		panel_11.add(txtNameWK, "cell 2 1,grow");
+		txtNameWK.setColumns(10);
+		
+		JLabel lblIndi = new JLabel("Indikator");
+		panel_11.add(lblIndi, "cell 1 2,grow");
+		
+		JComboBox<Wirkungsindikator> comboBoxWK = new JComboBox<Wirkungsindikator>();
+		comboBoxWK.setModel(new DefaultComboBoxModel<Wirkungsindikator>(Wirkungsindikator.values()));
+		panel_11.add(comboBoxWK, "cell 2 2,grow");
+		
+		JLabel lblStatusWK = new JLabel(">>> ... <<<");
+		panel_11.add(lblStatusWK, "cell 0 4 4 1,alignx center");
+		
+		JButton btnSpeiWK = new JButton("speichern");
+		panel_11.add(btnSpeiWK, "cell 1 3 2 1,alignx center");	
+		
+		// Panel 12
+		
+		JPanel panel_12 = new JPanel();
+		panel.add(panel_12, "neuPB");
+		panel_12.setLayout(new MigLayout("", "[108px,grow][108px][108px][108px,grow]", 
+				"[20px][20px][20px][20px][20px][20px][20px][20px][20px,grow]"));
+		JLabel lblNewPB = new JLabel("Neue Produkt-Deklaration");
+		lblNewPB.setFont(new Font("Tahoma", Font.BOLD, 14));
+		panel_12.add(lblNewPB, "flowy,cell 1 0 2 1,alignx center,growy");
+		
+		// Panel 13
+		
+		JPanel panel_13 = new JPanel();
+		panel.add(panel_13, "listeWKs");		
+		panel_13.setLayout(new MigLayout("", "[74px,grow]", "[14px][grow]"));	
+		JLabel lblListeDerWKs = new JLabel("Liste der Wirkungskategorien");
+		lblListeDerWKs.setFont(new Font("Tahoma", Font.BOLD, 14));
+		panel_13.add(lblListeDerWKs, "cell 0 0,alignx center,aligny top");		
+		wksTable.setModel(wksTableModel);
+		TableColumnModel tcm5 = wksTable.getColumnModel();
+		tcm5.getColumn(0).setHeaderValue("Name");
+		tcm5.getColumn(1).setHeaderValue("Wirkungsindikator");
+		panel_13.add(new JScrollPane(wksTable), "cell 0 1,alignx center,aligny top");
 		
 		cl.show(panel, "leer");
 		
@@ -510,7 +571,7 @@ public class IWBLCI {
 		JMenuItem mntmProductSystem = new JMenuItem();
 		mntmProductSystem.setAction(newProductAction);
 		mnNew.add(mntmProductSystem);
-		/*
+		
 		JMenuItem mntmWK = new JMenuItem("Wirkungskategorie");
 		mntmWK.setAction(newWKAction);
 		mnNew.add(mntmWK);
@@ -518,8 +579,24 @@ public class IWBLCI {
 		JMenuItem mntmPB = new JMenuItem("ProduktBilanziert");
 		mntmPB.setAction(newPBAction);
 		mnNew.add(mntmPB);
-		*/
+		/*
+		JMenuItem mntmCF = new JMenuItem("CharakterFaktor");
+		mntmCF.setAction(newCFAction);
+		mnNew.add(mntmCF);
 		
+		JMenuItem mntmBM = new JMenuItem("Bewertungsmethode");
+		mntmBM.setAction(newBMAction);
+		mnNew.add(mntmBM);
+		
+		JMenuItem mntmPKente = new JMenuItem("Produktkomponente");
+		mntmPKente.setAction(newPKenteAction);
+		mnNew.add(mntmPKente);
+		
+		JMenuItem mntmPKtio = new JMenuItem("ProduktBilanziert");
+		mntmPKtion.setAction(newPKtionAction);
+		mnNew.add(mntmPKtion);		
+		*/
+			
 		JMenu mnEdit = new JMenu("Edit");
 		menuBar.add(mnEdit);
 		
@@ -541,6 +618,10 @@ public class IWBLCI {
 		JMenuItem mntmProduktsysteme = new JMenuItem("Produktsysteme");
 		mntmProduktsysteme.setAction(listProductAction);
 		mnListe.add(mntmProduktsysteme);
+		
+		JMenuItem mntmWKs = new JMenuItem("Wirkungskategorien");
+		mntmWKs.setAction(listWKsAction);
+		mnListe.add(mntmWKs);
 		
 		JMenu mnBerechnen = new JMenu("Berechnen");
 		menuBar.add(mnBerechnen);
@@ -915,9 +996,40 @@ public class IWBLCI {
 				lblStatus3.setText(">>> ... <<<");
 			}
 		});
+		
+		/*
+		 * neue Wirkungskategorie
+		 */
+		
+		btnSpeiWK.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				String name = txtNameWK.getText();	
+				Wirkungsindikator wi = comboBoxWK.getItemAt(comboBoxWK.getSelectedIndex());
+				if (name.equals("")) {
+					lblStatusWK.setText(">>> Es wurde kein Name angegeben. <<<");
+				} else {
+					boolean nameVorhanden = false;
+					for(Wirkungskategorie wk : allWKs) {
+						if (name.equals(wk.getName())) {
+							nameVorhanden = true;
+						}
+					}
+					if (nameVorhanden == true) {
+						lblStatusWK.setText(">>> Der angegebene Name ist bereits vorhanden. <<<");
+					} else {
+						allWKs.add(new Wirkungskategorie(name, wi));
+						lblStatusWK.setText(">>> Anzahl Wirkungskategorien: " + allWKs.size() + " <<<");
+						txtNameWK.setText("");
+						comboBoxWK.setSelectedIndex(0);
+					}	
+				} 		
+			}
+		});
+
 	
 		/*
-		 * Produktsystem editieren
+		 * Prozessmodul editieren
 		 */
 	
 		btnEditModul.addMouseListener(new MouseAdapter() {
@@ -1059,7 +1171,7 @@ public class IWBLCI {
 			cl.show(panel, "neuProdukt");
 		}
 	}
-	/*
+	
 	private class newWKAction extends AbstractAction {	
 		private static final long serialVersionUID = 226480034134794912L;
 		public newWKAction() {
@@ -1067,20 +1179,19 @@ public class IWBLCI {
 			putValue(SHORT_DESCRIPTION, "neue Wirkungskategorie erfassen");
 		}
 		public void actionPerformed(ActionEvent e) {
-			cl.show(panel, "todo");
+			cl.show(panel, "neuWK");
 		}
 	}
 	private class newPBAction extends AbstractAction {
 		private static final long serialVersionUID = -7489938933445684497L;
 		public newPBAction() {
 			putValue(NAME, "Produkt-Deklaration");
-			putValue(SHORT_DESCRIPTION, "neues Produkt-Deklaration erfassen");
+			putValue(SHORT_DESCRIPTION, "neue Produkt-Deklaration erfassen");
 		}
 		public void actionPerformed(ActionEvent e) {
-			cl.show(panel, "todo");
+			cl.show(panel, "neuPB");
 		}
 	}
-	*/
 	
 	private class editModuleAction extends AbstractAction {
 		private static final long serialVersionUID = -4615227267646047497L;
@@ -1161,6 +1272,21 @@ public class IWBLCI {
 				}			
 			}			
 			cl.show(panel, "listeProdukt");
+		}
+	}
+	private class listWKsAction extends AbstractAction {
+		private static final long serialVersionUID = 3929527112031439132L;
+		public listWKsAction() {
+			putValue(NAME, "Wirkungskategorien");
+			putValue(SHORT_DESCRIPTION, "Liste aller Wirkungskategorien");
+		}
+		public void actionPerformed(ActionEvent e) {
+			wksTableModel.setRowCount(0);
+			for(Wirkungskategorie wk : allWKs) {
+				wksTableModel.addRow(new Object[] {wk.getName(), wk.getEinheit()});
+			}
+			
+			cl.show(panel, "listeWKs");
 		}
 	}
 	private class calculateAction extends AbstractAction {
