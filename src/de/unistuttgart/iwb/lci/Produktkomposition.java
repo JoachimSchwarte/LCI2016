@@ -8,8 +8,10 @@ import java.util.HashMap;
 import java.util.LinkedList;
 
 /**
+ * Diese Klasse dient zur Erzeugung von Produktkompositionen.
+ * 
  * @author Dr.-Ing. Joachim Schwarte
- * @version 0.92
+ * @version 0.924
  */
 
 public class Produktkomposition implements Wirkungsvektor {
@@ -24,6 +26,14 @@ public class Produktkomposition implements Wirkungsvektor {
 	
 	// Konstruktor:
 	
+	/**
+	 * Der einparametrige Konstruktor erzeugt eine benanntes 
+	 * Produktkomposition, die noch keine Komponenten
+	 * enthält.
+	 * @param name
+	 * ist der Name der Produktkomposition.
+	 */
+	
 	public Produktkomposition(String name) {
 		super();
 		this.name = name;
@@ -31,9 +41,23 @@ public class Produktkomposition implements Wirkungsvektor {
 	
 	// Methoden:
 	
+	/**
+	 * @return
+	 * ... den Namen der Produktpomposition.
+	 */
+	
 	public String getName() {
 		return name;
 	}
+	
+	/**
+	 * Ergänzt die Produktkomposition um eine weitere
+	 * Komponente. 
+	 * @param teilprodukt
+	 * ... ist die zu ergänzende Komponente. Dies kann
+	 * ein beliebiges Objekt einer Klasse, die das Interface
+	 * Wirkungsvektor implementiert, sein.
+	 */
 	
 	public void addKomponente(Wirkungsvektor teilprodukt) {
 		zusammensetzung.add(teilprodukt);
@@ -53,5 +77,4 @@ public class Produktkomposition implements Wirkungsvektor {
 		}
 		return wv;
 	}
-
 }

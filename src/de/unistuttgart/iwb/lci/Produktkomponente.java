@@ -8,8 +8,13 @@ package de.unistuttgart.iwb.lci;
 import java.util.HashMap;
 
 /**
+ * Diese Klasse dient zur Erzeugung von Produktkomponenten.
+ * Diese basieren auf Objekten einer beliebigen Klasse,
+ * die das Interface Wirkungsvektor implementiert, und ergänzen
+ * diese durch eine Mengenangabe.
+ * 
  * @author Dr.-Ing. Joachim Schwarte
- * @version 0.92
+ * @version 0.924
  */
 
 public class Produktkomponente implements Wirkungsvektor {
@@ -23,6 +28,20 @@ public class Produktkomponente implements Wirkungsvektor {
 	private double menge;
 	
 	// Konstruktor:
+	
+	/**
+	 * Der dreiparametrige Konstruktor erzeugt eine vollständige
+	 * Produktkomponente.
+	 * @param name
+	 * übergibt der Namen der Produktkomponente. Dieser kann frei 
+	 * gewählt werden.
+	 * Auf Anwendungsebene ist Namenseindeutigkeit anzustreben.
+	 * @param komponente
+	 * ist ein bliebiges Objekt einer Klasse, die das Interface
+	 * Wirkungsvektor implementiert.
+	 * @param menge
+	 * ist die zugehörige Mengenangabe. 
+	 */
 
 	public Produktkomponente(String name, Wirkungsvektor komponente, double menge) {
 		super();
@@ -42,13 +61,29 @@ public class Produktkomponente implements Wirkungsvektor {
 		return wvKomponente;
 	}
 	
+	/**
+	 * @return
+	 * ... den Namen der Produktkomponente.
+	 */
+	
 	public String getName() {
 		return name;
 	}
+	
+	/**
+	 * @return
+	 * ... das Objekt des Interface-Typs Wirkungsvektor,
+	 * dass durch die Produktkomponente quantifiziert wird.
+	 */
 
 	public Wirkungsvektor getKomponente() {
 		return komponente;
 	}
+	
+	/**
+	 * @return
+	 * ... die Mengenangabe.
+	 */
 
 	public double getMenge() {
 		return menge;
