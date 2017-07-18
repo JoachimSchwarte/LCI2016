@@ -74,20 +74,27 @@ public class IWBLCI {
 			= new HashMap<String, ModulNamenListe>();
 	private LinkedList<Wirkungskategorie>allWKs
 			= new LinkedList<Wirkungskategorie>();
+	private HashMap<String, ProduktBilanziert>allPBs 
+			= new HashMap<String, ProduktBilanziert>();
 	private final Action newFlowAction 		= new newFlowAction();
 	private final Action newModuleAction 	= new newModuleAction();
 	private final Action newProductAction 	= new newProductAction();
 	private final Action newWKAction 		= new newWKAction();
 	private final Action newPBAction 		= new newPBAction();
-//	private final Action newCFAction 		= new newCFAction();
-//	private final Action newBMAction 		= new newBMAction();
-//	private final Action newPKenteAction 	= new newPKenteAction();
-//	private final Action newPKtionAction 	= new newPKationAction();
+	private final Action newCFAction 		= new newCFAction();
+	private final Action newBMAction 		= new newBMAction();
+	private final Action newPKenteAction 	= new newPKenteAction();
+	private final Action newPKtionAction 	= new newPKtionAction();
 	private final Action editModuleAction 	= new editModuleAction();
 	private final Action listFlowAction 	= new listFlowAction();
 	private final Action listModuleAction 	= new listModuleAction();
 	private final Action listProductAction 	= new listProductAction();
 	private final Action listWKsAction 	  	= new listWKsAction();
+	private final Action listPBsAction 	  	= new listPBsAction();
+	private final Action listCFsAction 	  	= new listCFsAction();
+	private final Action listBMsAction 	  	= new listBMsAction();
+	private final Action listPKentesAction 	= new listPKentesAction();
+	private final Action listPKtionsAction 	= new listPKtionsAction();
 	private final Action calculateAction 	= new calculateAction();
 	private final Action saveAction 		= new saveAction();
 	private final Action loadAction 		= new loadAction();
@@ -105,15 +112,30 @@ public class IWBLCI {
 	private JTextField txtPSName;
 	private JTextField txtBV;
 	private JTextField txtBVMenge;
+	// Panel 12; Neue Produktdeklaration
+	private JTextField txtP12n1; 	// Name des Produkts
+	private JTextField txtP12n2;	// Wirkungskategorie
+	private JTextField txtP12n3;	// Menge
+	private JTextField txtP12n4;	// Bwertungsmethode
 	private JTable flowsTable 		= new JTable();
 	private JTable modulesTable 	= new JTable();
 	private JTable productsTable 	= new JTable();
 	private JTable wksTable 		= new JTable();
+//	private JTable pbsTable 		= new JTable();
+//	private JTable cfsTable 		= new JTable();
+//	private JTable bmsTable 		= new JTable();
+//	private JTable pkentesTable 	= new JTable();
+//	private JTable pktionsTable 	= new JTable();
 	private JTable resultsTable 	= new JTable();
 	DefaultTableModel flowsTableModel 		= new DefaultTableModel(0,3);
 	DefaultTableModel modulesTableModel 	= new DefaultTableModel(0,3);
 	DefaultTableModel productsTableModel 	= new DefaultTableModel(0,3);
 	DefaultTableModel wksTableModel 		= new DefaultTableModel(0,2);
+//	DefaultTableModel pbsTableModel 		= new DefaultTableModel(0,3);
+//	DefaultTableModel cfsTableModel 		= new DefaultTableModel(0,3);
+//	DefaultTableModel bmsTableModel 		= new DefaultTableModel(0,3);
+//	DefaultTableModel pkenteTableModel 		= new DefaultTableModel(0,3);
+//	DefaultTableModel pktionTableModel 		= new DefaultTableModel(0,3);
 	DefaultTableModel resultsTableModel 	= new DefaultTableModel(0,3);
 
 	/**
@@ -346,7 +368,7 @@ public class IWBLCI {
 		JLabel lblInfo4 = new JLabel("Universit\u00e4t Stuttgart");
 		lblInfo4.setFont(new Font("Tahoma", Font.BOLD, 14));
 		panel_4.add(lblInfo4, "cell 1 5,alignx center,aligny top");
-		JLabel lblInfo5 = new JLabel("Version 0.925   17.07.2017");
+		JLabel lblInfo5 = new JLabel("Version 0.925   18.07.2017");
 		lblInfo5.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		panel_4.add(lblInfo5, "cell 1 7,alignx center,aligny top");
 
@@ -428,7 +450,7 @@ public class IWBLCI {
 		JLabel lblTodo4 = new JLabel("");
 		lblTodo4.setFont(new Font("Tahoma", Font.BOLD, 14));
 		panel_9.add(lblTodo4, "cell 1 5,alignx center,aligny top");
-		JLabel lblTodo5 = new JLabel("Version 0.925   17.07.2017");
+		JLabel lblTodo5 = new JLabel("Version 0.925   18.07.2017");
 		lblTodo5.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		panel_9.add(lblTodo5, "cell 1 7,alignx center,aligny top");
 		
@@ -519,9 +541,57 @@ public class IWBLCI {
 		panel.add(panel_12, "neuPB");
 		panel_12.setLayout(new MigLayout("", "[108px,grow][108px][108px][108px,grow]", 
 				"[20px][20px][20px][20px][20px][20px][20px][20px][20px,grow]"));
-		JLabel lblNewPB = new JLabel("Neue Produkt-Deklaration");
-		lblNewPB.setFont(new Font("Tahoma", Font.BOLD, 14));
-		panel_12.add(lblNewPB, "flowy,cell 1 0 2 1,alignx center,growy");
+		JLabel lblP12n2 = new JLabel("Neue Produktdeklaration");
+		lblP12n2.setFont(new Font("Tahoma", Font.BOLD, 14));
+		panel_12.add(lblP12n2, "flowy,cell 1 0 2 1,alignx center,growy");
+		
+		JLabel lblP12n3 = new JLabel("Name der Produktdeklaration");
+		panel_12.add(lblP12n3, "cell 1 1,grow");
+		
+		txtP12n1 = new JTextField();
+		txtP12n1.setText("");
+		panel_12.add(txtP12n1, "cell 2 1,grow");
+		txtP12n1.setColumns(10);
+		
+		JLabel lblP12n6 = new JLabel("Bewertungsmethode");
+		panel_12.add(lblP12n6, "cell 1 2,grow");
+		
+		txtP12n4 = new JTextField();
+		txtP12n4.setText("");
+		panel_12.add(txtP12n4, "cell 2 2,grow");
+		txtP12n4.setColumns(10);
+		
+		JLabel lblP12n1 = new JLabel(">>> ... <<<");
+		panel_12.add(lblP12n1, "cell 0 7 4 1,alignx center");
+		
+		JButton btnP12n1 = new JButton("neue Produktdeklaration anlegen");
+		panel_12.add(btnP12n1, "cell 1 3 2 1,alignx center");
+		
+		JLabel lblP12n4 = new JLabel("Wirkungskategorie");
+		panel_12.add(lblP12n4, "cell 1 4,grow");
+		
+		txtP12n2 = new JTextField();
+		txtP12n2.setText("");
+		panel_12.add(txtP12n2, "cell 2 4,grow");
+		txtP12n2.setColumns(10);
+		txtP12n2.setEnabled(false);
+		
+		JLabel lblP12n5 = new JLabel("Menge");
+		panel_12.add(lblP12n5, "cell 1 5,grow");
+		
+		txtP12n3 = new JTextField();
+		txtP12n3.setText("");
+		panel_12.add(txtP12n3, "cell 2 5,grow");
+		txtP12n3.setColumns(10);
+		txtP12n3.setEnabled(false);
+		
+		JButton btnP12n2 = new JButton("Wirkung hinzuf\u00fcgen");
+		btnP12n2.setEnabled(false);
+		panel_12.add(btnP12n2, "cell 1 6,alignx center");
+		
+		JButton btnP12n3 = new JButton("fertig");
+		btnP12n3.setEnabled(false);
+		panel_12.add(btnP12n3, "cell 2 6,alignx center");
 		
 		// Panel 13
 		
@@ -572,30 +642,29 @@ public class IWBLCI {
 		mntmProductSystem.setAction(newProductAction);
 		mnNew.add(mntmProductSystem);
 		
-		JMenuItem mntmWK = new JMenuItem("Wirkungskategorie");
+		JMenuItem mntmWK = new JMenuItem();
 		mntmWK.setAction(newWKAction);
 		mnNew.add(mntmWK);
 		
-		JMenuItem mntmPB = new JMenuItem("ProduktBilanziert");
+		JMenuItem mntmPB = new JMenuItem();
 		mntmPB.setAction(newPBAction);
 		mnNew.add(mntmPB);
-		/*
-		JMenuItem mntmCF = new JMenuItem("CharakterFaktor");
+		
+		JMenuItem mntmCF = new JMenuItem();
 		mntmCF.setAction(newCFAction);
 		mnNew.add(mntmCF);
 		
-		JMenuItem mntmBM = new JMenuItem("Bewertungsmethode");
+		JMenuItem mntmBM = new JMenuItem();
 		mntmBM.setAction(newBMAction);
 		mnNew.add(mntmBM);
 		
-		JMenuItem mntmPKente = new JMenuItem("Produktkomponente");
+		JMenuItem mntmPKente = new JMenuItem();
 		mntmPKente.setAction(newPKenteAction);
 		mnNew.add(mntmPKente);
 		
-		JMenuItem mntmPKtio = new JMenuItem("ProduktBilanziert");
+		JMenuItem mntmPKtion = new JMenuItem();
 		mntmPKtion.setAction(newPKtionAction);
-		mnNew.add(mntmPKtion);		
-		*/
+		mnNew.add(mntmPKtion);				
 			
 		JMenu mnEdit = new JMenu("Edit");
 		menuBar.add(mnEdit);
@@ -607,21 +676,41 @@ public class IWBLCI {
 		JMenu mnListe = new JMenu("Liste");
 		menuBar.add(mnListe);
 		
-		JMenuItem mntmFlsse = new JMenuItem("Fl\u00FCsse");
+		JMenuItem mntmFlsse = new JMenuItem();
 		mntmFlsse.setAction(listFlowAction);
 		mnListe.add(mntmFlsse);
 		
-		JMenuItem mntmProzessmodule = new JMenuItem("Prozessmodule");
+		JMenuItem mntmProzessmodule = new JMenuItem();
 		mntmProzessmodule.setAction(listModuleAction);
 		mnListe.add(mntmProzessmodule);
 		
-		JMenuItem mntmProduktsysteme = new JMenuItem("Produktsysteme");
+		JMenuItem mntmProduktsysteme = new JMenuItem();
 		mntmProduktsysteme.setAction(listProductAction);
 		mnListe.add(mntmProduktsysteme);
-		
-		JMenuItem mntmWKs = new JMenuItem("Wirkungskategorien");
+
+		JMenuItem mntmWKs = new JMenuItem();
 		mntmWKs.setAction(listWKsAction);
 		mnListe.add(mntmWKs);
+
+		JMenuItem mntmPBs = new JMenuItem();
+		mntmPBs.setAction(listPBsAction);
+		mnListe.add(mntmPBs);	
+		
+		JMenuItem mntmCFs = new JMenuItem();
+		mntmCFs.setAction(listCFsAction);
+		mnListe.add(mntmCFs);
+
+		JMenuItem mntmBMs = new JMenuItem();
+		mntmBMs.setAction(listBMsAction);
+		mnListe.add(mntmBMs);		
+
+		JMenuItem mntmPKentes = new JMenuItem();
+		mntmPKentes.setAction(listPKentesAction);
+		mnListe.add(mntmPKentes);
+
+		JMenuItem mntmPKtions = new JMenuItem();
+		mntmPKtions.setAction(listPKtionsAction);
+		mnListe.add(mntmPKtions);
 		
 		JMenu mnBerechnen = new JMenu("Berechnen");
 		menuBar.add(mnBerechnen);
@@ -1026,6 +1115,116 @@ public class IWBLCI {
 				} 		
 			}
 		});
+		
+		/*
+		 * neue Produktdeklaration (= neues ProduktBilanziert-Objekt)
+		 */
+
+		btnP12n1.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				String name = txtP12n1.getText();	
+				if (name.equals("")) {
+					lblP12n1.setText(">>> Es wurde kein Name angegeben. <<<");
+				} else {
+					boolean nameVorhanden = false;
+					
+					for(String mod : allModules.keySet()) {
+						if (name.equals(mod)) {
+							nameVorhanden = true;
+						}
+					}
+					for(String mod : allProSys.keySet()) {
+						if (name.equals(mod)) {
+							nameVorhanden = true;
+						}
+					}
+					for(String mod : allPBs.keySet()) {
+						if (name.equals(mod)) {
+							nameVorhanden = true;
+						}
+					}
+					
+					// auch Produktkomponente und Produktkomposition müssen 
+					// ausgeschlossen werden!!!
+					
+					if (nameVorhanden == true) {
+						lblP12n1.setText(">>> Der angegebene Name ist bereits vorhanden. <<<");
+					} else {
+						allPBs.put(name, new ProduktBilanziert(name));
+						lblP12n1.setText(">>> Anzahl Produktdeklarationen: " + allPBs.size() + " <<<");
+						btnP12n1.setEnabled(false);
+						txtP12n1.setEnabled(false);
+						btnP12n2.setEnabled(true);
+						txtP12n2.setEnabled(true);
+						txtP12n3.setEnabled(true);
+					}	
+				} 		
+			}
+		});
+		
+		btnP12n2.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				String fname = txtP12n2.getText();
+				String fmenge = txtP12n3.getText();
+				Double menge;
+				try {
+					menge = Double.parseDouble(fmenge);
+				} catch (NumberFormatException e){
+					menge = 0.0;
+				}
+				if (fname.equals("") || (menge == 0.0)) {
+					lblP12n1.setText(">>> unvollst\u00e4ndige Eingabe <<<");
+				} else {
+					boolean nameVorhanden = false;
+					for(Wirkungskategorie wk1 : allWKs) {
+						if (fname.equals(wk1.getName())) {
+							nameVorhanden = true;
+						}
+					}
+					if (nameVorhanden == true) {
+						Wirkungskategorie wk2 = null;
+						for(Wirkungskategorie wk1 : allWKs){
+							if (fname.equals(wk1.getName())){
+								wk2 = wk1;
+							}
+						}
+						String mname = txtP12n1.getText();
+						allPBs.get(mname).addWirkung(wk2, menge);
+						txtP12n2.setText("");
+						txtP12n3.setText("");
+						btnP12n3.setEnabled(true);
+						int anzPWKs = allPBs.get(mname).getWirkungsvektor(null).size();
+						
+						// Bewertungsmethode = null
+						// ACHTUNG: zusätzliches Abfragefeld erforderlich.
+						
+						lblP12n1.setText(">>> Die Produktdeklaration " + mname + " besitzt " +
+								anzPWKs + " Wirkungen <<<");
+						
+					} else {
+						lblP12n1.setText(">>> unbekannte Wirkung <<<");
+					}					
+				}
+			}
+		});
+		
+		btnP12n3.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				btnP12n1.setEnabled(true);
+				txtP12n2.setText("");
+				txtP12n3.setText("");
+				txtP12n1.setText("");
+				btnP12n2.setEnabled(false);
+				btnP12n3.setEnabled(false);
+				txtP12n1.setEnabled(true);
+				txtP12n2.setEnabled(false);
+				txtP12n3.setEnabled(false);
+				lblP12n1.setText(">>> ... <<<");
+			}
+		});
 
 	
 		/*
@@ -1185,11 +1384,51 @@ public class IWBLCI {
 	private class newPBAction extends AbstractAction {
 		private static final long serialVersionUID = -7489938933445684497L;
 		public newPBAction() {
-			putValue(NAME, "Produkt-Deklaration");
-			putValue(SHORT_DESCRIPTION, "neue Produkt-Deklaration erfassen");
+			putValue(NAME, "Produktdeklaration");
+			putValue(SHORT_DESCRIPTION, "neue Produktdeklaration erfassen");
 		}
 		public void actionPerformed(ActionEvent e) {
 			cl.show(panel, "neuPB");
+		}
+	}
+	private class newCFAction extends AbstractAction {
+		private static final long serialVersionUID = -7489938933445684497L;
+		public newCFAction() {
+			putValue(NAME, "Charakterisierungsfaktor");
+			putValue(SHORT_DESCRIPTION, "neuen Charakterisierungsfaktor erfassen");
+		}
+		public void actionPerformed(ActionEvent e) {
+			cl.show(panel, "todo");
+		}
+	}
+	private class newBMAction extends AbstractAction {
+		private static final long serialVersionUID = -7489938933445684497L;
+		public newBMAction() {
+			putValue(NAME, "Bewertungsmethode");
+			putValue(SHORT_DESCRIPTION, "neue Bewertungsmethode erfassen");
+		}
+		public void actionPerformed(ActionEvent e) {
+			cl.show(panel, "todo");
+		}
+	}
+	private class newPKenteAction extends AbstractAction {
+		private static final long serialVersionUID = -7489938933445684497L;
+		public newPKenteAction() {
+			putValue(NAME, "Produktkomponente");
+			putValue(SHORT_DESCRIPTION, "neue Produktkomponente erfassen");
+		}
+		public void actionPerformed(ActionEvent e) {
+			cl.show(panel, "todo");
+		}
+	}
+	private class newPKtionAction extends AbstractAction {
+		private static final long serialVersionUID = -7489938933445684497L;
+		public newPKtionAction() {
+			putValue(NAME, "Produktkomposition");
+			putValue(SHORT_DESCRIPTION, "neue Produktkomposition erfassen");
+		}
+		public void actionPerformed(ActionEvent e) {
+			cl.show(panel, "todo");
 		}
 	}
 	
@@ -1289,6 +1528,57 @@ public class IWBLCI {
 			cl.show(panel, "listeWKs");
 		}
 	}
+	private class listPBsAction extends AbstractAction {
+		private static final long serialVersionUID = 3929527112031439132L;
+		public listPBsAction() {
+			putValue(NAME, "Produktdeklarationen");
+			putValue(SHORT_DESCRIPTION, "Liste aller Produktdeklarationen");
+		}
+		public void actionPerformed(ActionEvent e) {
+			cl.show(panel, "todo");
+		}
+	}
+	private class listCFsAction extends AbstractAction {
+		private static final long serialVersionUID = 3929527112031439132L;
+		public listCFsAction() {
+			putValue(NAME, "Charakterisierungsfaktoren");
+			putValue(SHORT_DESCRIPTION, "Liste aller Charakterisierungsfaktoren");
+		}
+		public void actionPerformed(ActionEvent e) {
+			cl.show(panel, "todo");
+		}
+	}
+	private class listBMsAction extends AbstractAction {
+		private static final long serialVersionUID = 3929527112031439132L;
+		public listBMsAction() {
+			putValue(NAME, "Bewertungsmethoden");
+			putValue(SHORT_DESCRIPTION, "Liste aller Bewertungsmethoden");
+		}
+		public void actionPerformed(ActionEvent e) {
+			cl.show(panel, "todo");
+		}
+	}
+	private class listPKentesAction extends AbstractAction {
+		private static final long serialVersionUID = 3929527112031439132L;
+		public listPKentesAction() {
+			putValue(NAME, "Produktkomponenten");
+			putValue(SHORT_DESCRIPTION, "Liste aller Produktkomponenten");
+		}
+		public void actionPerformed(ActionEvent e) {
+			cl.show(panel, "todo");
+		}
+	}
+	private class listPKtionsAction extends AbstractAction {
+		private static final long serialVersionUID = 3929527112031439132L;
+		public listPKtionsAction() {
+			putValue(NAME, "Produktkompositionen");
+			putValue(SHORT_DESCRIPTION, "Liste aller Produktkompositionen");
+		}
+		public void actionPerformed(ActionEvent e) {
+			cl.show(panel, "todo");
+		}
+	}
+
 	private class calculateAction extends AbstractAction {
 		private static final long serialVersionUID = 7449057427765901652L;
 		public calculateAction() {
