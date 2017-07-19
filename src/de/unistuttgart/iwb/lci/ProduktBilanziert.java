@@ -13,7 +13,7 @@ import java.util.HashMap;
  * Produkt").
  * 
  * @author Dr.-Ing. Joachim Schwarte
- * @version 0.924
+ * @version 0.925
  */
 
 public class ProduktBilanziert 
@@ -24,6 +24,7 @@ implements Wirkungsvektor {
 	// Instanzvariablen:
 	
 	private String name;
+	private Bewertungsmethode bm;
 	private HashMap<Wirkungskategorie, Double> wvAlle = new HashMap<Wirkungskategorie, Double>();
 	
 	// Konstruktor:
@@ -42,6 +43,26 @@ implements Wirkungsvektor {
 	}
 
 	// Methoden:
+	
+	/**
+	 * Legt die (wesentliche) Bewertungsmethode fest.
+	 * @param bm1
+	 * Die (wesentliche) Bewertungsmethode
+	 */
+	
+	public void setBM(Bewertungsmethode bm1) {
+		bm = bm1;
+	}
+	
+	/**
+	 * @return
+	 * ... die (wesentliche) Bewertungsmethode für das vorliegende
+	 * bilanzierte Produkt (= Produktdeklaration)
+	 */
+	
+	public Bewertungsmethode getBM() {
+		return bm;
+	}
 	
 	/**
 	 * Fügt dem bilanzierten Produkt eine Wirkungskategorie und

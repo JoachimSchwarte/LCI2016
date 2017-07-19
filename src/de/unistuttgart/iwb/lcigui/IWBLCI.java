@@ -61,22 +61,24 @@ public class IWBLCI {
 	private JFrame frmIwblciVersion;
 	private JPanel panel = new JPanel();
 	private CardLayout cl = new CardLayout(0, 0);
-	private LinkedList<Fluss>allFlows 
-			= new LinkedList<Fluss>();
-	private HashMap<String, Prozessmodul>allModules 
-			= new HashMap<String, Prozessmodul>();
-	private HashMap<String, Produktsystem>allProSys 
-			= new HashMap<String, Produktsystem>();
-	private HashMap<String, Bedarfsvektor>allBVs 
-			= new HashMap<String, Bedarfsvektor>();
-	private HashMap<String, VorUndKoppelprodukte>allVKs 
-			= new HashMap<String, VorUndKoppelprodukte>();
-	private HashMap<String, ModulNamenListe>allMNLs 
-			= new HashMap<String, ModulNamenListe>();
-	private LinkedList<Wirkungskategorie>allWKs
-			= new LinkedList<Wirkungskategorie>();
-	private HashMap<String, ProduktBilanziert>allPBs 
-			= new HashMap<String, ProduktBilanziert>();
+	private LinkedList<Fluss>allFlows = 
+			new LinkedList<Fluss>();
+	private HashMap<String, Prozessmodul>allModules =
+			new HashMap<String, Prozessmodul>();
+	private HashMap<String, Produktsystem>allProSys = 
+			new HashMap<String, Produktsystem>();
+	private HashMap<String, Bedarfsvektor>allBVs = 
+			new HashMap<String, Bedarfsvektor>();
+	private HashMap<String, VorUndKoppelprodukte>allVKs = 
+			new HashMap<String, VorUndKoppelprodukte>();
+	private HashMap<String, ModulNamenListe>allMNLs = 
+			new HashMap<String, ModulNamenListe>();
+	private LinkedList<Wirkungskategorie>allWKs = 
+			new LinkedList<Wirkungskategorie>();
+	private HashMap<String, ProduktBilanziert>allPBs = 
+			new HashMap<String, ProduktBilanziert>();
+	private HashMap<String, Bewertungsmethode>allBWs = 
+			new HashMap<String, Bewertungsmethode>();
 	private final Action newFlowAction 		= new newFlowAction();
 	private final Action newModuleAction 	= new newModuleAction();
 	private final Action newProductAction 	= new newProductAction();
@@ -122,7 +124,7 @@ public class IWBLCI {
 	private JTable modulesTable 	= new JTable();
 	private JTable productsTable 	= new JTable();
 	private JTable wksTable 		= new JTable();
-//	private JTable pbsTable 		= new JTable();
+	private JTable pbsTable 		= new JTable();
 //	private JTable cfsTable 		= new JTable();
 //	private JTable bmsTable 		= new JTable();
 //	private JTable pkentesTable 	= new JTable();
@@ -132,7 +134,7 @@ public class IWBLCI {
 	DefaultTableModel modulesTableModel 	= new DefaultTableModel(0,3);
 	DefaultTableModel productsTableModel 	= new DefaultTableModel(0,3);
 	DefaultTableModel wksTableModel 		= new DefaultTableModel(0,2);
-//	DefaultTableModel pbsTableModel 		= new DefaultTableModel(0,3);
+	DefaultTableModel pbsTableModel 		= new DefaultTableModel(0,3);
 //	DefaultTableModel cfsTableModel 		= new DefaultTableModel(0,3);
 //	DefaultTableModel bmsTableModel 		= new DefaultTableModel(0,3);
 //	DefaultTableModel pkenteTableModel 		= new DefaultTableModel(0,3);
@@ -621,6 +623,21 @@ public class IWBLCI {
 		tcm5.getColumn(0).setHeaderValue("Name");
 		tcm5.getColumn(1).setHeaderValue("Wirkungsindikator");
 		panel_13.add(new JScrollPane(wksTable), "cell 0 1,alignx center,aligny top");
+		
+		// Panel 14
+		
+		JPanel panel_14 = new JPanel();
+		panel.add(panel_14, "listePBs");
+		panel_14.setLayout(new MigLayout("", "[74px,grow]", "[14px][grow]"));	
+		JLabel lblListeDerPBs = new JLabel("Liste der Produktdeklarationen");
+		lblListeDerPBs.setFont(new Font("Tahoma", Font.BOLD, 14));
+		panel_14.add(lblListeDerPBs, "cell 0 0,alignx center,aligny top");		
+		pbsTable.setModel(pbsTableModel);
+		TableColumnModel tcm6 = pbsTable.getColumnModel();
+		tcm6.getColumn(0).setHeaderValue("Produkt / Bewertung");
+		tcm6.getColumn(1).setHeaderValue("Wirkungskategorie");
+		tcm6.getColumn(2).setHeaderValue("Menge");
+		panel_14.add(new JScrollPane(pbsTable), "cell 0 1,alignx center,aligny top");
 		
 		cl.show(panel, "leer");
 		
@@ -1166,13 +1183,34 @@ public class IWBLCI {
 					if (nameVorhanden == true) {
 						lblP12n1.setText(">>> Der angegebene Name ist bereits vorhanden. <<<");
 					} else {
-						allPBs.put(name, new ProduktBilanziert(name));
-						lblP12n1.setText(">>> Anzahl Produktdeklarationen: " + allPBs.size() + " <<<");
-						btnP12n1.setEnabled(false);
-						txtP12n1.setEnabled(false);
-						btnP12n2.setEnabled(true);
-						txtP12n2.setEnabled(true);
-						txtP12n3.setEnabled(true);
+						String bwName = txtP12n4.getText();	
+						boolean bwNew = chbP12n1.isSelected();
+						boolean bwVorhanden = false;
+						for(String bw : allBWs.keySet()) {
+							if (name.equals(bw)) {
+								bwVorhanden = true;
+							}
+						}
+						if (bwVorhanden == false && bwNew == false) {
+							lblP12n1.setText(">>> Die Bewertungsmethode ist unbekannt. <<<");
+						} else {
+							if (bwVorhanden == false) {
+								Bewertungsmethode bwNeu = new Bewertungsmethode(bwName);
+								allBWs.put(bwName, bwNeu);
+							}
+							Bewertungsmethode bwNeu = allBWs.get(bwName);
+							allPBs.put(name, new ProduktBilanziert(name));
+							allPBs.get(name).setBM(bwNeu);
+							lblP12n1.setText(">>> Anzahl Produktdeklarationen: " + allPBs.size() + " <<<");
+							btnP12n1.setEnabled(false);
+							txtP12n1.setEnabled(false);
+							btnP12n2.setEnabled(true);
+							txtP12n2.setEnabled(true);
+							txtP12n3.setEnabled(true);	
+							txtP12n4.setEnabled(false);	
+							chbP12n1.setEnabled(false);
+							chbP12n2.setEnabled(true);
+						}
 					}	
 				} 		
 			}
@@ -1182,6 +1220,7 @@ public class IWBLCI {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				String fname = txtP12n2.getText();
+				boolean wkNew = chbP12n2.isSelected();
 				String fmenge = txtP12n3.getText();
 				Double menge;
 				try {
@@ -1205,15 +1244,19 @@ public class IWBLCI {
 								wk2 = wk1;
 							}
 						}
+
 						String mname = txtP12n1.getText();
+						String bmName = txtP12n4.getText();
+						if (wkNew == true) {
+							allBWs.get(bmName).addWK(wk2);
+						}
 						allPBs.get(mname).addWirkung(wk2, menge);
 						txtP12n2.setText("");
 						txtP12n3.setText("");
 						btnP12n3.setEnabled(true);
-						int anzPWKs = allPBs.get(mname).getWirkungsvektor(null).size();
+						int anzPWKs = allPBs.get(mname).getWirkungsvektor(allBWs.get(bmName)).size();
 						
-						// Bewertungsmethode = null
-						// ACHTUNG: zusätzliches Abfragefeld erforderlich.
+
 						
 						lblP12n1.setText(">>> Die Produktdeklaration " + mname + " besitzt " +
 								anzPWKs + " Wirkungen <<<");
@@ -1550,7 +1593,17 @@ public class IWBLCI {
 			putValue(SHORT_DESCRIPTION, "Liste aller Produktdeklarationen");
 		}
 		public void actionPerformed(ActionEvent e) {
-			cl.show(panel, "todo");
+			pbsTableModel.setRowCount(0);
+			for(String mn : allPBs.keySet()) {
+				ProduktBilanziert akPB = allPBs.get(mn);
+				pbsTableModel.addRow(new Object[] {mn + " / " + akPB.getBM().getName(), "", ""});
+				Bewertungsmethode akBM = akPB.getBM();
+				for(Wirkungskategorie w : akPB.getWirkungsvektor(akBM).keySet()){
+					pbsTableModel.addRow(new Object[] {"", w.getName(), 
+							akPB.getWirkungsvektor(akBM).get(w)});
+				}						
+			}		
+			cl.show(panel, "listePBs");
 		}
 	}
 	private class listCFsAction extends AbstractAction {
