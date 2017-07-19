@@ -36,6 +36,7 @@ import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JTable;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -368,7 +369,7 @@ public class IWBLCI {
 		JLabel lblInfo4 = new JLabel("Universit\u00e4t Stuttgart");
 		lblInfo4.setFont(new Font("Tahoma", Font.BOLD, 14));
 		panel_4.add(lblInfo4, "cell 1 5,alignx center,aligny top");
-		JLabel lblInfo5 = new JLabel("Version 0.925   18.07.2017");
+		JLabel lblInfo5 = new JLabel("Version 0.925   19.07.2017");
 		lblInfo5.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		panel_4.add(lblInfo5, "cell 1 7,alignx center,aligny top");
 
@@ -450,7 +451,7 @@ public class IWBLCI {
 		JLabel lblTodo4 = new JLabel("");
 		lblTodo4.setFont(new Font("Tahoma", Font.BOLD, 14));
 		panel_9.add(lblTodo4, "cell 1 5,alignx center,aligny top");
-		JLabel lblTodo5 = new JLabel("Version 0.925   18.07.2017");
+		JLabel lblTodo5 = new JLabel("Version 0.925   19.07.2017");
 		lblTodo5.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		panel_9.add(lblTodo5, "cell 1 7,alignx center,aligny top");
 		
@@ -540,7 +541,7 @@ public class IWBLCI {
 		JPanel panel_12 = new JPanel();
 		panel.add(panel_12, "neuPB");
 		panel_12.setLayout(new MigLayout("", "[108px,grow][108px][108px][108px,grow]", 
-				"[20px][20px][20px][20px][20px][20px][20px][20px][20px,grow]"));
+				"[20px][20px][20px][20px][20px][20px][20px][20px][20px][20px][20px,grow]"));
 		JLabel lblP12n2 = new JLabel("Neue Produktdeklaration");
 		lblP12n2.setFont(new Font("Tahoma", Font.BOLD, 14));
 		panel_12.add(lblP12n2, "flowy,cell 1 0 2 1,alignx center,growy");
@@ -561,37 +562,51 @@ public class IWBLCI {
 		panel_12.add(txtP12n4, "cell 2 2,grow");
 		txtP12n4.setColumns(10);
 		
+		JLabel lblP12n8 = new JLabel("... neu anlegen, wenn nicht vorhanden");
+		panel_12.add(lblP12n8, "cell 1 3,grow");
+		
+		JCheckBox chbP12n1 = new JCheckBox();
+		panel_12.add(chbP12n1, "cell 2 3,grow");
+		chbP12n1.setEnabled(true);
+		
 		JLabel lblP12n1 = new JLabel(">>> ... <<<");
-		panel_12.add(lblP12n1, "cell 0 7 4 1,alignx center");
+		panel_12.add(lblP12n1, "cell 0 9 4 1,alignx center");
 		
 		JButton btnP12n1 = new JButton("neue Produktdeklaration anlegen");
-		panel_12.add(btnP12n1, "cell 1 3 2 1,alignx center");
+		panel_12.add(btnP12n1, "cell 1 4 2 1,alignx center");
 		
 		JLabel lblP12n4 = new JLabel("Wirkungskategorie");
-		panel_12.add(lblP12n4, "cell 1 4,grow");
+		panel_12.add(lblP12n4, "cell 1 5,grow");
 		
 		txtP12n2 = new JTextField();
 		txtP12n2.setText("");
-		panel_12.add(txtP12n2, "cell 2 4,grow");
+		panel_12.add(txtP12n2, "cell 2 5,grow");
 		txtP12n2.setColumns(10);
 		txtP12n2.setEnabled(false);
 		
+		JLabel lblP12n7 = new JLabel("... ggf. in Bewertungsmethode neu anlegen");
+		panel_12.add(lblP12n7, "cell 1 6,grow");
+		
+		JCheckBox chbP12n2 = new JCheckBox();
+		panel_12.add(chbP12n2, "cell 2 6,grow");
+		chbP12n2.setEnabled(false);
+		
 		JLabel lblP12n5 = new JLabel("Menge");
-		panel_12.add(lblP12n5, "cell 1 5,grow");
+		panel_12.add(lblP12n5, "cell 1 7,grow");
 		
 		txtP12n3 = new JTextField();
 		txtP12n3.setText("");
-		panel_12.add(txtP12n3, "cell 2 5,grow");
+		panel_12.add(txtP12n3, "cell 2 7,grow");
 		txtP12n3.setColumns(10);
 		txtP12n3.setEnabled(false);
 		
 		JButton btnP12n2 = new JButton("Wirkung hinzuf\u00fcgen");
 		btnP12n2.setEnabled(false);
-		panel_12.add(btnP12n2, "cell 1 6,alignx center");
+		panel_12.add(btnP12n2, "cell 1 8,alignx center");
 		
 		JButton btnP12n3 = new JButton("fertig");
 		btnP12n3.setEnabled(false);
-		panel_12.add(btnP12n3, "cell 2 6,alignx center");
+		panel_12.add(btnP12n3, "cell 2 8,alignx center");
 		
 		// Panel 13
 		

@@ -15,7 +15,7 @@ import java.util.LinkedList;
  * die zu einer Bewertungsmethode gehören, zusammen.
  * 
  * @author Dr.-Ing. Joachim Schwarte
- * @version 0.924
+ * @version 0.925
  */
 
 public class Bewertungsmethode {
@@ -25,13 +25,15 @@ public class Bewertungsmethode {
 	// Instanzvariablen:
 	
 	private String name;
-	private LinkedList<CharakterFaktor> faktorSet 
-	= new LinkedList<CharakterFaktor>();
+	private LinkedList<CharakterFaktor> faktorSet = 
+			new LinkedList<CharakterFaktor>();
+	private HashSet<Wirkungskategorie> wkl = 
+			new HashSet<Wirkungskategorie>();
 	
 	// Konstruktor:
 	
 	/**
-	 * Der einparametrige Konstruktor erzeugt ein benannte 
+	 * Der einparametrige Konstruktor erzeugt eine benannte 
 	 * Bewertungsmethode, die noch keine Charakterisierungsfaktoren
 	 * beinhaltet.
 	 * @param name
@@ -64,21 +66,31 @@ public class Bewertungsmethode {
 	
 	public void addFaktor(CharakterFaktor cv) {
 		faktorSet.add(cv);
+		wkl.add(cv.getWirkung());
+	}
+	
+	/**
+	 * Fügt der Liste der Wirkungskategorien einen Eintrag
+	 * hinzu.
+	 * @param wk
+	 * Die Wirkungskategorie, die der Liste hinzugefügt werden 
+	 * soll.
+	 */
+	
+	public void addWK(Wirkungskategorie wk) {
+		wkl.add(wk);
 	}
 	
 	/**
 	 * @return
 	 * ... Liste derjenigen Wirkungskategorien, denen durch die
 	 * vorhandenen Charakterisierungsfaktoren Flüsse quantifiziert
-	 * zugeordnet sind.
+	 * zugeordnet sind oder die durch Verwendung der Methode
+	 * addWK(...) explizit der Liste hinzugefügt wurden.
 	 */
 	
-	public HashSet<Wirkungskategorie> kategorieListe() {
-		HashSet<Wirkungskategorie> kl = new HashSet<Wirkungskategorie>();
-		for (CharakterFaktor cvl : faktorSet) {
-			kl.add(cvl.getWirkung());		
-		}		
-		return kl;
+	public HashSet<Wirkungskategorie> kategorieListe() {	
+		return wkl;
 	}
 	
 	/**
