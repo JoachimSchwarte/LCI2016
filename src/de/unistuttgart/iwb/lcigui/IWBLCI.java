@@ -119,7 +119,7 @@ public class IWBLCI {
 	private JTextField txtP12n1; 	// Name des Produkts
 	private JTextField txtP12n2;	// Wirkungskategorie
 	private JTextField txtP12n3;	// Menge
-	private JTextField txtP12n4;	// Bwertungsmethode
+	private JTextField txtP12n4;	// Bewertungsmethode
 	private JTable flowsTable 		= new JTable();
 	private JTable modulesTable 	= new JTable();
 	private JTable productsTable 	= new JTable();
@@ -371,7 +371,7 @@ public class IWBLCI {
 		JLabel lblInfo4 = new JLabel("Universit\u00e4t Stuttgart");
 		lblInfo4.setFont(new Font("Tahoma", Font.BOLD, 14));
 		panel_4.add(lblInfo4, "cell 1 5,alignx center,aligny top");
-		JLabel lblInfo5 = new JLabel("Version 0.925   19.07.2017");
+		JLabel lblInfo5 = new JLabel("Version 0.925   20.07.2017");
 		lblInfo5.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		panel_4.add(lblInfo5, "cell 1 7,alignx center,aligny top");
 
@@ -453,7 +453,7 @@ public class IWBLCI {
 		JLabel lblTodo4 = new JLabel("");
 		lblTodo4.setFont(new Font("Tahoma", Font.BOLD, 14));
 		panel_9.add(lblTodo4, "cell 1 5,alignx center,aligny top");
-		JLabel lblTodo5 = new JLabel("Version 0.925   19.07.2017");
+		JLabel lblTodo5 = new JLabel("Version 0.925   20.07.2017");
 		lblTodo5.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		panel_9.add(lblTodo5, "cell 1 7,alignx center,aligny top");
 		
@@ -1185,22 +1185,30 @@ public class IWBLCI {
 					} else {
 						String bwName = txtP12n4.getText();	
 						boolean bwNew = chbP12n1.isSelected();
-						boolean bwVorhanden = false;
-						for(String bw : allBWs.keySet()) {
-							if (name.equals(bw)) {
-								bwVorhanden = true;
-							}
-						}
-						if (bwVorhanden == false && bwNew == false) {
+						boolean bwVorhanden = allBWs.keySet().contains(bwName);
+
+						if (bwVorhanden == false) {
 							lblP12n1.setText(">>> Die Bewertungsmethode ist unbekannt. <<<");
-						} else {
-							if (bwVorhanden == false) {
+							if (bwNew == true) {
 								Bewertungsmethode bwNeu = new Bewertungsmethode(bwName);
 								allBWs.put(bwName, bwNeu);
-							}
-							Bewertungsmethode bwNeu = allBWs.get(bwName);
+								allPBs.put(name, new ProduktBilanziert(name));
+								allPBs.get(name).setBM(bwNeu);
+								lblP12n1.setText(">>> Anzahl Produktdeklarationen: " + allPBs.size() + " <<<");
+								btnP12n1.setEnabled(false);
+								txtP12n1.setEnabled(false);
+								btnP12n2.setEnabled(true);
+								txtP12n2.setEnabled(true);
+								txtP12n3.setEnabled(true);	
+								txtP12n4.setEnabled(false);	
+								chbP12n1.setEnabled(false);							
+								chbP12n2.setEnabled(true);
+								chbP12n1.setSelected(false);		
+								chbP12n2.setSelected(false);		
+							} 
+						} else {
 							allPBs.put(name, new ProduktBilanziert(name));
-							allPBs.get(name).setBM(bwNeu);
+							allPBs.get(name).setBM(allBWs.get(bwName));
 							lblP12n1.setText(">>> Anzahl Produktdeklarationen: " + allPBs.size() + " <<<");
 							btnP12n1.setEnabled(false);
 							txtP12n1.setEnabled(false);
@@ -1209,9 +1217,11 @@ public class IWBLCI {
 							txtP12n3.setEnabled(true);	
 							txtP12n4.setEnabled(false);	
 							chbP12n1.setEnabled(false);
-							chbP12n2.setEnabled(true);
+							chbP12n2.setEnabled(true);	
+							chbP12n1.setSelected(false);		
+							chbP12n2.setSelected(false);
 						}
-					}	
+					} 
 				} 		
 			}
 		});
@@ -1250,17 +1260,18 @@ public class IWBLCI {
 						if (wkNew == true) {
 							allBWs.get(bmName).addWK(wk2);
 						}
-						allPBs.get(mname).addWirkung(wk2, menge);
-						txtP12n2.setText("");
-						txtP12n3.setText("");
-						btnP12n3.setEnabled(true);
-						int anzPWKs = allPBs.get(mname).getWirkungsvektor(allBWs.get(bmName)).size();
-						
-
-						
-						lblP12n1.setText(">>> Die Produktdeklaration " + mname + " besitzt " +
-								anzPWKs + " Wirkungen <<<");
-						
+						if (allBWs.get(bmName).kategorieListe().contains(wk2)) {
+							allPBs.get(mname).addWirkung(wk2, menge);
+							txtP12n2.setText("");
+							txtP12n3.setText("");
+							btnP12n3.setEnabled(true);
+							int anzPWKs = allPBs.get(mname).getWirkungsvektor(allBWs.get(bmName)).size();					
+							lblP12n1.setText(">>> Die Produktdeklaration " + mname + " besitzt " +
+									anzPWKs + " Wirkungen <<<");
+						} else {
+							lblP12n1.setText(">>> Die Wirkungskategorie ist nicht Bestandteil"
+									+ " der Bewertungsmethode <<<");
+						}						
 					} else {
 						lblP12n1.setText(">>> unbekannte Wirkung <<<");
 					}					
@@ -1275,11 +1286,17 @@ public class IWBLCI {
 				txtP12n2.setText("");
 				txtP12n3.setText("");
 				txtP12n1.setText("");
+				txtP12n4.setText("");
 				btnP12n2.setEnabled(false);
 				btnP12n3.setEnabled(false);
 				txtP12n1.setEnabled(true);
 				txtP12n2.setEnabled(false);
 				txtP12n3.setEnabled(false);
+				txtP12n4.setEnabled(true);					
+				chbP12n1.setEnabled(true);
+				chbP12n2.setEnabled(false);	
+				chbP12n1.setSelected(false);		
+				chbP12n2.setSelected(false);
 				lblP12n1.setText(">>> ... <<<");
 			}
 		});
