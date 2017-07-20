@@ -49,7 +49,7 @@ import java.io.ObjectOutputStream;
 
 /**
  * @author Dr.-Ing. Joachim Schwarte
- * @version 0.925
+ * @version 0.926
  */
 
 public class IWBLCI {
@@ -120,6 +120,11 @@ public class IWBLCI {
 	private JTextField txtP12n2;	// Wirkungskategorie
 	private JTextField txtP12n3;	// Menge
 	private JTextField txtP12n4;	// Bewertungsmethode
+	// Panel 15; Neuer Charakterisierungsfaktor
+	private JTextField txtP15n1; 	// Name des Charakterisierungsfaktors
+	private JTextField txtP15n2;	// Name des Flusses
+	private JTextField txtP15n3;	// Name der Wirkungskategorie
+	private JTextField txtP15n4;	// Faktor
 	private JTable flowsTable 		= new JTable();
 	private JTable modulesTable 	= new JTable();
 	private JTable productsTable 	= new JTable();
@@ -169,7 +174,7 @@ public class IWBLCI {
 	 */
 	private void initialize() {
 		frmIwblciVersion = new JFrame();
-		frmIwblciVersion.setTitle("IWB-LCI   Version 0.925");
+		frmIwblciVersion.setTitle("IWB-LCI   Version 0.926");
 		frmIwblciVersion.setBounds(100, 100, 600, 480);
 		frmIwblciVersion.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);		
 		
@@ -371,7 +376,7 @@ public class IWBLCI {
 		JLabel lblInfo4 = new JLabel("Universit\u00e4t Stuttgart");
 		lblInfo4.setFont(new Font("Tahoma", Font.BOLD, 14));
 		panel_4.add(lblInfo4, "cell 1 5,alignx center,aligny top");
-		JLabel lblInfo5 = new JLabel("Version 0.925   20.07.2017");
+		JLabel lblInfo5 = new JLabel("Version 0.926   20.07.2017");
 		lblInfo5.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		panel_4.add(lblInfo5, "cell 1 7,alignx center,aligny top");
 
@@ -453,7 +458,7 @@ public class IWBLCI {
 		JLabel lblTodo4 = new JLabel("");
 		lblTodo4.setFont(new Font("Tahoma", Font.BOLD, 14));
 		panel_9.add(lblTodo4, "cell 1 5,alignx center,aligny top");
-		JLabel lblTodo5 = new JLabel("Version 0.925   20.07.2017");
+		JLabel lblTodo5 = new JLabel("Version 0.926   20.07.2017");
 		lblTodo5.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		panel_9.add(lblTodo5, "cell 1 7,alignx center,aligny top");
 		
@@ -638,6 +643,54 @@ public class IWBLCI {
 		tcm6.getColumn(1).setHeaderValue("Wirkungskategorie");
 		tcm6.getColumn(2).setHeaderValue("Menge");
 		panel_14.add(new JScrollPane(pbsTable), "cell 0 1,alignx center,aligny top");
+		
+		// Panel 15
+		
+		JPanel panel_15 = new JPanel();
+		panel.add(panel_15, "neuCF");
+		panel_15.setLayout(new MigLayout("", "[108px,grow][108px][108px][108px,grow]", 
+				"[20px][20px][20px][20px][20px][20px][20px][20px][20px][20px][20px,grow]"));
+		JLabel lblP15n2 = new JLabel("Neuer Charakterisierungsfaktor");
+		lblP15n2.setFont(new Font("Tahoma", Font.BOLD, 14));
+		panel_15.add(lblP15n2, "flowy,cell 1 0 2 1,alignx center,growy");
+		
+		JLabel lblP15n3 = new JLabel("Name der Charakterisierungsfaktors");
+		panel_15.add(lblP15n3, "cell 1 1,grow");
+		
+		txtP15n1 = new JTextField();
+		txtP15n1.setText("");
+		panel_15.add(txtP15n1, "cell 2 1,grow");
+		txtP15n1.setColumns(10);
+		
+		JLabel lblP15n4 = new JLabel("Name des Flusses");
+		panel_15.add(lblP15n4, "cell 1 2,grow");
+		
+		txtP15n2 = new JTextField();
+		txtP15n2.setText("");
+		panel_15.add(txtP15n2, "cell 2 2,grow");
+		txtP15n2.setColumns(10);
+		
+		JLabel lblP15n5 = new JLabel("Name der Wirkungskategorie");
+		panel_15.add(lblP15n5, "cell 1 3,grow");
+		
+		txtP15n3 = new JTextField();
+		txtP15n3.setText("");
+		panel_15.add(txtP15n3, "cell 2 3,grow");
+		txtP15n3.setColumns(10);
+		
+		JLabel lblP15n6 = new JLabel("Faktor");
+		panel_15.add(lblP15n6, "cell 1 4,grow");
+		
+		txtP15n4 = new JTextField();
+		txtP15n4.setText("");
+		panel_15.add(txtP15n4, "cell 2 4,grow");
+		txtP15n4.setColumns(10);
+		
+		JButton btnP15n1 = new JButton("speichern");
+		panel_15.add(btnP15n1, "cell 1 5 2 1,alignx center");	
+		
+		JLabel lblP15n1 = new JLabel(">>> ... <<<");
+		panel_15.add(lblP15n1, "cell 0 6 4 1,alignx center");
 		
 		cl.show(panel, "leer");
 		
@@ -1473,7 +1526,7 @@ public class IWBLCI {
 			putValue(SHORT_DESCRIPTION, "neuen Charakterisierungsfaktor erfassen");
 		}
 		public void actionPerformed(ActionEvent e) {
-			cl.show(panel, "todo");
+			cl.show(panel, "neuCF");
 		}
 	}
 	private class newBMAction extends AbstractAction {

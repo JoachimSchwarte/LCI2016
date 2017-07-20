@@ -28,7 +28,7 @@ implements Flussvektoren, Wirkungsvektor {
 	// Konstruktor:
 	
 	/**
-	 * Der parameterlos Konstruktor erzeugt ein leeres und
+	 * Der parameterlose Konstruktor erzeugt ein leeres und
 	 * unbenanntes Prozessmodul.
 	 */
 	
