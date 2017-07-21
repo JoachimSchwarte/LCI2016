@@ -10,7 +10,7 @@ import java.util.HashMap;
  * Diese Klasse dient zur Erzeugung von Prozessmodulen.
  * 
  * @author Dr.-Ing. Joachim Schwarte
- * @version 0.924
+ * @version 0.926
  */
 
 public class Prozessmodul 
@@ -20,6 +20,7 @@ implements Flussvektoren, Wirkungsvektor {
 	
 	// Instanzvariablen:
 	
+	private String name;
 	private HashMap<Fluss, Double> efv = 
 			new HashMap<Fluss, Double>(); //Elementarflüsse
 	private HashMap<Fluss, Double> pfv = 
@@ -34,6 +35,23 @@ implements Flussvektoren, Wirkungsvektor {
 	
 	public Prozessmodul() {
 		super();
+		setName(("PM" + NameCheck.getInstance().sizeWVName()));
+		NameCheck.getInstance().addFVName(getName());
+		NameCheck.getInstance().addWVName(getName());
+	}
+	
+	/**
+	 * Der einparametrige Konstruktor erzeugt ein leeres 
+	 * benanntes Prozessmodul.
+	 * @param name
+	 * Der Name des Prozessmoduls
+	 */
+	
+	public Prozessmodul(String name) {
+		super();
+		setName(name);
+		NameCheck.getInstance().addFVName(getName());
+		NameCheck.getInstance().addWVName(getName());
 	}
 	
 	// Methoden:
@@ -93,5 +111,13 @@ implements Flussvektoren, Wirkungsvektor {
 	public void removeFluss(Fluss fluss) {
 		efv.remove(fluss);
 		pfv.remove(fluss);
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 }

@@ -13,7 +13,7 @@ import java.util.HashMap;
  * Produkt").
  * 
  * @author Dr.-Ing. Joachim Schwarte
- * @version 0.925
+ * @version 0.926
  */
 
 public class ProduktBilanziert 
@@ -34,12 +34,13 @@ implements Wirkungsvektor {
 	 * Produktobjekt, das noch keine Daten aus einer 
 	 * Wirkungsabschätzung enthält.
 	 * @param name
-	 * ist der Name der Name des bilanzierten Produkts.
+	 * ist der Name des bilanzierten Produkts.
 	 */
 
 	public ProduktBilanziert(String name) {
 		super();
 		this.name = name;
+		NameCheck.getInstance().addWVName(name);
 	}
 
 	// Methoden:

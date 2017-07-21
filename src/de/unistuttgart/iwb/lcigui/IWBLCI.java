@@ -873,7 +873,7 @@ public class IWBLCI {
 					if (nameVorhanden == true) {
 						lblStatus2.setText(">>> Der angegebene Name ist bereits vorhanden. <<<");
 					} else {
-						allModules.put(name, new Prozessmodul());
+						allModules.put(name, new Prozessmodul(name));
 						lblStatus2.setText(">>> Anzahl Prozessmodule: " + allModules.size() + " <<<");
 						btnSpei2.setEnabled(false);
 						txtModName.setEnabled(false);
@@ -1212,28 +1212,7 @@ public class IWBLCI {
 				if (name.equals("")) {
 					lblP12n1.setText(">>> Es wurde kein Name angegeben. <<<");
 				} else {
-					boolean nameVorhanden = false;
-					
-					for(String mod : allModules.keySet()) {
-						if (name.equals(mod)) {
-							nameVorhanden = true;
-						}
-					}
-					for(String mod : allProSys.keySet()) {
-						if (name.equals(mod)) {
-							nameVorhanden = true;
-						}
-					}
-					for(String mod : allPBs.keySet()) {
-						if (name.equals(mod)) {
-							nameVorhanden = true;
-						}
-					}
-					
-					// auch Produktkomponente und Produktkomposition müssen 
-					// ausgeschlossen werden!!!
-					
-					if (nameVorhanden == true) {
+					if (NameCheck.getInstance().containsWVName(name)) {
 						lblP12n1.setText(">>> Der angegebene Name ist bereits vorhanden. <<<");
 					} else {
 						String bwName = txtP12n4.getText();	
@@ -1838,7 +1817,7 @@ public class IWBLCI {
 					int nrMods = os.readInt();
 					for (Integer i=0; i<nrMods; i++) {
 						String mn = (String)os.readObject();
-						allModules.put(mn, new Prozessmodul());
+						allModules.put(mn, new Prozessmodul(mn));
 						int esize = os.readInt();
 						for (int j=0; j<(esize); j++) {
 							String fname = (String)os.readObject();

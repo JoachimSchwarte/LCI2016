@@ -11,7 +11,7 @@ package de.unistuttgart.iwb.lci;
  * Instanzvariablen zur Verfügung.
  * 
  * @author Dr.-Ing. Joachim Schwarte
- * @version 0.924
+ * @version 0.926
  */
 
 public class Fluss {	
