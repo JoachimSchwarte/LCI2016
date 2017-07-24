@@ -17,15 +17,11 @@ import java.util.HashSet;
  * @version 0.926
  */
 
-public class NameCheck {
-	
-	// Diese Klasse besitzt keine Klassenvariablen
-	
-	// Instanzvariablen:	
+public class NameCheck {	
 
 	private static NameCheck instance;
-	private HashSet<String>fvNames = new HashSet<String>();
-	private HashSet<String>wvNames = new HashSet<String>();
+	private static HashSet<String>fvNames = new HashSet<String>();
+	private static HashSet<String>wvNames = new HashSet<String>();
 	
 	// Konstruktor:
 	
@@ -79,7 +75,7 @@ public class NameCheck {
 	 * Flussvektoren
 	 */
 
-	public void removeFVName(String name) {
+	public static void removeFVName(String name) {
 	    fvNames.remove(name);		
 	}
 	
@@ -91,7 +87,7 @@ public class NameCheck {
 	 * Wirkungsvektor
 	 */
 	
-	public void removeWVName(String name) {
+	public static void removeWVName(String name) {
 	    wvNames.remove(name);			    
 	}
 	
@@ -105,7 +101,7 @@ public class NameCheck {
 	 * ... den Wahrheitswert, den die Überprüfung liefert
 	 */
 	
-	public boolean containsFVName(String name) {
+	public static boolean containsFVName(String name) {
 	    return fvNames.contains(name);		
 	}
 	
@@ -119,7 +115,7 @@ public class NameCheck {
 	 * ... den Wahrheitswert, den die Überprüfung liefert
 	 */
 	
-	public boolean containsWVName(String name) {
+	public static boolean containsWVName(String name) {
 	    return wvNames.contains(name);			    
 	}
 	
@@ -130,7 +126,7 @@ public class NameCheck {
 	 * sind
 	 */
 	
-	public int sizeFVName() {
+	public static int sizeFVName() {
 	    return fvNames.size();
 	}
 	
@@ -141,7 +137,7 @@ public class NameCheck {
 	 * sind
 	 */
 	
-	public int sizeWVName() {
+	public static int sizeWVName() {
 	    return wvNames.size();			    
 	}
 }

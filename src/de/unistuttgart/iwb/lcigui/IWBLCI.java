@@ -63,6 +63,8 @@ public class IWBLCI {
 	private CardLayout cl = new CardLayout(0, 0);
 	private LinkedList<Fluss>allFlows = 
 			new LinkedList<Fluss>();
+	private HashMap<String,Fluss>allFLs = 
+			new HashMap<String, Fluss>();
 	private HashMap<String, Prozessmodul>allModules =
 			new HashMap<String, Prozessmodul>();
 	private HashMap<String, Produktsystem>allProSys = 
@@ -73,12 +75,14 @@ public class IWBLCI {
 			new HashMap<String, VorUndKoppelprodukte>();
 	private HashMap<String, ModulNamenListe>allMNLs = 
 			new HashMap<String, ModulNamenListe>();
-	private LinkedList<Wirkungskategorie>allWKs = 
-			new LinkedList<Wirkungskategorie>();
+	private HashMap<String, Wirkungskategorie>allWKs = 
+			new HashMap<String, Wirkungskategorie>();
 	private HashMap<String, ProduktBilanziert>allPBs = 
 			new HashMap<String, ProduktBilanziert>();
 	private HashMap<String, Bewertungsmethode>allBWs = 
 			new HashMap<String, Bewertungsmethode>();
+	private HashMap<String, CharakterFaktor>allCFs = 
+			new HashMap<String, CharakterFaktor>();
 	private final Action newFlowAction 		= new newFlowAction();
 	private final Action newModuleAction 	= new newModuleAction();
 	private final Action newProductAction 	= new newProductAction();
@@ -125,12 +129,15 @@ public class IWBLCI {
 	private JTextField txtP15n2;	// Name des Flusses
 	private JTextField txtP15n3;	// Name der Wirkungskategorie
 	private JTextField txtP15n4;	// Faktor
+	// Panel 17; Neue Bewertungsmethode
+	private JTextField txtP17n1; 	// Name der Bewertungsmethode
+	private JTextField txtP17n2; 	// Name des Charakterisierungsfaktors
 	private JTable flowsTable 		= new JTable();
 	private JTable modulesTable 	= new JTable();
 	private JTable productsTable 	= new JTable();
 	private JTable wksTable 		= new JTable();
 	private JTable pbsTable 		= new JTable();
-//	private JTable cfsTable 		= new JTable();
+	private JTable cfsTable 		= new JTable();
 //	private JTable bmsTable 		= new JTable();
 //	private JTable pkentesTable 	= new JTable();
 //	private JTable pktionsTable 	= new JTable();
@@ -140,7 +147,7 @@ public class IWBLCI {
 	DefaultTableModel productsTableModel 	= new DefaultTableModel(0,3);
 	DefaultTableModel wksTableModel 		= new DefaultTableModel(0,2);
 	DefaultTableModel pbsTableModel 		= new DefaultTableModel(0,3);
-//	DefaultTableModel cfsTableModel 		= new DefaultTableModel(0,3);
+	DefaultTableModel cfsTableModel 		= new DefaultTableModel(0,4);
 //	DefaultTableModel bmsTableModel 		= new DefaultTableModel(0,3);
 //	DefaultTableModel pkenteTableModel 		= new DefaultTableModel(0,3);
 //	DefaultTableModel pktionTableModel 		= new DefaultTableModel(0,3);
@@ -376,7 +383,7 @@ public class IWBLCI {
 		JLabel lblInfo4 = new JLabel("Universit\u00e4t Stuttgart");
 		lblInfo4.setFont(new Font("Tahoma", Font.BOLD, 14));
 		panel_4.add(lblInfo4, "cell 1 5,alignx center,aligny top");
-		JLabel lblInfo5 = new JLabel("Version 0.926   21.07.2017");
+		JLabel lblInfo5 = new JLabel("Version 0.926   24.07.2017");
 		lblInfo5.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		panel_4.add(lblInfo5, "cell 1 7,alignx center,aligny top");
 
@@ -458,7 +465,7 @@ public class IWBLCI {
 		JLabel lblTodo4 = new JLabel("");
 		lblTodo4.setFont(new Font("Tahoma", Font.BOLD, 14));
 		panel_9.add(lblTodo4, "cell 1 5,alignx center,aligny top");
-		JLabel lblTodo5 = new JLabel("Version 0.926   21.07.2017");
+		JLabel lblTodo5 = new JLabel("Version 0.926   24.07.2017");
 		lblTodo5.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		panel_9.add(lblTodo5, "cell 1 7,alignx center,aligny top");
 		
@@ -692,6 +699,63 @@ public class IWBLCI {
 		JLabel lblP15n1 = new JLabel(">>> ... <<<");
 		panel_15.add(lblP15n1, "cell 0 6 4 1,alignx center");
 		
+		// Panel 16
+		
+		JPanel panel_16 = new JPanel();
+		panel.add(panel_16, "listeCFs");		
+		panel_16.setLayout(new MigLayout("", "[74px,grow]", "[14px][grow]"));	
+		JLabel lblListeDerCFs = new JLabel("Liste der Charakterisierungsfaktoren");
+		lblListeDerCFs.setFont(new Font("Tahoma", Font.BOLD, 14));
+		panel_16.add(lblListeDerCFs, "cell 0 0,alignx center,aligny top");		
+		cfsTable.setModel(cfsTableModel);
+		TableColumnModel tcm7 = cfsTable.getColumnModel();
+		tcm7.getColumn(0).setHeaderValue("Name");
+		tcm7.getColumn(1).setHeaderValue("Fluss");
+		tcm7.getColumn(2).setHeaderValue("Wirkungskategorie");
+		tcm7.getColumn(3).setHeaderValue("Faktor");
+		panel_16.add(new JScrollPane(cfsTable), "cell 0 1,alignx center,aligny top");
+		
+		// Panel 17
+		
+		JPanel panel_17 = new JPanel();
+		panel.add(panel_17, "neuBM");
+		panel_17.setLayout(new MigLayout("", "[108px,grow][108px][108px][108px,grow]", 
+				"[20px][20px][20px][20px][20px][20px][20px][20px][20px,grow]"));
+		JLabel lblP17n2 = new JLabel("Neue Bewertungsmethode");
+		lblP17n2.setFont(new Font("Tahoma", Font.BOLD, 14));
+		panel_17.add(lblP17n2, "flowy,cell 1 0 2 1,alignx center,growy");
+		
+		JLabel lblP17n3 = new JLabel("Name der Bewertungsmethode");
+		panel_17.add(lblP17n3, "cell 1 1,grow");
+		
+		txtP17n1 = new JTextField();
+		txtP17n1.setText("");
+		panel_17.add(txtP17n1, "cell 2 1,grow");
+		txtP17n1.setColumns(10);
+		
+		JLabel lblP17n1 = new JLabel(">>> ... <<<");
+		panel_17.add(lblP17n1, "cell 0 5 4 1,alignx center");
+		
+		JButton btnP17n1 = new JButton("neue Bewertungsmethode anlegen");
+		panel_17.add(btnP17n1, "cell 1 2 2 1,alignx center");
+		
+		JLabel lblP17n4 = new JLabel("Name des Charakterisierungsfaktors");
+		panel_17.add(lblP17n4, "cell 1 3,grow");
+		
+		txtP17n2 = new JTextField();
+		txtP17n2.setText("");
+		panel_17.add(txtP17n2, "cell 2 3,grow");
+		txtP17n2.setColumns(10);
+		txtP17n2.setEnabled(false);
+		
+		JButton btnP17n2 = new JButton("Charakterisierungsfaktor hinzuf\u00fcgen");
+		btnP17n2.setEnabled(false);
+		panel_17.add(btnP17n2, "cell 1 4,alignx center");
+		
+		JButton btnP17n3 = new JButton("fertig");
+		btnP17n3.setEnabled(false);
+		panel_17.add(btnP17n3, "cell 2 4,alignx center");
+
 		cl.show(panel, "leer");
 		
 		/*
@@ -837,7 +901,9 @@ public class IWBLCI {
 					if (nameVorhanden == true) {
 						lblStatusmeldung.setText(">>> Der angegebene Name ist bereits vorhanden. <<<");
 					} else {
-						allFlows.add(new Fluss(name, typ, einheit));
+						Fluss lFluss = new Fluss(name, typ, einheit);
+						allFlows.add(lFluss);
+						allFLs.put(name, lFluss);
 						lblStatusmeldung.setText(">>> Anzahl Flussobjekte: " + allFlows.size() + " <<<");
 						txtName.setText("");
 						comboBox.setSelectedIndex(0);
@@ -1183,16 +1249,10 @@ public class IWBLCI {
 				if (name.equals("")) {
 					lblStatusWK.setText(">>> Es wurde kein Name angegeben. <<<");
 				} else {
-					boolean nameVorhanden = false;
-					for(Wirkungskategorie wk : allWKs) {
-						if (name.equals(wk.getName())) {
-							nameVorhanden = true;
-						}
-					}
-					if (nameVorhanden == true) {
+					if (Wirkungskategorie.constainsName(name)) {
 						lblStatusWK.setText(">>> Der angegebene Name ist bereits vorhanden. <<<");
 					} else {
-						allWKs.add(new Wirkungskategorie(name, wi));
+						allWKs.put(name, new Wirkungskategorie(name, wi));
 						lblStatusWK.setText(">>> Anzahl Wirkungskategorien: " + allWKs.size() + " <<<");
 						txtNameWK.setText("");
 						comboBoxWK.setSelectedIndex(0);
@@ -1212,7 +1272,7 @@ public class IWBLCI {
 				if (name.equals("")) {
 					lblP12n1.setText(">>> Es wurde kein Name angegeben. <<<");
 				} else {
-					if (NameCheck.getInstance().containsWVName(name)) {
+					if (NameCheck.containsWVName(name)) {
 						lblP12n1.setText(">>> Der angegebene Name ist bereits vorhanden. <<<");
 					} else {
 						String bwName = txtP12n4.getText();	
@@ -1273,20 +1333,8 @@ public class IWBLCI {
 				if (fname.equals("") || (menge == 0.0)) {
 					lblP12n1.setText(">>> unvollst\u00e4ndige Eingabe <<<");
 				} else {
-					boolean nameVorhanden = false;
-					for(Wirkungskategorie wk1 : allWKs) {
-						if (fname.equals(wk1.getName())) {
-							nameVorhanden = true;
-						}
-					}
-					if (nameVorhanden == true) {
-						Wirkungskategorie wk2 = null;
-						for(Wirkungskategorie wk1 : allWKs){
-							if (fname.equals(wk1.getName())){
-								wk2 = wk1;
-							}
-						}
-
+					if (Wirkungskategorie.constainsName(fname)) {
+						Wirkungskategorie wk2 = allWKs.get(fname);
 						String mname = txtP12n1.getText();
 						String bmName = txtP12n4.getText();
 						if (wkNew == true) {
@@ -1332,7 +1380,57 @@ public class IWBLCI {
 				lblP12n1.setText(">>> ... <<<");
 			}
 		});
-
+		
+		/*
+		 * neuer Charakterisierungsfaktor (= neues CharakterFaktor-Objekt)
+		 */		
+		
+		btnP15n1.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				String cfName = txtP15n1.getText();
+				String flName = txtP15n2.getText();
+				String wkName = txtP15n3.getText();
+				String fakStr = txtP15n4.getText();
+				Double faktor = 0.0;
+				Boolean faktorZahl = true;
+				try {
+						faktor = Double.parseDouble(fakStr);
+					} catch (NumberFormatException e){
+						faktorZahl = false;
+				}
+				if (CharakterFaktor.constainsName(cfName) == false &&
+						cfName.equals("") == false &&
+						Fluss.constainsName(flName) == true &&
+						Wirkungskategorie.constainsName(wkName) == true &&
+						faktorZahl == true) {
+					allCFs.put(cfName, new CharakterFaktor(cfName, 
+							allFLs.get(flName), allWKs.get(wkName) , faktor));	
+					txtP15n1.setText("");
+					txtP15n2.setText("");
+					txtP15n3.setText("");
+					txtP15n4.setText("");
+					lblP15n1.setText(">>> Anzahl Charakterisierungfaktoren: "
+							+ + allCFs.size() + " <<<");					
+				} else {
+					if (faktorZahl == false) {
+						lblP15n1.setText(">>> Es wurde kein Zahlenwert angegeben <<<"); 
+					}
+					if (Wirkungskategorie.constainsName(wkName) == false && wkName.equals("") == false) {
+						lblP15n1.setText(">>> Die Wirkungskategorie ist unbekannt <<<"); 
+					}
+					if (Fluss.constainsName(flName) == false && flName.equals("") == false) {
+						lblP15n1.setText(">>> Der Fluss ist unbekannt <<<"); 
+					}
+					if (CharakterFaktor.constainsName(cfName) == true) {
+						lblP15n1.setText(">>> Der Name des Charakterisierungfaktors existiert bereits <<<"); 
+					}
+					if (cfName.equals("") || wkName.equals("") || flName.equals("") || fakStr.equals("")) {
+						lblP15n1.setText(">>> Unvollst\u00e4ndige Eingabe <<<");
+					}
+				}				
+			}
+		});
 	
 		/*
 		 * Prozessmodul editieren
@@ -1515,7 +1613,7 @@ public class IWBLCI {
 			putValue(SHORT_DESCRIPTION, "neue Bewertungsmethode erfassen");
 		}
 		public void actionPerformed(ActionEvent e) {
-			cl.show(panel, "todo");
+			cl.show(panel, "neuBM");
 		}
 	}
 	private class newPKenteAction extends AbstractAction {
@@ -1628,8 +1726,9 @@ public class IWBLCI {
 		}
 		public void actionPerformed(ActionEvent e) {
 			wksTableModel.setRowCount(0);
-			for(Wirkungskategorie wk : allWKs) {
-				wksTableModel.addRow(new Object[] {wk.getName(), wk.getEinheit()});
+			for(String wkName : allWKs.keySet()) {
+				wksTableModel.addRow(new Object[] {allWKs.get(wkName).getName(), 
+						allWKs.get(wkName).getEinheit()});
 			}
 			
 			cl.show(panel, "listeWKs");
@@ -1662,7 +1761,13 @@ public class IWBLCI {
 			putValue(SHORT_DESCRIPTION, "Liste aller Charakterisierungsfaktoren");
 		}
 		public void actionPerformed(ActionEvent e) {
-			cl.show(panel, "todo");
+			cfsTableModel.setRowCount(0);
+			for (String cf : allCFs.keySet()) {
+				CharakterFaktor akcf = allCFs.get(cf);
+				cfsTableModel.addRow(new Object[] {akcf.getName(), akcf.getFluss().getName(),
+						akcf.getWirkung().getName(), akcf.getWert()});
+			}
+			cl.show(panel, "listeCFs");
 		}
 	}
 	private class listBMsAction extends AbstractAction {
@@ -1811,7 +1916,9 @@ public class IWBLCI {
 						String name = os.readObject().toString();
 						FlussTyp typ = (FlussTyp)os.readObject();
 						FlussEinheit einheit = (FlussEinheit)os.readObject();
-						allFlows.add(new Fluss(name, typ, einheit));
+						Fluss lFluss = new Fluss(name, typ, einheit);
+						allFlows.add(lFluss);
+						allFLs.put(name, lFluss);
 					}		
 					allModules.clear();
 					int nrMods = os.readInt();

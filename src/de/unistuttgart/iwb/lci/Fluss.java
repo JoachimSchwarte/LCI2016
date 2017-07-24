@@ -5,6 +5,8 @@
 
 package de.unistuttgart.iwb.lci;
 
+import java.util.HashSet;
+
 /**
  * Diese Klasse dient zur Erzeugung von Flussobjekten.
  * Es stehen Zugriffsmethoden zur Abfrage der privaten
@@ -16,7 +18,9 @@ package de.unistuttgart.iwb.lci;
 
 public class Fluss {	
 	
-	// Diese Klasse besitzt keine Klassenvariablen
+	// Klassenvariable:
+	
+	private static HashSet<String> allNames = new HashSet<String>();
 	
 	// Instanzvariablen:	
 
@@ -44,6 +48,7 @@ public class Fluss {
 		this.name = name;
 		this.typ = typ;
 		this.einheit = einheit;
+		allNames.add(name);
 	}
 	
 	// Methoden (Getter für die Instanzvariablen):
@@ -74,5 +79,18 @@ public class Fluss {
 	
 	public FlussEinheit getEinheit() {
 		return einheit;
+	}
+	
+	/**
+	 * Überprüft, ob bereits ein Fluss-Objekt des gegebenen
+	 * Namens existiert.
+	 * @param string
+	 * ist der zu prüfende Name
+	 * @return
+	 * ... den Wahrheitswert, den die Überprüfung liefert
+	 */
+	
+	public static boolean constainsName(String string) {
+		return allNames.contains(string);
 	}
 }

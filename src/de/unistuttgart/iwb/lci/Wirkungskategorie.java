@@ -5,17 +5,21 @@
 
 package de.unistuttgart.iwb.lci;
 
+import java.util.HashSet;
+
 /**
  * Diese Klasse dient zur Erzeugung von Objekten, die
  * Wirkungskategorien repräsentieren.
  * 
  * @author Dr.-Ing. Joachim Schwarte
- * @version 0.924
+ * @version 0.926
  */
 
 public class Wirkungskategorie {
 	
-	// Diese Klasse besitzt keine Klassenvariablen
+	// Klassenvariable:
+	
+	private static HashSet<String> allNames = new HashSet<String>();
 	
 	// Instanzvariablen:
 	
@@ -39,6 +43,7 @@ public class Wirkungskategorie {
 		super();
 		this.name = name;
 		this.einheit = einheit;
+		allNames.add(name);
 	}
 	
 	// Methoden (Getter für die Instanzvariablen):
@@ -60,5 +65,18 @@ public class Wirkungskategorie {
 
 	public Wirkungsindikator getEinheit() {
 		return einheit;
+	}
+	
+	/**
+	 * Überprüft, ob bereits eine Wirkungskategorie
+	 * des gegebenen Namens existiert.
+	 * @param string
+	 * ist der zu prüfende Name
+	 * @return
+	 * ... den Wahrheitswert, den die Überprüfung liefert
+	 */
+	
+	public static boolean constainsName(String string) {
+		return allNames.contains(string);
 	}
 }

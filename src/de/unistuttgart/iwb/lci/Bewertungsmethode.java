@@ -6,7 +6,6 @@
 package de.unistuttgart.iwb.lci;
 
 import java.util.HashSet;
-import java.util.LinkedList;
 
 /**
  * Diese Klasse dient zur Erzeugung von Objekten, die
@@ -15,18 +14,20 @@ import java.util.LinkedList;
  * die zu einer Bewertungsmethode gehören, zusammen.
  * 
  * @author Dr.-Ing. Joachim Schwarte
- * @version 0.925
+ * @version 0.926
  */
 
 public class Bewertungsmethode {
 	
-	// Diese Klasse besitzt keine Klassenvariablen
+	// Klassenvariable:
+	
+	private static HashSet<String> allNames = new HashSet<String>();
 	
 	// Instanzvariablen:
 	
 	private String name;
-	private LinkedList<CharakterFaktor> faktorSet = 
-			new LinkedList<CharakterFaktor>();
+	private HashSet<CharakterFaktor> faktorSet = 
+			new HashSet<CharakterFaktor>();
 	private HashSet<Wirkungskategorie> wkl = 
 			new HashSet<Wirkungskategorie>();
 	
@@ -43,6 +44,7 @@ public class Bewertungsmethode {
 	public Bewertungsmethode(String name) {
 		super();
 		this.name = name;
+		allNames.add(name);
 	}
 	
 	// Methoden:
@@ -98,8 +100,20 @@ public class Bewertungsmethode {
 	 * ... Liste aller vorhandenen Charakterisierungsfaktoren
 	 */
 	
-	public LinkedList<CharakterFaktor> getFaktorSet() {
+	public HashSet<CharakterFaktor> getFaktorSet() {
 		return faktorSet;
 	}
-
+	
+	/**
+	 * Überprüft, ob bereits eine Bewertungsmethode
+	 * des genannten Namens existiert.
+	 * @param string
+	 * ist der zu prüfende Name
+	 * @return
+	 * ... den Wahrheitswert, den die Überprüfung liefert
+	 */
+	
+	public static boolean constainsName(String string) {
+		return allNames.contains(string);
+	}
 }

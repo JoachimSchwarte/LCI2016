@@ -35,7 +35,7 @@ implements Flussvektoren, Wirkungsvektor {
 	
 	public Prozessmodul() {
 		super();
-		setName(("PM" + NameCheck.getInstance().sizeWVName()));
+		setName(("PM" + NameCheck.sizeWVName()));
 		NameCheck.getInstance().addFVName(getName());
 		NameCheck.getInstance().addWVName(getName());
 	}

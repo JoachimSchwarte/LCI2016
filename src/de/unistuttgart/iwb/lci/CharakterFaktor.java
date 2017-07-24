@@ -5,6 +5,8 @@
 
 package de.unistuttgart.iwb.lci;
 
+import java.util.HashSet;
+
 /**
  * Diese Klasse dient zur Erzeugung von Objekten, die
  * Charakterisierungsfaktoren repräsentieren.
@@ -12,12 +14,14 @@ package de.unistuttgart.iwb.lci;
  * zwischen Flüssen und Wirkungskategorien hergestellt.
  * 
  * @author Dr.-Ing. Joachim Schwarte
- * @version 0.924
+ * @version 0.926
  */
 
 public class CharakterFaktor {
 	
-	// Diese Klasse besitzt keine Klassenvariablen
+	// Klassenvariable:
+	
+	private static HashSet<String> allNames = new HashSet<String>();
 	
 	// Instanzvariablen:
 	
@@ -49,6 +53,7 @@ public class CharakterFaktor {
 		this.fluss = fluss;
 		this.wirkung = wirkung;
 		this.wert = wert;
+		allNames.add(name);
 	}
 	
 	// Methoden (Getter für die Instanzvariablen):
@@ -90,4 +95,16 @@ public class CharakterFaktor {
 		return wert;
 	}	
 
+	/**
+	 * Überprüft, ob bereits ein Charakterisierungsfaktor
+	 * des gegebenen Namens existiert.
+	 * @param string
+	 * ist der zu prüfende Name
+	 * @return
+	 * ... den Wahrheitswert, den die Überprüfung liefert
+	 */
+	
+	public static boolean constainsName(String string) {
+		return allNames.contains(string);
+	}
 }
