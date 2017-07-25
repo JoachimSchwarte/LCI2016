@@ -5,10 +5,11 @@
 
 package de.unistuttgart.iwb.lci;
 
-import java.util.HashSet;
+import java.util.HashMap;
 
 /**
- * Diese Klasse dient zur Erzeugung von Objekten, die
+ * Diese Klasse dient zur Erzeugung und
+ * Verwaltung von Objekten, die
  * Bewertungsmethoden repräsentieren.
  * Objekte dieser Art fassen alle Charakterisierungfaktoren,
  * die zu einer Bewertungsmethode gehören, zusammen.
@@ -21,37 +22,48 @@ public class Bewertungsmethode {
 	
 	// Klassenvariable:
 	
-	private static HashSet<String> allNames = new HashSet<String>();
+	private static HashMap<String, Bewertungsmethode> allBWs = new HashMap<String, Bewertungsmethode>();
 	
 	// Instanzvariablen:
 	
 	private String name;
-	private HashSet<CharakterFaktor> faktorSet = 
-			new HashSet<CharakterFaktor>();
-	private HashSet<Wirkungskategorie> wkl = 
-			new HashSet<Wirkungskategorie>();
-	
+	private HashMap<String, CharakterFaktor> faktorSet = 
+			new HashMap<String, CharakterFaktor>();
+	private HashMap<String, Wirkungskategorie> wkl = 
+			new HashMap<String, Wirkungskategorie>();
+
 	// Konstruktor:
 	
-	/**
-	 * Der einparametrige Konstruktor erzeugt eine benannte 
-	 * Bewertungsmethode, die noch keine Charakterisierungsfaktoren
-	 * beinhaltet.
-	 * @param name
-	 * ist der Name der neuen Bewertungsmethode.
-	 */
-
-	public Bewertungsmethode(String name) {
+	private Bewertungsmethode(String name) {
 		super();
 		this.name = name;
-		allNames.add(name);
+		allBWs.put(name, this);
 	}
 	
 	// Methoden:
 	
 	/**
+	 * Die instance-Methode erzeugt unter Verwendung des
+	 * privaten Konstruktors eine neue Bewertungsmethode
+	 * oder gibt eine bereits existierende Bewertungsmethode
+	 * zurück.
+	 * @param name
+	 * ist der Name der Bewertungsmethode.
 	 * @return
-	 * ... den Namen des Bewertungsmethode.
+	 * ... neue oder bereits zuvor existierende
+	 * Bewertungsmethode
+	 */
+	
+	public static Bewertungsmethode instance(String name) {
+		if (allBWs.containsKey(name) == false) {
+			new Bewertungsmethode(name);
+		} 
+		return allBWs.get(name);
+	}
+	
+	/**
+	 * @return
+	 * ... den Namen der Bewertugsmethode
 	 */
 	
 	public String getName() {
@@ -67,8 +79,8 @@ public class Bewertungsmethode {
 	 */
 	
 	public void addFaktor(CharakterFaktor cv) {
-		faktorSet.add(cv);
-		wkl.add(cv.getWirkung());
+		faktorSet.put(cv.getName(), cv);
+		wkl.put(cv.getWirkung().getName(), cv.getWirkung());	
 	}
 	
 	/**
@@ -80,8 +92,8 @@ public class Bewertungsmethode {
 	 */
 	
 	public void addWK(Wirkungskategorie wk) {
-		wkl.add(wk);
-	}
+		wkl.put(wk.getName(), wk);
+	}	
 	
 	/**
 	 * @return
@@ -91,7 +103,7 @@ public class Bewertungsmethode {
 	 * addWK(...) explizit der Liste hinzugefügt wurden.
 	 */
 	
-	public HashSet<Wirkungskategorie> kategorieListe() {	
+	public HashMap<String, Wirkungskategorie> kategorieListe() {	
 		return wkl;
 	}
 	
@@ -100,7 +112,7 @@ public class Bewertungsmethode {
 	 * ... Liste aller vorhandenen Charakterisierungsfaktoren
 	 */
 	
-	public HashSet<CharakterFaktor> getFaktorSet() {
+	public HashMap<String, CharakterFaktor> getFaktorSet() {
 		return faktorSet;
 	}
 	
@@ -113,7 +125,16 @@ public class Bewertungsmethode {
 	 * ... den Wahrheitswert, den die Überprüfung liefert
 	 */
 	
-	public static boolean constainsName(String string) {
-		return allNames.contains(string);
+	public static boolean containsName(String string) {
+		return allBWs.containsKey(string);
+	}
+	
+	/**
+	 * @return
+	 * ... alle vorhandenen Bewertungsmethoden
+	 */
+	 
+	public static HashMap<String, Bewertungsmethode> getAllBWs() {
+		return allBWs;
 	}
 }

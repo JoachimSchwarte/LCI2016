@@ -55,7 +55,8 @@ public class Produktkomponente implements Wirkungsvektor {
 	@Override
 	public HashMap<Wirkungskategorie, Double> getWirkungsvektor(Bewertungsmethode bm) {
 		HashMap<Wirkungskategorie, Double> wvKomponente = komponente.getWirkungsvektor(bm);
-		for (Wirkungskategorie wk : bm.kategorieListe()){
+		for (String wkName : bm.kategorieListe().keySet()){
+			Wirkungskategorie wk = bm.kategorieListe().get(wkName);
 			wvKomponente.put(wk, wvKomponente.get(wk)*menge);
 		}
 		return wvKomponente;

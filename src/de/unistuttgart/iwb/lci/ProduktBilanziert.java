@@ -92,7 +92,7 @@ implements Wirkungsvektor {
 		HashMap<Wirkungskategorie, Double> wvAktuell =
 				new HashMap<Wirkungskategorie, Double>();
 		for(Wirkungskategorie key : wvAlle.keySet()) {
-			if (bm1.kategorieListe().contains(key)) {
+			if (bm1.kategorieListe().keySet().contains(key.getName())) {
 				wvAktuell.put(key, wvAlle.get(key));
 			}
 		}

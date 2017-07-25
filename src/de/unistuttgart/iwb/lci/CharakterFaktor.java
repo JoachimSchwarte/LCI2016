@@ -104,7 +104,7 @@ public class CharakterFaktor {
 	 * ... den Wahrheitswert, den die Überprüfung liefert
 	 */
 	
-	public static boolean constainsName(String string) {
+	public static boolean containsName(String string) {
 		return allNames.contains(string);
 	}
 }

@@ -79,8 +79,6 @@ public class IWBLCI {
 			new HashMap<String, Wirkungskategorie>();
 	private HashMap<String, ProduktBilanziert>allPBs = 
 			new HashMap<String, ProduktBilanziert>();
-	private HashMap<String, Bewertungsmethode>allBWs = 
-			new HashMap<String, Bewertungsmethode>();
 	private HashMap<String, CharakterFaktor>allCFs = 
 			new HashMap<String, CharakterFaktor>();
 	private final Action newFlowAction 		= new newFlowAction();
@@ -138,7 +136,7 @@ public class IWBLCI {
 	private JTable wksTable 		= new JTable();
 	private JTable pbsTable 		= new JTable();
 	private JTable cfsTable 		= new JTable();
-//	private JTable bmsTable 		= new JTable();
+	private JTable bmsTable 		= new JTable();
 //	private JTable pkentesTable 	= new JTable();
 //	private JTable pktionsTable 	= new JTable();
 	private JTable resultsTable 	= new JTable();
@@ -148,7 +146,7 @@ public class IWBLCI {
 	DefaultTableModel wksTableModel 		= new DefaultTableModel(0,2);
 	DefaultTableModel pbsTableModel 		= new DefaultTableModel(0,3);
 	DefaultTableModel cfsTableModel 		= new DefaultTableModel(0,4);
-//	DefaultTableModel bmsTableModel 		= new DefaultTableModel(0,3);
+	DefaultTableModel bmsTableModel 		= new DefaultTableModel(0,3);
 //	DefaultTableModel pkenteTableModel 		= new DefaultTableModel(0,3);
 //	DefaultTableModel pktionTableModel 		= new DefaultTableModel(0,3);
 	DefaultTableModel resultsTableModel 	= new DefaultTableModel(0,3);
@@ -383,7 +381,7 @@ public class IWBLCI {
 		JLabel lblInfo4 = new JLabel("Universit\u00e4t Stuttgart");
 		lblInfo4.setFont(new Font("Tahoma", Font.BOLD, 14));
 		panel_4.add(lblInfo4, "cell 1 5,alignx center,aligny top");
-		JLabel lblInfo5 = new JLabel("Version 0.926   24.07.2017");
+		JLabel lblInfo5 = new JLabel("Version 0.926   25.07.2017");
 		lblInfo5.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		panel_4.add(lblInfo5, "cell 1 7,alignx center,aligny top");
 
@@ -465,7 +463,7 @@ public class IWBLCI {
 		JLabel lblTodo4 = new JLabel("");
 		lblTodo4.setFont(new Font("Tahoma", Font.BOLD, 14));
 		panel_9.add(lblTodo4, "cell 1 5,alignx center,aligny top");
-		JLabel lblTodo5 = new JLabel("Version 0.926   24.07.2017");
+		JLabel lblTodo5 = new JLabel("Version 0.926   25.07.2017");
 		lblTodo5.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		panel_9.add(lblTodo5, "cell 1 7,alignx center,aligny top");
 		
@@ -757,6 +755,21 @@ public class IWBLCI {
 		panel_17.add(btnP17n3, "cell 2 4,alignx center");
 
 		cl.show(panel, "leer");
+		
+		// Panel 18
+		
+		JPanel panel_18 = new JPanel();
+		panel.add(panel_18, "listeBMs");		
+		panel_18.setLayout(new MigLayout("", "[74px,grow]", "[14px][grow]"));	
+		JLabel lblListeDerBMs = new JLabel("Liste der Bewertungsmethoden");
+		lblListeDerBMs.setFont(new Font("Tahoma", Font.BOLD, 14));
+		panel_18.add(lblListeDerBMs, "cell 0 0,alignx center,aligny top");		
+		bmsTable.setModel(bmsTableModel);
+		TableColumnModel tcm8 = bmsTable.getColumnModel();
+		tcm8.getColumn(0).setHeaderValue("Bewertungsmethode");
+		tcm8.getColumn(1).setHeaderValue("Elementtyp");
+		tcm8.getColumn(2).setHeaderValue("Elementname");
+		panel_18.add(new JScrollPane(bmsTable), "cell 0 1,alignx center,aligny top");				
 		
 		/*
 		 * Organisation der Menuleiste
@@ -1249,7 +1262,7 @@ public class IWBLCI {
 				if (name.equals("")) {
 					lblStatusWK.setText(">>> Es wurde kein Name angegeben. <<<");
 				} else {
-					if (Wirkungskategorie.constainsName(name)) {
+					if (Wirkungskategorie.containsName(name)) {
 						lblStatusWK.setText(">>> Der angegebene Name ist bereits vorhanden. <<<");
 					} else {
 						allWKs.put(name, new Wirkungskategorie(name, wi));
@@ -1277,13 +1290,10 @@ public class IWBLCI {
 					} else {
 						String bwName = txtP12n4.getText();	
 						boolean bwNew = chbP12n1.isSelected();
-						boolean bwVorhanden = allBWs.keySet().contains(bwName);
-
-						if (bwVorhanden == false) {
+						if (Bewertungsmethode.containsName(bwName) == false) {
 							lblP12n1.setText(">>> Die Bewertungsmethode ist unbekannt. <<<");
 							if (bwNew == true) {
-								Bewertungsmethode bwNeu = new Bewertungsmethode(bwName);
-								allBWs.put(bwName, bwNeu);
+								Bewertungsmethode bwNeu = Bewertungsmethode.instance(bwName);
 								allPBs.put(name, new ProduktBilanziert(name));
 								allPBs.get(name).setBM(bwNeu);
 								lblP12n1.setText(">>> Anzahl Produktdeklarationen: " + allPBs.size() + " <<<");
@@ -1300,7 +1310,7 @@ public class IWBLCI {
 							} 
 						} else {
 							allPBs.put(name, new ProduktBilanziert(name));
-							allPBs.get(name).setBM(allBWs.get(bwName));
+							allPBs.get(name).setBM(Bewertungsmethode.instance(bwName));
 							lblP12n1.setText(">>> Anzahl Produktdeklarationen: " + allPBs.size() + " <<<");
 							btnP12n1.setEnabled(false);
 							txtP12n1.setEnabled(false);
@@ -1333,25 +1343,25 @@ public class IWBLCI {
 				if (fname.equals("") || (menge == 0.0)) {
 					lblP12n1.setText(">>> unvollst\u00e4ndige Eingabe <<<");
 				} else {
-					if (Wirkungskategorie.constainsName(fname)) {
+					if (Wirkungskategorie.containsName(fname)) {
 						Wirkungskategorie wk2 = allWKs.get(fname);
 						String mname = txtP12n1.getText();
 						String bmName = txtP12n4.getText();
 						if (wkNew == true) {
-							allBWs.get(bmName).addWK(wk2);
+							Bewertungsmethode.instance(bmName).addWK(wk2);
 						}
-						if (allBWs.get(bmName).kategorieListe().contains(wk2)) {
+						if (Bewertungsmethode.instance(bmName).kategorieListe().keySet().contains(wk2.getName())) {
 							allPBs.get(mname).addWirkung(wk2, menge);
 							txtP12n2.setText("");
 							txtP12n3.setText("");
 							btnP12n3.setEnabled(true);
-							int anzPWKs = allPBs.get(mname).getWirkungsvektor(allBWs.get(bmName)).size();					
+							int anzPWKs = allPBs.get(mname).getWirkungsvektor(Bewertungsmethode.instance(bmName)).size();					
 							lblP12n1.setText(">>> Die Produktdeklaration " + mname + " besitzt " +
 									anzPWKs + " Wirkungen <<<");
 						} else {
 							lblP12n1.setText(">>> Die Wirkungskategorie ist nicht Bestandteil"
 									+ " der Bewertungsmethode <<<");
-						}						
+						}												
 					} else {
 						lblP12n1.setText(">>> unbekannte Wirkung <<<");
 					}					
@@ -1399,10 +1409,10 @@ public class IWBLCI {
 					} catch (NumberFormatException e){
 						faktorZahl = false;
 				}
-				if (CharakterFaktor.constainsName(cfName) == false &&
+				if (CharakterFaktor.containsName(cfName) == false &&
 						cfName.equals("") == false &&
-						Fluss.constainsName(flName) == true &&
-						Wirkungskategorie.constainsName(wkName) == true &&
+						Fluss.containsName(flName) == true &&
+						Wirkungskategorie.containsName(wkName) == true &&
 						faktorZahl == true) {
 					allCFs.put(cfName, new CharakterFaktor(cfName, 
 							allFLs.get(flName), allWKs.get(wkName) , faktor));	
@@ -1416,19 +1426,83 @@ public class IWBLCI {
 					if (faktorZahl == false) {
 						lblP15n1.setText(">>> Es wurde kein Zahlenwert angegeben <<<"); 
 					}
-					if (Wirkungskategorie.constainsName(wkName) == false && wkName.equals("") == false) {
+					if (Wirkungskategorie.containsName(wkName) == false && wkName.equals("") == false) {
 						lblP15n1.setText(">>> Die Wirkungskategorie ist unbekannt <<<"); 
 					}
-					if (Fluss.constainsName(flName) == false && flName.equals("") == false) {
+					if (Fluss.containsName(flName) == false && flName.equals("") == false) {
 						lblP15n1.setText(">>> Der Fluss ist unbekannt <<<"); 
 					}
-					if (CharakterFaktor.constainsName(cfName) == true) {
+					if (CharakterFaktor.containsName(cfName) == true) {
 						lblP15n1.setText(">>> Der Name des Charakterisierungfaktors existiert bereits <<<"); 
 					}
 					if (cfName.equals("") || wkName.equals("") || flName.equals("") || fakStr.equals("")) {
 						lblP15n1.setText(">>> Unvollst\u00e4ndige Eingabe <<<");
 					}
 				}				
+			}
+		});
+		
+		/*
+		 * neuer Bewertungsmethode
+		 */		
+		
+		btnP17n1.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				String bmName = txtP17n1.getText();
+				if (Bewertungsmethode.containsName(bmName) == false &&
+						(bmName.equals("") == false)) {
+					Bewertungsmethode.instance(bmName);	
+					txtP17n1.setEnabled(false);
+					btnP17n1.setEnabled(false);
+					btnP17n2.setEnabled(true);
+					txtP17n2.setEnabled(true);
+				} else {
+					if (bmName.equals("")) {
+						lblP17n1.setText(">>> Es wurde kein Name angegeben <<<"); 						
+					} else {
+						lblP17n1.setText(">>> Der angegebene Name ist bereits vorhanden <<<");
+					}
+				}
+			}
+		});
+		
+		btnP17n2.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				String bmName = txtP17n1.getText();
+				String cfName = txtP17n2.getText();
+				if (Bewertungsmethode.instance(bmName).kategorieListe().containsKey(cfName) == false &&
+						cfName.equals("") == false &&
+						allCFs.containsKey(cfName)) {
+					Bewertungsmethode.instance(bmName).addFaktor(allCFs.get(cfName));	
+					btnP17n3.setEnabled(true);
+				} else {
+					if (cfName.equals("")) {
+						lblP17n1.setText(">>> Es wurde kein Name angegeben <<<"); 						
+					} 
+					if (Bewertungsmethode.instance(bmName).kategorieListe().containsKey(cfName) == true) {
+						lblP17n1.setText(">>> Der angegebene Charakterisierungsfaktor ist bereits vorhanden <<<");
+					}
+					if (allCFs.containsKey(cfName) == false) {
+						lblP17n1.setText(">>> Den angegebene Charakterisierungsfaktor gibt es nicht <<<");
+					}
+				}
+			}
+		});
+		
+		btnP17n3.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				lblP17n1.setText(">>> ... <<<");
+				txtP17n1.setText("");
+				txtP17n2.setText("");
+				txtP17n1.setEnabled(true);
+				txtP17n2.setEnabled(false);
+				btnP17n1.setEnabled(true);
+				btnP17n2.setEnabled(false);
+				btnP17n3.setEnabled(false);
+			
 			}
 		});
 	
@@ -1777,7 +1851,17 @@ public class IWBLCI {
 			putValue(SHORT_DESCRIPTION, "Liste aller Bewertungsmethoden");
 		}
 		public void actionPerformed(ActionEvent e) {
-			cl.show(panel, "todo");
+			bmsTableModel.setRowCount(0);
+			for (String bmName : Bewertungsmethode.getAllBWs().keySet()) {
+				bmsTableModel.addRow(new Object[] {bmName, "", ""});
+				for (String katName : Bewertungsmethode.instance(bmName).kategorieListe().keySet()) {
+					bmsTableModel.addRow(new Object[] {"", "Wirkungskategorie", katName});
+				}
+				for (String cfName : Bewertungsmethode.instance(bmName).getFaktorSet().keySet()) {
+					bmsTableModel.addRow(new Object[] {"", "Charakterisierungsfaktor", cfName});
+				}
+			}		
+			cl.show(panel, "listeBMs");
 		}
 	}
 	private class listPKentesAction extends AbstractAction {

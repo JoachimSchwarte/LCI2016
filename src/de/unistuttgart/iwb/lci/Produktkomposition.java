@@ -67,7 +67,8 @@ public class Produktkomposition implements Wirkungsvektor {
 	public HashMap<Wirkungskategorie, Double> getWirkungsvektor(Bewertungsmethode bm) {
 		HashMap<Wirkungskategorie, Double> wv =
 				new HashMap<Wirkungskategorie, Double>();
-		for (Wirkungskategorie wk : bm.kategorieListe()){
+		for (String wkName : bm.kategorieListe().keySet()){
+			Wirkungskategorie wk = bm.kategorieListe().get(wkName);
 			wv.put(wk, 0.);
 		}
 		for (Wirkungsvektor wvKomponente : zusammensetzung){

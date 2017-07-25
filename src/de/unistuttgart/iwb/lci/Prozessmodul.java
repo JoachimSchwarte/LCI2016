@@ -89,10 +89,11 @@ implements Flussvektoren, Wirkungsvektor {
 	public HashMap<Wirkungskategorie, Double> getWirkungsvektor(Bewertungsmethode bm) {
 		HashMap<Wirkungskategorie, Double> wv =
 				new HashMap<Wirkungskategorie, Double>();
-		for (Wirkungskategorie wk : bm.kategorieListe()){
-			wv.put(wk, 0.);
+		for (String wk : bm.kategorieListe().keySet()){
+			wv.put(bm.kategorieListe().get(wk), 0.);
 		}
-		for (CharakterFaktor cf : bm.getFaktorSet()){
+		for (String cfName : bm.getFaktorSet().keySet()){
+			CharakterFaktor cf = bm.getFaktorSet().get(cfName);
 			if (efv.containsKey(cf.getFluss())) {
 				wv.put(cf.getWirkung(), wv.get(cf.getWirkung())+
 						cf.getWert()*efv.get(cf.getFluss()));

@@ -66,8 +66,8 @@ public class IwbLciTest {
 	CharakterFaktor C33 = new CharakterFaktor("c33", c, W3, 1.);
 	CharakterFaktor C12 = new CharakterFaktor("c12", a, W2, 0.15);
 	CharakterFaktor C23 = new CharakterFaktor("c23", b, W3, 0.25);
-	Bewertungsmethode BM1 = new Bewertungsmethode("TestMethode1");
-	Bewertungsmethode BM2 = new Bewertungsmethode("TestMethode2");
+	Bewertungsmethode BM1 = Bewertungsmethode.instance("TestMethode1");
+	Bewertungsmethode BM2 = Bewertungsmethode.instance("TestMethode2");
 	ProduktBilanziert PB1 = new ProduktBilanziert("TestProdukt1");
 	Produktkomponente Komponente1 = new Produktkomponente("Modul3doppelt", Modul3, 2.);
 	Produktkomponente Komponente2 = new Produktkomponente("Modul4vierfach", Modul4, 4.);
@@ -229,6 +229,13 @@ public class IwbLciTest {
 		assertEquals(uD, g2.get(d), 0.01);
 		assertEquals(uE, g2.get(e), 0.01);
 		assertEquals(uF, g2.get(f), 0.01);
+	}
+	
+	@Test
+	public void BewertungsNamesTest() {
+		initialize2();
+		assertEquals(BM1.getName(), "TestMethode1");
+		assertEquals(BM2.getName(), "TestMethode2");
 	}
 	
 	@Test
