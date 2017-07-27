@@ -11,13 +11,15 @@ import java.util.LinkedList;
  * Diese Klasse dient zur Erzeugung von Produktkompositionen.
  * 
  * @author Dr.-Ing. Joachim Schwarte
- * @version 0.924
+ * @version 0.927
  */
 
 public class Produktkomposition implements Wirkungsvektor {
 	
-	// Diese Klasse besitzt keine Klassenvariablen
+	// Klassenvariable:
 	
+	private static HashMap<String, Produktkomposition> allPKtions = new HashMap<String, Produktkomposition>();
+
 	// Instanzvariablen:
 	
 	private String name;
@@ -25,25 +27,37 @@ public class Produktkomposition implements Wirkungsvektor {
 			= new LinkedList<Wirkungsvektor>();
 	
 	// Konstruktor:
-	
-	/**
-	 * Der einparametrige Konstruktor erzeugt eine benanntes 
-	 * Produktkomposition, die noch keine Komponenten
-	 * enthält.
-	 * @param name
-	 * ist der Name der Produktkomposition.
-	 */
-	
-	public Produktkomposition(String name) {
+
+	private Produktkomposition(String name) {
 		super();
 		this.name = name;
+		allPKtions.put(name, this);
 	}
 	
 	// Methoden:
 	
 	/**
+	 * Die instance-Methode erzeugt unter Verwendung des
+	 * privaten Konstruktors eine neue Produktkomposition
+	 * oder gibt eine bereits existierende Produktkomposition
+	 * zurück.
+	 * @param name
+	 * ist der Name der Produktkomposition.
 	 * @return
-	 * ... den Namen der Produktpomposition.
+	 * ... neue oder bereits zuvor existierende
+	 * Produktkomposition
+	 */
+	
+	public static Produktkomposition instance(String name) {
+		if (allPKtions.containsKey(name) == false) {
+			new Produktkomposition(name);
+		} 
+		return allPKtions.get(name);
+	}
+	
+	/**
+	 * @return
+	 * ... den Namen der Produktkomposition.
 	 */
 	
 	public String getName() {

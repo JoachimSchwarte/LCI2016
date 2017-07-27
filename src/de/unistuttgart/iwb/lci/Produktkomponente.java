@@ -14,12 +14,14 @@ import java.util.HashMap;
  * diese durch eine Mengenangabe.
  * 
  * @author Dr.-Ing. Joachim Schwarte
- * @version 0.924
+ * @version 0.927
  */
 
 public class Produktkomponente implements Wirkungsvektor {
 	
-	// Diese Klasse besitzt keine Klassenvariablen
+	// Klassenvariable:
+	
+	private static HashMap<String, Produktkomponente> allPKentes = new HashMap<String, Produktkomponente>();
 	
 	// Instanzvariablen:
 	
@@ -28,29 +30,69 @@ public class Produktkomponente implements Wirkungsvektor {
 	private double menge;
 	
 	// Konstruktor:
+
+	private Produktkomponente(String name, Wirkungsvektor komponente, double menge) {
+		super();
+		this.name = name;
+		this.komponente = komponente;
+		this.menge = menge;
+		allPKentes.put(name, this);
+	}
+
+	// Methoden:
 	
 	/**
-	 * Der dreiparametrige Konstruktor erzeugt eine vollständige
+	 * Der dreiparametrige Methode newInstance erzeugt 
+	 * unter Verwendung des privaten Konstruktors eine vollständige
 	 * Produktkomponente.
 	 * @param name
-	 * übergibt der Namen der Produktkomponente. Dieser kann frei 
-	 * gewählt werden.
-	 * Auf Anwendungsebene ist Namenseindeutigkeit anzustreben.
+	 * übergibt der Namen der Produktkomponente. 
+	 * Dieser muss eindeutig sein
 	 * @param komponente
 	 * ist ein bliebiges Objekt einer Klasse, die das Interface
 	 * Wirkungsvektor implementiert.
 	 * @param menge
 	 * ist die zugehörige Mengenangabe. 
+	 * @return
+	 * ... die neue Produktkomponente
 	 */
-
-	public Produktkomponente(String name, Wirkungsvektor komponente, double menge) {
-		super();
-		this.name = name;
-		this.komponente = komponente;
-		this.menge = menge;
+	
+	public static Produktkomponente newInstance(String name, Wirkungsvektor komponente, double menge) {
+		if (allPKentes.containsKey(name) == false) {
+			new Produktkomponente(name, komponente, menge);	
+		} 
+		return allPKentes.get(name);
 	}
-
-	// Methoden:
+	
+	/**
+	 * Gibt eine bereits vorhandene Produktkomponente zurück.
+	 * @param name
+	 * Name der gesuchten Produktkomponente
+	 * @return
+	 * ... die gesuchte Produktkomponente
+	 */
+	
+	public static Produktkomponente getInstance(String name) { 
+		return allPKentes.get(name);
+	}
+	
+	/**
+	 * Dient vorläufig zum Aktualisieren des Wirkungsvektors.
+	 * @param name
+	 * der Name der Produktkomponente. 
+	 * @param komponente
+	 * ist ein bliebiges Objekt einer Klasse, die das Interface
+	 * Wirkungsvektor implementiert.
+	 * @param menge
+	 * ist die zugehörige Mengenangabe. 
+	 * @return
+	 * ... die Produktkomponente
+	 */
+	
+	public static Produktkomponente updateInstance(String name, Wirkungsvektor komponente, double menge) { 		
+		allPKentes.put(name, new Produktkomponente(name, komponente, menge));
+		return allPKentes.get(name);
+	}
 
 	@Override
 	public HashMap<Wirkungskategorie, Double> getWirkungsvektor(Bewertungsmethode bm) {

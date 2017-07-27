@@ -7,7 +7,7 @@ package de.unistuttgart.iwb.lcitest;
 
 /**
  * @author Dr.-Ing. Joachim Schwarte
- * @version 0.92
+ * @version 0.927
  */
 
 import static org.junit.Assert.*;
@@ -69,13 +69,13 @@ public class IwbLciTest {
 	Bewertungsmethode BM1 = Bewertungsmethode.instance("TestMethode1");
 	Bewertungsmethode BM2 = Bewertungsmethode.instance("TestMethode2");
 	ProduktBilanziert PB1 = new ProduktBilanziert("TestProdukt1");
-	Produktkomponente Komponente1 = new Produktkomponente("Modul3doppelt", Modul3, 2.);
-	Produktkomponente Komponente2 = new Produktkomponente("Modul4vierfach", Modul4, 4.);
-	Produktkomponente Komponente3 = new Produktkomponente("GesamtDreifach", Gesamt, 3.);
-	Produktkomponente Komponente4 = new Produktkomponente("PB1fünffach", PB1, 5.);
-	Produktkomposition PK1 = new Produktkomposition("TestKomposition1");
-	Produktkomponente Komponente5 = new Produktkomponente("PK1sechsfach", PK1, 6.);
-	Produktkomponente Komponente6 = new Produktkomponente("EinsBisFuenfDoppelt", EinsBisFuenf, 2.);
+	Produktkomponente Komponente1 = Produktkomponente.newInstance("Modul3doppelt", Modul3, 2.);
+	Produktkomponente Komponente2 = Produktkomponente.newInstance("Modul4vierfach", Modul4, 4.);
+	Produktkomponente Komponente3 = Produktkomponente.newInstance("GesamtDreifach", Gesamt, 3.);
+	Produktkomponente Komponente4 = Produktkomponente.newInstance("PB1fünffach", PB1, 5.);
+	Produktkomposition PK1 = Produktkomposition.instance("TestKomposition1");
+	Produktkomponente Komponente5 = Produktkomponente.newInstance("PK1sechsfach", PK1, 6.);
+	Produktkomponente Komponente6 = Produktkomponente.newInstance("EinsBisFuenfDoppelt", EinsBisFuenf, 2.);
 	private void initialize1() {
 		Modul1.addFluss(a, 50.);
 		Modul1.addFluss(c, -300.);
@@ -160,8 +160,15 @@ public class IwbLciTest {
 		PB1.addWirkung(W1, 3.);
 		PB1.addWirkung(W2, 5.);
 		PB1.addWirkung(W3, 7.);
+		Komponente1 = Produktkomponente.updateInstance("Modul3doppelt", Modul3, 2.);
+		Komponente2 = Produktkomponente.updateInstance("Modul4vierfach", Modul4, 4.);
+		Komponente3 = Produktkomponente.updateInstance("GesamtDreifach", Gesamt, 3.);
+		Komponente4 = Produktkomponente.updateInstance("PB1fünffach", PB1, 5.);
+		
 	}
 	private void initialize3() {
+		Komponente4 = Produktkomponente.updateInstance("PB1fünffach", PB1, 5.);
+		Komponente6 = Produktkomponente.updateInstance("EinsBisFuenfDoppelt", EinsBisFuenf, 2.);
 		PK1.addKomponente(Komponente4);
 		PK1.addKomponente(Komponente6);
 	}
@@ -244,6 +251,8 @@ public class IwbLciTest {
 		assertEquals(3, BM1.kategorieListe().size());
 		assertEquals(1, BM2.kategorieListe().size());
 		assertEquals("Klimawandel", W1.getName());
+		assertEquals(5, BM1.getFaktorSet().size());
+		assertEquals(2, BM2.getFaktorSet().size());
 	}
 	
 	@Test
@@ -298,6 +307,27 @@ public class IwbLciTest {
 	}
 	
 	@Test
+	public void PKentesNamesTest() {
+		initialize2();
+		assertEquals(Komponente1.getName(), "Modul3doppelt");
+		assertEquals(Komponente2.getName(), "Modul4vierfach");
+		assertEquals(Komponente3.getName(), Produktkomponente.getInstance("GesamtDreifach").getName());		
+	}
+	
+	@Test
+	public void PKentesMengenTest() {
+		initialize2();
+		assertEquals(Komponente1.getMenge(), 
+				Produktkomponente.getInstance("Modul3doppelt").getMenge(), 0.001);
+		assertEquals(Komponente2.getMenge(), 
+				Produktkomponente.getInstance("Modul4vierfach").getMenge(), 0.001);
+		assertEquals(Komponente3.getMenge(), 
+				Produktkomponente.getInstance("GesamtDreifach").getMenge(), 0.001);	
+		assertEquals(Komponente1.getMenge(), 2.0, 0.001);
+		assertEquals(Produktkomponente.getInstance("Modul3doppelt").getMenge(), 2.0, 0.001);
+	}
+	
+	@Test
 	public void ProduktkomponenteTest1() {
 		initialize1();
 		initialize2();
@@ -305,6 +335,8 @@ public class IwbLciTest {
 		HashMap<Wirkungskategorie, Double> wv1b = Komponente1.getWirkungsvektor(BM1);
 		assertEquals(3, wv1a.size());
 		assertEquals(3, wv1b.size());
+		assertEquals(wv1a.get(W1)*Komponente1.getMenge(), 20.0, .001);
+		assertEquals(wv1b.get(W1), 20.0, .001);
 		assertEquals(wv1a.get(W1)*Komponente1.getMenge(), wv1b.get(W1), .001);
 		assertEquals(wv1a.get(W2)*2., wv1b.get(W2), .001);
 		assertEquals(wv1a.get(W3)*Komponente1.getMenge(), wv1b.get(W3), .001);

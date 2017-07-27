@@ -21,6 +21,7 @@ import javax.swing.JLabel;
 import java.awt.CardLayout;
 import javax.swing.AbstractAction;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -38,8 +39,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JTable;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -49,7 +49,7 @@ import java.io.ObjectOutputStream;
 
 /**
  * @author Dr.-Ing. Joachim Schwarte
- * @version 0.926
+ * @version 0.927
  */
 
 public class IWBLCI {
@@ -130,6 +130,13 @@ public class IWBLCI {
 	// Panel 17; Neue Bewertungsmethode
 	private JTextField txtP17n1; 	// Name der Bewertungsmethode
 	private JTextField txtP17n2; 	// Name des Charakterisierungsfaktors
+	// Panel 19; Neue Produktkomponente
+	private JTextField txtP19n1; 	// Name der Produktkomponente
+	private JTextField txtP19n2;	// Name der unquantifizierten Komponente
+	private JTextField txtP19n3;	// Menge
+	// Panel 21; Neue Produktkomponente
+	private JTextField txtP21n1; 	// Name der Produktkomposition
+	private JTextField txtP21n2;	// Name der Produktkomponente
 	private JTable flowsTable 		= new JTable();
 	private JTable modulesTable 	= new JTable();
 	private JTable productsTable 	= new JTable();
@@ -137,8 +144,8 @@ public class IWBLCI {
 	private JTable pbsTable 		= new JTable();
 	private JTable cfsTable 		= new JTable();
 	private JTable bmsTable 		= new JTable();
-//	private JTable pkentesTable 	= new JTable();
-//	private JTable pktionsTable 	= new JTable();
+	private JTable pkentesTable 	= new JTable();
+	private JTable pktionsTable 	= new JTable();
 	private JTable resultsTable 	= new JTable();
 	DefaultTableModel flowsTableModel 		= new DefaultTableModel(0,3);
 	DefaultTableModel modulesTableModel 	= new DefaultTableModel(0,3);
@@ -147,8 +154,8 @@ public class IWBLCI {
 	DefaultTableModel pbsTableModel 		= new DefaultTableModel(0,3);
 	DefaultTableModel cfsTableModel 		= new DefaultTableModel(0,4);
 	DefaultTableModel bmsTableModel 		= new DefaultTableModel(0,3);
-//	DefaultTableModel pkenteTableModel 		= new DefaultTableModel(0,3);
-//	DefaultTableModel pktionTableModel 		= new DefaultTableModel(0,3);
+	DefaultTableModel pkentesTableModel 	= new DefaultTableModel(0,3);
+	DefaultTableModel pktionsTableModel 	= new DefaultTableModel(0,2);
 	DefaultTableModel resultsTableModel 	= new DefaultTableModel(0,3);
 
 	/**
@@ -179,7 +186,7 @@ public class IWBLCI {
 	 */
 	private void initialize() {
 		frmIwblciVersion = new JFrame();
-		frmIwblciVersion.setTitle("IWB-LCI   Version 0.926");
+		frmIwblciVersion.setTitle("IWB-LCI   Version 0.927");
 		frmIwblciVersion.setBounds(100, 100, 600, 480);
 		frmIwblciVersion.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);		
 		
@@ -381,7 +388,7 @@ public class IWBLCI {
 		JLabel lblInfo4 = new JLabel("Universit\u00e4t Stuttgart");
 		lblInfo4.setFont(new Font("Tahoma", Font.BOLD, 14));
 		panel_4.add(lblInfo4, "cell 1 5,alignx center,aligny top");
-		JLabel lblInfo5 = new JLabel("Version 0.926   25.07.2017");
+		JLabel lblInfo5 = new JLabel("Version 0.927   27.07.2017");
 		lblInfo5.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		panel_4.add(lblInfo5, "cell 1 7,alignx center,aligny top");
 
@@ -463,7 +470,7 @@ public class IWBLCI {
 		JLabel lblTodo4 = new JLabel("");
 		lblTodo4.setFont(new Font("Tahoma", Font.BOLD, 14));
 		panel_9.add(lblTodo4, "cell 1 5,alignx center,aligny top");
-		JLabel lblTodo5 = new JLabel("Version 0.926   25.07.2017");
+		JLabel lblTodo5 = new JLabel("Version 0.927   27.07.2017");
 		lblTodo5.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		panel_9.add(lblTodo5, "cell 1 7,alignx center,aligny top");
 		
@@ -769,7 +776,110 @@ public class IWBLCI {
 		tcm8.getColumn(0).setHeaderValue("Bewertungsmethode");
 		tcm8.getColumn(1).setHeaderValue("Elementtyp");
 		tcm8.getColumn(2).setHeaderValue("Elementname");
-		panel_18.add(new JScrollPane(bmsTable), "cell 0 1,alignx center,aligny top");				
+		panel_18.add(new JScrollPane(bmsTable), "cell 0 1,alignx center,aligny top");	
+		
+		// Panel 19
+		
+		JPanel panel_19 = new JPanel();
+		panel.add(panel_19, "neuPKente");
+		panel_19.setLayout(new MigLayout("", "[108px,grow][108px][108px][108px,grow]", 
+				"[20px][20px][20px][20px][20px][20px][20px][20px][20px,grow]"));
+		JLabel lblP19n2 = new JLabel("Neue Produktkomponente");
+		lblP19n2.setFont(new Font("Tahoma", Font.BOLD, 14));
+		panel_19.add(lblP19n2, "flowy,cell 1 0 2 1,alignx center,growy");
+		
+		JLabel lblP19n3 = new JLabel("Name der Produktkomponente");
+		panel_19.add(lblP19n3, "cell 1 1,grow");
+		
+		txtP19n1 = new JTextField();
+		txtP19n1.setText("");
+		panel_19.add(txtP19n1, "cell 2 1,grow");
+		txtP19n1.setColumns(10);
+		
+		JLabel lblP19n4 = new JLabel("Name der unquantifizierten Komponente");
+		panel_19.add(lblP19n4, "cell 1 2,grow");
+		
+		txtP19n2 = new JTextField();
+		txtP19n2.setText("");
+		panel_19.add(txtP19n2, "cell 2 2,grow");
+		txtP19n2.setColumns(10);
+		
+		JLabel lblP19n5 = new JLabel("Menge");
+		panel_19.add(lblP19n5, "cell 1 3,grow");
+		
+		txtP19n3 = new JTextField();
+		txtP19n3.setText("");
+		panel_19.add(txtP19n3, "cell 2 3,grow");
+		txtP19n3.setColumns(10);
+		
+		JButton btnP19n1 = new JButton("Produktkomponente hinzuf\u00fcgen");
+		btnP19n1.setEnabled(false);
+		panel_19.add(btnP19n1, "cell 1 4 2 1,alignx center");
+		
+		JLabel lblP19n1 = new JLabel(">>> ... <<<");
+		panel_19.add(lblP19n1, "cell 0 5 5 1,alignx center");
+		
+		// Panel 20
+		
+		JPanel panel_20 = new JPanel();
+		panel.add(panel_20, "listePKentes");		
+		panel_20.setLayout(new MigLayout("", "[74px,grow]", "[14px][grow]"));	
+		JLabel lblListeDerPKentes = new JLabel("Liste der Produktkomponenten");
+		lblListeDerPKentes.setFont(new Font("Tahoma", Font.BOLD, 14));
+		panel_20.add(lblListeDerPKentes, "cell 0 0,alignx center,aligny top");		
+		pkentesTable.setModel(pkentesTableModel);
+		TableColumnModel tcm9 = pkentesTable.getColumnModel();
+		tcm9.getColumn(0).setHeaderValue("Produktkomponente");
+		tcm9.getColumn(1).setHeaderValue("unquantifizierte Komp.");
+		tcm9.getColumn(2).setHeaderValue("Menge");
+		panel_20.add(new JScrollPane(pkentesTable), "cell 0 1,alignx center,aligny top");
+		
+		// Panel 21
+		
+		JPanel panel_21 = new JPanel();
+		panel.add(panel_21, "neuPKtion");
+		panel_21.setLayout(new MigLayout("", "[108px,grow][108px][108px][108px,grow]", 
+				"[20px][21px][20px][20px][20px][20px][20px][20px][20px,grow]"));
+		JLabel lblP21n2 = new JLabel("Neue Produktkomposition");
+		lblP21n2.setFont(new Font("Tahoma", Font.BOLD, 14));
+		panel_21.add(lblP21n2, "flowy,cell 1 0 2 1,alignx center,growy");
+		
+		JLabel lblP21n3 = new JLabel("Name der Produktkomposition");
+		panel_21.add(lblP21n3, "cell 1 1,grow");
+		
+		txtP21n1 = new JTextField();
+		txtP21n1.setText("");
+		panel_21.add(txtP21n1, "cell 2 1,grow");
+		txtP21n1.setColumns(10);
+		
+		JLabel lblP21n4 = new JLabel("Name der Produktkomponente");
+		panel_21.add(lblP21n4, "cell 1 2,grow");
+		
+		txtP21n2 = new JTextField();
+		txtP21n2.setText("");
+		panel_21.add(txtP21n2, "cell 2 2,grow");
+		txtP21n2.setColumns(10);
+		
+		JButton btnP21n1 = new JButton("Produktkomposition hinzuf\u00fcgen");
+		btnP21n1.setEnabled(false);
+		panel_21.add(btnP21n1, "cell 1 3 2 1,alignx center");
+		
+		JLabel lblP21n1 = new JLabel(">>> ... <<<");
+		panel_21.add(lblP21n1, "cell 0 4 5 1,alignx center");
+		
+		// Panel 22
+		
+		JPanel panel_22 = new JPanel();
+		panel.add(panel_22, "listePKtions");		
+		panel_22.setLayout(new MigLayout("", "[74px,grow]", "[14px][grow]"));	
+		JLabel lblListeDerPKtions = new JLabel("Liste der Produktkomponsitionen");
+		lblListeDerPKtions.setFont(new Font("Tahoma", Font.BOLD, 14));
+		panel_22.add(lblListeDerPKtions, "cell 0 0,alignx center,aligny top");		
+		pktionsTable.setModel(pktionsTableModel);
+		TableColumnModel tcm10 = pktionsTable.getColumnModel();
+		tcm10.getColumn(0).setHeaderValue("Produktkomposition");
+		tcm10.getColumn(1).setHeaderValue("Produktkomponente");
+		panel_22.add(new JScrollPane(pktionsTable), "cell 0 1,alignx center,aligny top");
 		
 		/*
 		 * Organisation der Menuleiste
@@ -896,9 +1006,9 @@ public class IWBLCI {
 		 * neuer Fluss
 		 */
 		
-		btnSpeichern.addMouseListener(new MouseAdapter() {
+		btnSpeichern.addActionListener(new ActionListener() {
 			@Override
-			public void mouseClicked(MouseEvent arg0) {
+			public void actionPerformed(ActionEvent arg0) {
 				String name = txtName.getText();	
 				FlussTyp typ = comboBox.getItemAt(comboBox.getSelectedIndex());
 				FlussEinheit einheit = comboBox_1.getItemAt(comboBox_1.getSelectedIndex());
@@ -930,9 +1040,9 @@ public class IWBLCI {
 		 * neues Prozessmodul
 		 */
 		
-		btnSpei2.addMouseListener(new MouseAdapter() {
+		btnSpei2.addActionListener(new ActionListener() {
 			@Override
-			public void mouseClicked(MouseEvent arg0) {
+			public void actionPerformed(ActionEvent arg0) {
 				String name = txtModName.getText();	
 				if (name.equals("")) {
 					lblStatus2.setText(">>> Es wurde kein Name angegeben. <<<");
@@ -964,9 +1074,9 @@ public class IWBLCI {
 			}
 		});
 		
-		btnAddFluss.addMouseListener(new MouseAdapter() {
+		btnAddFluss.addActionListener(new ActionListener() {
 			@Override
-			public void mouseClicked(MouseEvent arg0) {
+			public void actionPerformed(ActionEvent arg0) {
 				String fname = txtFlussName.getText();
 				String fmenge = txtMenge.getText();
 				Double menge;
@@ -1009,9 +1119,9 @@ public class IWBLCI {
 			}
 		});
 		
-		btnFertig.addMouseListener(new MouseAdapter() {
+		btnFertig.addActionListener(new ActionListener() {
 			@Override
-			public void mouseClicked(MouseEvent arg0) {
+			public void actionPerformed(ActionEvent arg0) {
 				btnSpei2.setEnabled(true);
 				txtFlussName.setText("");
 				txtMenge.setText("");
@@ -1029,9 +1139,9 @@ public class IWBLCI {
 		 * neues Produktsystem
 		 */
 		
-		btnSpei3.addMouseListener(new MouseAdapter() {
+		btnSpei3.addActionListener(new ActionListener() {
 			@Override
-			public void mouseClicked(MouseEvent arg0) {
+			public void actionPerformed(ActionEvent arg0) {
 				String name = txtPSName.getText();	
 				if (name.equals("")) {
 					lblStatus3.setText(">>> Es wurde kein Name angegeben. <<<");
@@ -1067,9 +1177,9 @@ public class IWBLCI {
 			}
 		});
 		
-		btnAddMod.addMouseListener(new MouseAdapter() {
+		btnAddMod.addActionListener(new ActionListener() {
 			@Override
-			public void mouseClicked(MouseEvent arg0) {
+			public void actionPerformed(ActionEvent arg0) {
 				String modname = txtModName2.getText();
 				if (modname.equals("") || modname.equals(txtPSName.getText())) {
 					if (modname.equals("")) {
@@ -1102,9 +1212,6 @@ public class IWBLCI {
 							allProSys.get(txtPSName.getText()).addProzessmodul(allProSys.get(modname));
 						}
 						allMNLs.get(txtPSName.getText()).addName(modname);
-//						allMNLs.put(txtPSName.getText(), new ModulNamenListe());
-//						allBVs.put(txtPSName.getText(), new Bedarfsvektor());
-//						allVKs.put(txtPSName.getText(), new VorUndKoppelprodukte());
 						lblStatus3.setText(">>> Produktsystem " + txtPSName.getText() +
 								" besteht aus " + allProSys.get(txtPSName.getText()).getModulAnzahl() 
 								+ " Elementen <<<");
@@ -1117,9 +1224,9 @@ public class IWBLCI {
 			}
 		});
 		
-		btnWeiter.addMouseListener(new MouseAdapter() {
+		btnWeiter.addActionListener(new ActionListener() {
 			@Override
-			public void mouseClicked(MouseEvent arg0) {
+			public void actionPerformed(ActionEvent arg0) {
 				txtModName2.setEnabled(false);
 				txtModName2.setText("");
 				btnAddMod.setEnabled(false);
@@ -1131,9 +1238,9 @@ public class IWBLCI {
 			}
 		});
 		
-		btnAddBed.addMouseListener(new MouseAdapter() {
+		btnAddBed.addActionListener(new ActionListener() {
 			@Override
-			public void mouseClicked(MouseEvent arg0) {
+			public void actionPerformed(ActionEvent arg0) {
 				String fname = txtBV.getText();
 				String fmenge = txtBVMenge.getText();
 				Double menge;
@@ -1171,9 +1278,9 @@ public class IWBLCI {
 			}
 		});
 		
-		btnWei2.addMouseListener(new MouseAdapter() {
+		btnWei2.addActionListener(new ActionListener() {
 			@Override
-			public void mouseClicked(MouseEvent arg0) {
+			public void actionPerformed(ActionEvent arg0) {
 				txtModName2.setEnabled(false);
 				txtModName2.setText("");
 				btnAddMod.setEnabled(false);
@@ -1192,9 +1299,9 @@ public class IWBLCI {
 			}
 		});
 		
-		btnAddVK.addMouseListener(new MouseAdapter() {
+		btnAddVK.addActionListener(new ActionListener() {
 			@Override
-			public void mouseClicked(MouseEvent arg0) {
+			public void actionPerformed(ActionEvent arg0) {
 				String vkname = txtVKName.getText();
 				if (vkname.equals("")) {
 					lblStatus3.setText(">>> unvollst\u00e4ndige Eingabe <<<");
@@ -1225,9 +1332,9 @@ public class IWBLCI {
 			}
 		});
 
-		btnFertig2.addMouseListener(new MouseAdapter() {
+		btnFertig2.addActionListener(new ActionListener() {
 			@Override
-			public void mouseClicked(MouseEvent arg0) {
+			public void actionPerformed(ActionEvent arg0) {
 				txtPSName.setEnabled(true);
 				txtPSName.setText("");
 				btnSpei3.setEnabled(true);
@@ -1254,9 +1361,9 @@ public class IWBLCI {
 		 * neue Wirkungskategorie
 		 */
 		
-		btnSpeiWK.addMouseListener(new MouseAdapter() {
+		btnSpeiWK.addActionListener(new ActionListener() {
 			@Override
-			public void mouseClicked(MouseEvent arg0) {
+			public void actionPerformed(ActionEvent arg0) {
 				String name = txtNameWK.getText();	
 				Wirkungsindikator wi = comboBoxWK.getItemAt(comboBoxWK.getSelectedIndex());
 				if (name.equals("")) {
@@ -1278,9 +1385,9 @@ public class IWBLCI {
 		 * neue Produktdeklaration (= neues ProduktBilanziert-Objekt)
 		 */
 
-		btnP12n1.addMouseListener(new MouseAdapter() {
+		btnP12n1.addActionListener(new ActionListener() {
 			@Override
-			public void mouseClicked(MouseEvent arg0) {
+			public void actionPerformed(ActionEvent arg0) {
 				String name = txtP12n1.getText();	
 				if (name.equals("")) {
 					lblP12n1.setText(">>> Es wurde kein Name angegeben. <<<");
@@ -1328,9 +1435,9 @@ public class IWBLCI {
 			}
 		});
 		
-		btnP12n2.addMouseListener(new MouseAdapter() {
+		btnP12n2.addActionListener(new ActionListener() {
 			@Override
-			public void mouseClicked(MouseEvent arg0) {
+			public void actionPerformed(ActionEvent arg0) {
 				String fname = txtP12n2.getText();
 				boolean wkNew = chbP12n2.isSelected();
 				String fmenge = txtP12n3.getText();
@@ -1369,9 +1476,9 @@ public class IWBLCI {
 			}
 		});
 		
-		btnP12n3.addMouseListener(new MouseAdapter() {
+		btnP12n3.addActionListener(new ActionListener() {
 			@Override
-			public void mouseClicked(MouseEvent arg0) {
+			public void actionPerformed(ActionEvent arg0) {
 				btnP12n1.setEnabled(true);
 				txtP12n2.setText("");
 				txtP12n3.setText("");
@@ -1395,9 +1502,9 @@ public class IWBLCI {
 		 * neuer Charakterisierungsfaktor (= neues CharakterFaktor-Objekt)
 		 */		
 		
-		btnP15n1.addMouseListener(new MouseAdapter() {
+		btnP15n1.addActionListener(new ActionListener() {
 			@Override
-			public void mouseClicked(MouseEvent arg0) {
+			public void actionPerformed(ActionEvent arg0) {
 				String cfName = txtP15n1.getText();
 				String flName = txtP15n2.getText();
 				String wkName = txtP15n3.getText();
@@ -1421,7 +1528,7 @@ public class IWBLCI {
 					txtP15n3.setText("");
 					txtP15n4.setText("");
 					lblP15n1.setText(">>> Anzahl Charakterisierungfaktoren: "
-							+ + allCFs.size() + " <<<");					
+							+ allCFs.size() + " <<<");					
 				} else {
 					if (faktorZahl == false) {
 						lblP15n1.setText(">>> Es wurde kein Zahlenwert angegeben <<<"); 
@@ -1443,12 +1550,12 @@ public class IWBLCI {
 		});
 		
 		/*
-		 * neuer Bewertungsmethode
+		 * neue Bewertungsmethode
 		 */		
 		
-		btnP17n1.addMouseListener(new MouseAdapter() {
+		btnP17n1.addActionListener(new ActionListener() {
 			@Override
-			public void mouseClicked(MouseEvent arg0) {
+			public void actionPerformed(ActionEvent arg0) {
 				String bmName = txtP17n1.getText();
 				if (Bewertungsmethode.containsName(bmName) == false &&
 						(bmName.equals("") == false)) {
@@ -1457,6 +1564,8 @@ public class IWBLCI {
 					btnP17n1.setEnabled(false);
 					btnP17n2.setEnabled(true);
 					txtP17n2.setEnabled(true);
+					lblP17n1.setText(">>> Anzahl Bewertungsmethoden: "
+							+ Bewertungsmethode.getAllBWs().size() + " <<<");
 				} else {
 					if (bmName.equals("")) {
 						lblP17n1.setText(">>> Es wurde kein Name angegeben <<<"); 						
@@ -1467,33 +1576,39 @@ public class IWBLCI {
 			}
 		});
 		
-		btnP17n2.addMouseListener(new MouseAdapter() {
+		btnP17n2.addActionListener(new ActionListener() {
 			@Override
-			public void mouseClicked(MouseEvent arg0) {
+			public void actionPerformed(ActionEvent arg0) {
 				String bmName = txtP17n1.getText();
 				String cfName = txtP17n2.getText();
-				if (Bewertungsmethode.instance(bmName).kategorieListe().containsKey(cfName) == false &&
+				if (Bewertungsmethode.instance(bmName).getFaktorSet().containsKey(cfName) == false &&
 						cfName.equals("") == false &&
 						allCFs.containsKey(cfName)) {
 					Bewertungsmethode.instance(bmName).addFaktor(allCFs.get(cfName));	
 					btnP17n3.setEnabled(true);
+					txtP17n2.setText("");
+					lblP17n1.setText(">>> Diese Methode enthält "
+							+ Bewertungsmethode.instance(bmName).getFaktorSet().size() 
+							+ " Faktoren die " 
+							+ Bewertungsmethode.instance(bmName).kategorieListe().size()
+							+ " Kategorien betreffen <<<");
 				} else {
-					if (cfName.equals("")) {
-						lblP17n1.setText(">>> Es wurde kein Name angegeben <<<"); 						
-					} 
-					if (Bewertungsmethode.instance(bmName).kategorieListe().containsKey(cfName) == true) {
+					if (Bewertungsmethode.instance(bmName).getFaktorSet().containsKey(cfName) == true) {
 						lblP17n1.setText(">>> Der angegebene Charakterisierungsfaktor ist bereits vorhanden <<<");
 					}
 					if (allCFs.containsKey(cfName) == false) {
 						lblP17n1.setText(">>> Den angegebene Charakterisierungsfaktor gibt es nicht <<<");
 					}
+					if (cfName.equals("")) {
+						lblP17n1.setText(">>> Es wurde kein Name angegeben <<<"); 						
+					} 
 				}
 			}
 		});
 		
-		btnP17n3.addMouseListener(new MouseAdapter() {
+		btnP17n3.addActionListener(new ActionListener() {
 			@Override
-			public void mouseClicked(MouseEvent arg0) {
+			public void actionPerformed(ActionEvent arg0) {
 				lblP17n1.setText(">>> ... <<<");
 				txtP17n1.setText("");
 				txtP17n2.setText("");
@@ -1510,9 +1625,9 @@ public class IWBLCI {
 		 * Prozessmodul editieren
 		 */
 	
-		btnEditModul.addMouseListener(new MouseAdapter() {
+		btnEditModul.addActionListener(new ActionListener() {
 			@Override
-			public void mouseClicked(MouseEvent arg0) {
+			public void actionPerformed(ActionEvent arg0) {
 				String name = txtModName3.getText();	
 				if (name.equals("")) {
 					lblStatus4.setText(">>> Es wurde kein Name angegeben. <<<");
@@ -1540,9 +1655,9 @@ public class IWBLCI {
 			}		
 		});
 		
-		btnEditFluss.addMouseListener(new MouseAdapter() {
+		btnEditFluss.addActionListener(new ActionListener() {
 			@Override
-			public void mouseClicked(MouseEvent arg0) {
+			public void actionPerformed(ActionEvent arg0) {
 				String fname = txtFlussName2.getText();
 				String fmenge = txtMenge2.getText();
 				Double menge = 0.0;
@@ -1598,9 +1713,9 @@ public class IWBLCI {
 			}
 		});
 		
-		btnFertig3.addMouseListener(new MouseAdapter() {
+		btnFertig3.addActionListener(new ActionListener() {
 			@Override
-			public void mouseClicked(MouseEvent arg0) {
+			public void actionPerformed(ActionEvent arg0) {
 				btnEditModul.setEnabled(true);
 				txtFlussName2.setText("");
 				txtMenge2.setText("");
@@ -1697,7 +1812,7 @@ public class IWBLCI {
 			putValue(SHORT_DESCRIPTION, "neue Produktkomponente erfassen");
 		}
 		public void actionPerformed(ActionEvent e) {
-			cl.show(panel, "todo");
+			cl.show(panel, "neuPKente");
 		}
 	}
 	private class newPKtionAction extends AbstractAction {
@@ -1707,7 +1822,7 @@ public class IWBLCI {
 			putValue(SHORT_DESCRIPTION, "neue Produktkomposition erfassen");
 		}
 		public void actionPerformed(ActionEvent e) {
-			cl.show(panel, "todo");
+			cl.show(panel, "neuPKtion");
 		}
 	}
 	
@@ -1871,7 +1986,7 @@ public class IWBLCI {
 			putValue(SHORT_DESCRIPTION, "Liste aller Produktkomponenten");
 		}
 		public void actionPerformed(ActionEvent e) {
-			cl.show(panel, "todo");
+			cl.show(panel, "listePKentes");
 		}
 	}
 	private class listPKtionsAction extends AbstractAction {
@@ -1881,7 +1996,7 @@ public class IWBLCI {
 			putValue(SHORT_DESCRIPTION, "Liste aller Produktkompositionen");
 		}
 		public void actionPerformed(ActionEvent e) {
-			cl.show(panel, "todo");
+			cl.show(panel, "listePKtions");
 		}
 	}
 
