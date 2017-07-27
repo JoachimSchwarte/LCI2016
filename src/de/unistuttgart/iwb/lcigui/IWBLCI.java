@@ -813,7 +813,7 @@ public class IWBLCI {
 		txtP19n3.setColumns(10);
 		
 		JButton btnP19n1 = new JButton("Produktkomponente hinzuf\u00fcgen");
-		btnP19n1.setEnabled(false);
+		btnP19n1.setEnabled(true);
 		panel_19.add(btnP19n1, "cell 1 4 2 1,alignx center");
 		
 		JLabel lblP19n1 = new JLabel(">>> ... <<<");
@@ -1618,6 +1618,108 @@ public class IWBLCI {
 				btnP17n2.setEnabled(false);
 				btnP17n3.setEnabled(false);
 			
+			}
+		});
+		
+		/*
+		 * neue Produktkomponente
+		 */		
+		
+		btnP19n1.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				String pkName = txtP19n1.getText();
+				String koName = txtP19n2.getText();
+				String menStr = txtP19n3.getText();
+				Double menge = 0.0;
+				Boolean mengeZahl = true;
+				try {
+						menge = Double.parseDouble(menStr);
+					} catch (NumberFormatException e){
+						mengeZahl = false;
+				}
+				if (NameCheck.containsWVName(pkName) == false &&
+						pkName.equals("") == false &&
+						NameCheck.containsWVName(koName) == true &&
+						mengeZahl == true) {
+					Wirkungsvektor kompo = new Prozessmodul();
+					if (Prozessmodul.containsName(koName)) {
+						kompo = Prozessmodul.get(koName);					
+					}
+					if (Produktsystem.containsName(koName)) {
+						kompo = Produktsystem.get(koName);					
+					}
+					if (ProduktBilanziert.containsName(koName)) {
+						kompo = ProduktBilanziert.get(koName);					
+					}
+					if (Produktkomponente.containsName(koName)) {
+						kompo = Produktkomponente.get(koName);					
+					}
+					if (Produktkomposition.containsName(koName)) {
+						kompo = Produktkomposition.get(koName);					
+					}				
+					Produktkomponente.newInstance(pkName, kompo, menge);
+					txtP19n1.setText("");
+					txtP19n2.setText("");
+					txtP19n3.setText("");	
+					lblP19n1.setText(">>> Anzahl Produktkomponenten: "
+							+ Produktkomponente.getAll().size() + " <<<");
+				} else {
+					if (mengeZahl == false) {
+						lblP19n1.setText(">>> Es wurde kein Zahlenwert angegeben <<<"); 
+					}
+				}				
+			}
+		});
+		
+		/*
+		 * neue Produktkomposition
+		 */		
+		
+		btnP15n1.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				String cfName = txtP15n1.getText();
+				String flName = txtP15n2.getText();
+				String wkName = txtP15n3.getText();
+				String fakStr = txtP15n4.getText();
+				Double faktor = 0.0;
+				Boolean faktorZahl = true;
+				try {
+						faktor = Double.parseDouble(fakStr);
+					} catch (NumberFormatException e){
+						faktorZahl = false;
+				}
+				if (CharakterFaktor.containsName(cfName) == false &&
+						cfName.equals("") == false &&
+						Fluss.containsName(flName) == true &&
+						Wirkungskategorie.containsName(wkName) == true &&
+						faktorZahl == true) {
+					allCFs.put(cfName, new CharakterFaktor(cfName, 
+							allFLs.get(flName), allWKs.get(wkName) , faktor));	
+					txtP15n1.setText("");
+					txtP15n2.setText("");
+					txtP15n3.setText("");
+					txtP15n4.setText("");
+					lblP15n1.setText(">>> Anzahl Charakterisierungfaktoren: "
+							+ allCFs.size() + " <<<");					
+				} else {
+					if (faktorZahl == false) {
+						lblP15n1.setText(">>> Es wurde kein Zahlenwert angegeben <<<"); 
+					}
+					if (Wirkungskategorie.containsName(wkName) == false && wkName.equals("") == false) {
+						lblP15n1.setText(">>> Die Wirkungskategorie ist unbekannt <<<"); 
+					}
+					if (Fluss.containsName(flName) == false && flName.equals("") == false) {
+						lblP15n1.setText(">>> Der Fluss ist unbekannt <<<"); 
+					}
+					if (CharakterFaktor.containsName(cfName) == true) {
+						lblP15n1.setText(">>> Der Name des Charakterisierungfaktors existiert bereits <<<"); 
+					}
+					if (cfName.equals("") || wkName.equals("") || flName.equals("") || fakStr.equals("")) {
+						lblP15n1.setText(">>> Unvollst\u00e4ndige Eingabe <<<");
+					}
+				}				
 			}
 		});
 	

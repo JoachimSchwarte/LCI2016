@@ -10,13 +10,15 @@ import java.util.HashMap;
  * Diese Klasse dient zur Erzeugung von Prozessmodulen.
  * 
  * @author Dr.-Ing. Joachim Schwarte
- * @version 0.926
+ * @version 0.927
  */
 
 public class Prozessmodul 
 implements Flussvektoren, Wirkungsvektor {
 	
-	// Diese Klasse besitzt keine Klassenvariablen
+	// Klassenvariable:
+	
+	private static HashMap<String, Prozessmodul> allPMs = new HashMap<String, Prozessmodul>();
 	
 	// Instanzvariablen:
 	
@@ -38,6 +40,7 @@ implements Flussvektoren, Wirkungsvektor {
 		setName(("PM" + NameCheck.sizeWVName()));
 		NameCheck.getInstance().addFVName(getName());
 		NameCheck.getInstance().addWVName(getName());
+		allPMs.put(getName(), this);
 	}
 	
 	/**
@@ -52,6 +55,7 @@ implements Flussvektoren, Wirkungsvektor {
 		setName(name);
 		NameCheck.getInstance().addFVName(getName());
 		NameCheck.getInstance().addWVName(getName());
+		allPMs.put(getName(), this);
 	}
 	
 	// Methoden:
@@ -113,12 +117,57 @@ implements Flussvektoren, Wirkungsvektor {
 		efv.remove(fluss);
 		pfv.remove(fluss);
 	}
+	
+	/**
+	 * @return
+	 * ... den Namen des Prozessmoduls
+	 */
 
 	public String getName() {
 		return name;
 	}
+	
+	/**
+	 * Überschreibt den Namen des Prozessmoduls
+	 * @param name
+	 * Der neue Name
+	 */
 
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	/**
+	 * Überprüft, ob bereits ein Prozessmodul
+	 * des genannten Namens existiert.
+	 * @param string
+	 * ist der zu prüfende Name
+	 * @return
+	 * ... den Wahrheitswert, den die Überprüfung liefert
+	 */
+	
+	public static boolean containsName(String string) {
+		return allPMs.containsKey(string);
+	}
+	
+	/**
+	 * @return
+	 * ... alle vorhandenen Prozessmodule
+	 */
+	
+	public static HashMap<String, Prozessmodul> getAll() {
+		return allPMs;
+	}
+	
+	/**
+	 * Liefert ein Prozessmodul
+	 * @param string
+	 * Name des Prozessmoduls
+	 * @return
+	 * ... das gesuchte Prozessmodul
+	 */
+	
+	public static Prozessmodul get(String string) {
+		return allPMs.get(string);		
 	}
 }

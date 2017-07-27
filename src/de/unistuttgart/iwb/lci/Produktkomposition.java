@@ -93,4 +93,38 @@ public class Produktkomposition implements Wirkungsvektor {
 		}
 		return wv;
 	}
+	
+	/**
+	 * Überprüft, ob bereits eine Produktkomposition
+	 * des genannten Namens existiert.
+	 * @param string
+	 * ist der zu prüfende Name
+	 * @return
+	 * ... den Wahrheitswert, den die Überprüfung liefert
+	 */
+	
+	public static boolean containsName(String string) {
+		return allPKtions.containsKey(string);
+	}
+	
+	/**
+	 * @return
+	 * ... alle vorhandenen Produktkompositionen
+	 */
+	
+	public static HashMap<String, Produktkomposition> getAll() {
+		return allPKtions;
+	}
+	
+	/**
+	 * Liefert eine Produktkomposition
+	 * @param string
+	 * Name der Produktkomposition
+	 * @return
+	 * ... die gesuchte Produktkomposition
+	 */
+	
+	public static Produktkomposition get(String string) {
+		return allPKtions.get(string);		
+	}
 }

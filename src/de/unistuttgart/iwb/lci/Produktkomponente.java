@@ -132,4 +132,38 @@ public class Produktkomponente implements Wirkungsvektor {
 	public double getMenge() {
 		return menge;
 	}
+	
+	/**
+	 * Überprüft, ob bereits eine Produktkomponente
+	 * des genannten Namens existiert.
+	 * @param string
+	 * ist der zu prüfende Name
+	 * @return
+	 * ... den Wahrheitswert, den die Überprüfung liefert
+	 */
+	
+	public static boolean containsName(String string) {
+		return allPKentes.containsKey(string);
+	}
+	
+	/**
+	 * @return
+	 * ... alle vorhandenen Produktkomponenten
+	 */
+	
+	public static HashMap<String, Produktkomponente> getAll() {
+		return allPKentes;
+	}
+	
+	/**
+	 * Liefert eine Produktkomponente
+	 * @param string
+	 * Name der Produktkomponente
+	 * @return
+	 * ... die gesuchte Produktkomponente
+	 */
+	
+	public static Produktkomponente get(String string) {
+		return allPKentes.get(string);		
+	}
 }

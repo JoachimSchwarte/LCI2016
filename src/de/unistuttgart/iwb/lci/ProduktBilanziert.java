@@ -13,13 +13,15 @@ import java.util.HashMap;
  * Produkt").
  * 
  * @author Dr.-Ing. Joachim Schwarte
- * @version 0.926
+ * @version 0.927
  */
 
 public class ProduktBilanziert 
 implements Wirkungsvektor {
 	
-	// Diese Klasse besitzt keine Klassenvariablen
+	// Klassenvariable:
+	
+	private static HashMap<String, ProduktBilanziert> allPBs = new HashMap<String, ProduktBilanziert>();
 	
 	// Instanzvariablen:
 	
@@ -41,6 +43,7 @@ implements Wirkungsvektor {
 		super();
 		this.name = name;
 		NameCheck.getInstance().addWVName(name);
+		allPBs.put(name, this);
 	}
 
 	// Methoden:
@@ -97,5 +100,39 @@ implements Wirkungsvektor {
 			}
 		}
 		return wvAktuell;	
+	}
+	
+	/**
+	 * Überprüft, ob bereits eine Produktdeklaration
+	 * des genannten Namens existiert.
+	 * @param string
+	 * ist der zu prüfende Name
+	 * @return
+	 * ... den Wahrheitswert, den die Überprüfung liefert
+	 */
+	
+	public static boolean containsName(String string) {
+		return allPBs.containsKey(string);
+	}
+	
+	/**
+	 * @return
+	 * ... alle vorhandenen Produktdeklarationen
+	 */
+	
+	public static HashMap<String, ProduktBilanziert> getAll() {
+		return allPBs;
+	}
+	
+	/**
+	 * Liefert eine Produktdeklaration
+	 * @param string
+	 * Name des bilanzierten Produkts
+	 * @return
+	 * ... die gesuchte Produktdeklaration
+	 */
+	
+	public static ProduktBilanziert get(String string) {
+		return allPBs.get(string);		
 	}
 }

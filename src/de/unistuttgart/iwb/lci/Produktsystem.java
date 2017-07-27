@@ -12,13 +12,15 @@ import Jama.Matrix;
  * Diese Klasse dient zur Erzeugung von Produktsystemen.
  * 
  * @author Dr.-Ing. Joachim Schwarte
- * @version 0.926
+ * @version 0.927
  */
 
 public class Produktsystem 
 implements Flussvektoren, Wirkungsvektor {
 	
-	// Diese Klasse besitzt keine Klassenvariablen
+	// Klassenvariable:
+	
+	private static HashMap<String, Produktsystem> allPSs = new HashMap<String, Produktsystem>();
 	
 	// Instanzvariablen:
 	
@@ -57,6 +59,7 @@ implements Flussvektoren, Wirkungsvektor {
 		vorUndKoppelProdukte = vk;
 		NameCheck.getInstance().addFVName(name);
 		NameCheck.getInstance().addWVName(name);
+		allPSs.put(name, this);
 	}
 	
 	// Methoden:
@@ -232,6 +235,40 @@ implements Flussvektoren, Wirkungsvektor {
 			}			
 		}
 		return wv;
+	}
+	
+	/**
+	 * Überprüft, ob bereits ein Produktsystem
+	 * des genannten Namens existiert.
+	 * @param string
+	 * ist der zu prüfende Name
+	 * @return
+	 * ... den Wahrheitswert, den die Überprüfung liefert
+	 */
+	
+	public static boolean containsName(String string) {
+		return allPSs.containsKey(string);
+	}
+	
+	/**
+	 * @return
+	 * ... alle vorhandenen Produktsysteme
+	 */
+	
+	public static HashMap<String, Produktsystem> getAll() {
+		return allPSs;
+	}
+	
+	/**
+	 * Liefert ein Produktsystem
+	 * @param string
+	 * Name des Produktsystems
+	 * @return
+	 * ... das gesuchte Produktsystem
+	 */
+	
+	public static Produktsystem get(String string) {
+		return allPSs.get(string);		
 	}
 
 }
