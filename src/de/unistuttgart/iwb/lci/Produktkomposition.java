@@ -32,6 +32,7 @@ public class Produktkomposition implements Wirkungsvektor {
 		super();
 		this.name = name;
 		allPKtions.put(name, this);
+		NameCheck.getInstance().addWVName(name);
 	}
 	
 	// Methoden:

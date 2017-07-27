@@ -37,6 +37,7 @@ public class Produktkomponente implements Wirkungsvektor {
 		this.komponente = komponente;
 		this.menge = menge;
 		allPKentes.put(name, this);
+		NameCheck.getInstance().addWVName(name);
 	}
 
 	// Methoden:
