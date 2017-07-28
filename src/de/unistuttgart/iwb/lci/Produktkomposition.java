@@ -95,6 +95,16 @@ public class Produktkomposition implements Wirkungsvektor {
 	}
 	
 	/**
+	 * @return
+	 * ... die Anzahl der in der Produktkomposition enthaltenden
+	 * Komponenten
+	 */
+	
+	public Integer getKompAnz() {
+		return zusammensetzung.size();
+	}
+	
+	/**
 	 * Überprüft, ob bereits eine Produktkomposition
 	 * des genannten Namens existiert.
 	 * @param string
@@ -126,5 +136,9 @@ public class Produktkomposition implements Wirkungsvektor {
 	
 	public static Produktkomposition get(String string) {
 		return allPKtions.get(string);		
+	}
+	
+	public LinkedList<Wirkungsvektor> getZusammensetzung() {
+		return zusammensetzung;
 	}
 }

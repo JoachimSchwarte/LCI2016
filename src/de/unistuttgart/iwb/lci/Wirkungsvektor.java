@@ -13,7 +13,7 @@ import java.util.HashMap;
  * innerhalb einer Produktkomposition auftreten können.
  * 
  * @author Dr.-Ing. Joachim Schwarte
- * @version 0.924
+ * @version 0.927
  */
 
 public interface Wirkungsvektor {
@@ -27,4 +27,6 @@ public interface Wirkungsvektor {
 	 */
 	
 	public HashMap<Wirkungskategorie, Double> getWirkungsvektor(Bewertungsmethode bm);
+	
+	public String getName();
 }

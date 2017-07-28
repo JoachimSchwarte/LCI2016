@@ -844,7 +844,7 @@ public class IWBLCI {
 		lblP21n2.setFont(new Font("Tahoma", Font.BOLD, 14));
 		panel_21.add(lblP21n2, "flowy,cell 1 0 2 1,alignx center,growy");
 		
-		JLabel lblP21n3 = new JLabel("Name der Produktkomposition");
+		JLabel lblP21n3 = new JLabel("Name der neuen Produktkomposition");
 		panel_21.add(lblP21n3, "cell 1 1,grow");
 		
 		txtP21n1 = new JTextField();
@@ -852,20 +852,29 @@ public class IWBLCI {
 		panel_21.add(txtP21n1, "cell 2 1,grow");
 		txtP21n1.setColumns(10);
 		
-		JLabel lblP21n4 = new JLabel("Name der Produktkomponente");
-		panel_21.add(lblP21n4, "cell 1 2,grow");
+		JButton btnP21n1 = new JButton("Produktkomposition anlegen");
+		btnP21n1.setEnabled(true);
+		panel_21.add(btnP21n1, "cell 1 2 2 1,alignx center");
+		
+		JLabel lblP21n4 = new JLabel("Name der hinzuzufügenden Produktkomponente");
+		panel_21.add(lblP21n4, "cell 1 3,grow");
 		
 		txtP21n2 = new JTextField();
 		txtP21n2.setText("");
-		panel_21.add(txtP21n2, "cell 2 2,grow");
+		panel_21.add(txtP21n2, "cell 2 3,grow");
 		txtP21n2.setColumns(10);
+		txtP21n2.setEnabled(false);
 		
-		JButton btnP21n1 = new JButton("Produktkomposition hinzuf\u00fcgen");
-		btnP21n1.setEnabled(false);
-		panel_21.add(btnP21n1, "cell 1 3 2 1,alignx center");
+		JButton btnP21n2 = new JButton("Produktkomponente hinzufügen");
+		btnP21n2.setEnabled(false);
+		panel_21.add(btnP21n2, "cell 1 4,alignx center");
+		
+		JButton btnP21n3 = new JButton("fertig");
+		btnP21n3.setEnabled(false);
+		panel_21.add(btnP21n3, "cell 2 4,alignx center");
 		
 		JLabel lblP21n1 = new JLabel(">>> ... <<<");
-		panel_21.add(lblP21n1, "cell 0 4 5 1,alignx center");
+		panel_21.add(lblP21n1, "cell 0 5 5 1,alignx center");
 		
 		// Panel 22
 		
@@ -1668,6 +1677,15 @@ public class IWBLCI {
 					if (mengeZahl == false) {
 						lblP19n1.setText(">>> Es wurde kein Zahlenwert angegeben <<<"); 
 					}
+					if (NameCheck.containsWVName(koName) == false) {
+						lblP19n1.setText(">>> Die unquantifizierte Komponente existiert nicht <<<");
+					}
+					if (NameCheck.containsWVName(pkName) == true) {
+						lblP19n1.setText(">>> Die Produktkomponente existiert bereits <<<");
+					}
+					if (pkName.equals("") || koName.equals("") || menStr.equals("")) {
+						lblP19n1.setText(">>> Unvollst\u00e4ndige Eingabe <<<");
+					}
 				}				
 			}
 		});
@@ -1676,50 +1694,82 @@ public class IWBLCI {
 		 * neue Produktkomposition
 		 */		
 		
-		btnP15n1.addActionListener(new ActionListener() {
+		btnP21n1.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				String cfName = txtP15n1.getText();
-				String flName = txtP15n2.getText();
-				String wkName = txtP15n3.getText();
-				String fakStr = txtP15n4.getText();
-				Double faktor = 0.0;
-				Boolean faktorZahl = true;
-				try {
-						faktor = Double.parseDouble(fakStr);
-					} catch (NumberFormatException e){
-						faktorZahl = false;
-				}
-				if (CharakterFaktor.containsName(cfName) == false &&
-						cfName.equals("") == false &&
-						Fluss.containsName(flName) == true &&
-						Wirkungskategorie.containsName(wkName) == true &&
-						faktorZahl == true) {
-					allCFs.put(cfName, new CharakterFaktor(cfName, 
-							allFLs.get(flName), allWKs.get(wkName) , faktor));	
-					txtP15n1.setText("");
-					txtP15n2.setText("");
-					txtP15n3.setText("");
-					txtP15n4.setText("");
-					lblP15n1.setText(">>> Anzahl Charakterisierungfaktoren: "
-							+ allCFs.size() + " <<<");					
+				String PKtionName = txtP21n1.getText();
+				if (NameCheck.containsWVName(PKtionName) == false &&
+						PKtionName.equals("") == false) {
+					Produktkomposition.instance(PKtionName);	
+					txtP21n1.setEnabled(false);
+					txtP21n2.setEnabled(true);
+					btnP21n1.setEnabled(false);
+					btnP21n2.setEnabled(true);
+					lblP21n1.setText(">>> Anzahl Produktkompositionen: " +
+							Produktkomposition.getAll().size() +
+							" <<<");				 
 				} else {
-					if (faktorZahl == false) {
-						lblP15n1.setText(">>> Es wurde kein Zahlenwert angegeben <<<"); 
+					if (NameCheck.containsWVName(PKtionName) == true) {
+						lblP21n1.setText(">>> Der angegebene Name ist bereits vergeben <<<");
 					}
-					if (Wirkungskategorie.containsName(wkName) == false && wkName.equals("") == false) {
-						lblP15n1.setText(">>> Die Wirkungskategorie ist unbekannt <<<"); 
+					if (PKtionName.equals("")) {
+						lblP21n1.setText(">>> Es wurde kein Name angegeben <<<");
 					}
-					if (Fluss.containsName(flName) == false && flName.equals("") == false) {
-						lblP15n1.setText(">>> Der Fluss ist unbekannt <<<"); 
+				}
+			}
+
+		});
+		
+		btnP21n2.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				String PKtionName = txtP21n1.getText();
+				String PKenteName = txtP21n2.getText();
+				if (NameCheck.containsWVName(PKenteName) == true) {
+					Wirkungsvektor kompo = new Prozessmodul();
+					if (Prozessmodul.containsName(PKenteName)) {
+						kompo = Prozessmodul.get(PKenteName);					
 					}
-					if (CharakterFaktor.containsName(cfName) == true) {
-						lblP15n1.setText(">>> Der Name des Charakterisierungfaktors existiert bereits <<<"); 
+					if (Produktsystem.containsName(PKenteName)) {
+						kompo = Produktsystem.get(PKenteName);					
 					}
-					if (cfName.equals("") || wkName.equals("") || flName.equals("") || fakStr.equals("")) {
-						lblP15n1.setText(">>> Unvollst\u00e4ndige Eingabe <<<");
+					if (ProduktBilanziert.containsName(PKenteName)) {
+						kompo = ProduktBilanziert.get(PKenteName);					
 					}
-				}				
+					if (Produktkomponente.containsName(PKenteName)) {
+						kompo = Produktkomponente.get(PKenteName);					
+					}
+					if (Produktkomposition.containsName(PKenteName)) {
+						kompo = Produktkomposition.get(PKenteName);					
+					}
+					Produktkomposition.instance(PKtionName).addKomponente(kompo);
+					int koAnz = Produktkomposition.instance(PKtionName).getKompAnz();
+					lblP21n1.setText(">>> Die Produktkomposition besitzt " +
+							koAnz + " Komponenten <<<");
+					btnP21n3.setEnabled(true);	
+					txtP21n2.setText("");
+				} else {
+					if (NameCheck.containsWVName(PKenteName) == false) {
+						lblP21n1.setText(">>> Die Komponente ist unbekannt <<<");
+					}
+					if (PKenteName.equals(""))
+						lblP21n1.setText(">>> Es wurde kein Name angegeben <<<");
+				}			
+			}
+		});
+		
+		btnP21n3.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				lblP21n1.setText(">>> ... <<<");
+				txtP21n1.setText("");
+				txtP21n2.setText("");
+				txtP21n1.setEnabled(true);
+				txtP21n2.setEnabled(false);
+				btnP21n1.setEnabled(true);
+				btnP21n2.setEnabled(false);
+				btnP21n3.setEnabled(false);
+			
 			}
 		});
 	
@@ -2088,6 +2138,12 @@ public class IWBLCI {
 			putValue(SHORT_DESCRIPTION, "Liste aller Produktkomponenten");
 		}
 		public void actionPerformed(ActionEvent e) {
+			pkentesTableModel.setRowCount(0);
+			for (String pkenteName : Produktkomponente.getAll().keySet()) {
+				String pkunquName = Produktkomponente.getInstance(pkenteName).getKomponente().getName();
+				double menge = Produktkomponente.getInstance(pkenteName).getMenge();
+				pkentesTableModel.addRow(new Object[] {pkenteName, pkunquName, menge});
+			}
 			cl.show(panel, "listePKentes");
 		}
 	}
@@ -2098,6 +2154,13 @@ public class IWBLCI {
 			putValue(SHORT_DESCRIPTION, "Liste aller Produktkompositionen");
 		}
 		public void actionPerformed(ActionEvent e) {
+			pktionsTableModel.setRowCount(0);
+			for (String pktionName : Produktkomposition.getAll().keySet()) {
+				pktionsTableModel.addRow(new Object[] {pktionName, ""});
+				for (Wirkungsvektor wv : Produktkomposition.instance(pktionName).getZusammensetzung()) {
+					pktionsTableModel.addRow(new Object[] {"", wv.getName()});
+				}
+			}
 			cl.show(panel, "listePKtions");
 		}
 	}
