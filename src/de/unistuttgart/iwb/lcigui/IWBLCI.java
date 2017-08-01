@@ -32,6 +32,17 @@ import java.awt.Font;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
@@ -40,6 +51,7 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JTable;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -49,7 +61,7 @@ import java.io.ObjectOutputStream;
 
 /**
  * @author Dr.-Ing. Joachim Schwarte
- * @version 0.927
+ * @version 0.928
  */
 
 public class IWBLCI {
@@ -103,6 +115,7 @@ public class IWBLCI {
 	private final Action calculateAction 	= new calculateAction();
 	private final Action saveAction 		= new saveAction();
 	private final Action loadAction 		= new loadAction();
+	private final Action xmlExportAction 	= new xmlExportAction();
 	private final Action aboutAction 		= new aboutAction();
 	private JTextField txtName;
 	private JTextField txtNameWK;
@@ -186,7 +199,7 @@ public class IWBLCI {
 	 */
 	private void initialize() {
 		frmIwblciVersion = new JFrame();
-		frmIwblciVersion.setTitle("IWB-LCI   Version 0.927");
+		frmIwblciVersion.setTitle("IWB-LCI   Version 0.928");
 		frmIwblciVersion.setBounds(100, 100, 600, 480);
 		frmIwblciVersion.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);		
 		
@@ -388,7 +401,7 @@ public class IWBLCI {
 		JLabel lblInfo4 = new JLabel("Universit\u00e4t Stuttgart");
 		lblInfo4.setFont(new Font("Tahoma", Font.BOLD, 14));
 		panel_4.add(lblInfo4, "cell 1 5,alignx center,aligny top");
-		JLabel lblInfo5 = new JLabel("Version 0.927   27.07.2017");
+		JLabel lblInfo5 = new JLabel("Version 0.928   01.08.2017");
 		lblInfo5.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		panel_4.add(lblInfo5, "cell 1 7,alignx center,aligny top");
 
@@ -470,7 +483,7 @@ public class IWBLCI {
 		JLabel lblTodo4 = new JLabel("");
 		lblTodo4.setFont(new Font("Tahoma", Font.BOLD, 14));
 		panel_9.add(lblTodo4, "cell 1 5,alignx center,aligny top");
-		JLabel lblTodo5 = new JLabel("Version 0.927   27.07.2017");
+		JLabel lblTodo5 = new JLabel("Version 0.928   01.08.2017");
 		lblTodo5.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		panel_9.add(lblTodo5, "cell 1 7,alignx center,aligny top");
 		
@@ -907,6 +920,10 @@ public class IWBLCI {
 		JMenuItem mntmNewMenuItem_1 = new JMenuItem();
 		mntmNewMenuItem_1.setAction(loadAction);
 		mnDatei.add(mntmNewMenuItem_1);
+		
+		JMenuItem mntmNewMenuItem_3 = new JMenuItem();
+		mntmNewMenuItem_3.setAction(xmlExportAction);
+		mnDatei.add(mntmNewMenuItem_3);	
 		
 		JMenu mnNew = new JMenu("Neu");
 		menuBar.add(mnNew);
@@ -2393,6 +2410,79 @@ public class IWBLCI {
 	        }
 			
 		}
+	}
+	private class xmlExportAction extends AbstractAction {
+		private static final long serialVersionUID = -4377920048321969857L;
+		public xmlExportAction() {
+			putValue(NAME, "XML-Export");
+			putValue(SHORT_DESCRIPTION, "Exportieren des Objektbestandes nach XML");
+		}
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			try {
+	            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+	            DocumentBuilder builder = factory.newDocumentBuilder();
+	            Document document = builder.newDocument();
+	        
+	            Element root = document.createElement("XML");
+	            document.appendChild(root);	            
+	            
+	            for(Fluss pf : allFlows) {
+	            	Element fluss = document.createElement("Fluss");
+		            root.appendChild(fluss);
+	            	Element name = document.createElement("Name");
+		            fluss.appendChild(name);
+		            name.appendChild(document.createTextNode(pf.getName()));
+		            Element typ = document.createElement("Typ");
+		            fluss.appendChild(typ);
+		            typ.appendChild(document.createTextNode(pf.getTyp().toString()));
+		            Element einheit = document.createElement("Einheit");
+		            fluss.appendChild(einheit);
+		            einheit.appendChild(document.createTextNode(pf.getEinheit().toString()));
+				}
+				for(String mn : allModules.keySet()) {
+					Prozessmodul akModul = allModules.get(mn);
+					Element prozessmodul = document.createElement("Prozessmodul");
+					root.appendChild(prozessmodul);
+					Element name = document.createElement("Name");
+					prozessmodul.appendChild(name);
+		            name.appendChild(document.createTextNode(akModul.getName()));
+		            for(Fluss pf : akModul.getElementarflussvektor().keySet()){
+		            	Element fname = document.createElement("Flussname");
+		            	name.appendChild(fname);
+		            	fname.appendChild(document.createTextNode(pf.getName()));
+		            	Element menge = document.createElement("Menge");
+		            	name.appendChild(menge);
+		            	menge.appendChild(document.createTextNode(akModul.getElementarflussvektor().get(pf).toString()));
+		            }
+		            for(Fluss pf : akModul.getProduktflussvektor().keySet()){
+		            	Element fname = document.createElement("Flussname");
+		            	name.appendChild(fname);
+		            	fname.appendChild(document.createTextNode(pf.getName()));
+		            	Element menge = document.createElement("Menge");
+		            	name.appendChild(menge);
+		            	menge.appendChild(document.createTextNode(akModul.getProduktflussvektor().get(pf).toString()));
+		            }
+
+				}
+	            
+	            DOMSource domSource = new DOMSource(document);
+	            File fileOutput = new File("test.xml");
+	            StreamResult streamResult = new StreamResult(fileOutput);
+	            TransformerFactory tf = TransformerFactory.newInstance();
+
+	            Transformer serializer = tf.newTransformer();
+	            serializer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+	            serializer.setOutputProperty(OutputKeys.INDENT, "yes");
+	            serializer.transform(domSource, streamResult);
+	                    
+	        } catch(ParserConfigurationException e) {
+	            e.printStackTrace();
+	        } catch(Throwable e) {
+	            e.printStackTrace();
+	        } 
+		}
+		
 	}
 	private class aboutAction extends AbstractAction {
 		private static final long serialVersionUID = 8545097902506476895L;
