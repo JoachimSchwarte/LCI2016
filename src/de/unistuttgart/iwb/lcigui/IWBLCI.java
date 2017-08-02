@@ -30,6 +30,8 @@ import javax.swing.DefaultComboBoxModel;
 
 import java.awt.Font;
 import javax.swing.JTextField;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 import javax.xml.parsers.DocumentBuilder;
@@ -43,6 +45,8 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
@@ -58,6 +62,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+
+import org.apache.commons.io.FilenameUtils;
 
 /**
  * @author Dr.-Ing. Joachim Schwarte
@@ -116,6 +122,7 @@ public class IWBLCI {
 	private final Action saveAction 		= new saveAction();
 	private final Action loadAction 		= new loadAction();
 	private final Action xmlExportAction 	= new xmlExportAction();
+	private final Action xmlImportAction 	= new xmlImportAction();
 	private final Action aboutAction 		= new aboutAction();
 	private JTextField txtName;
 	private JTextField txtNameWK;
@@ -925,6 +932,10 @@ public class IWBLCI {
 		mntmNewMenuItem_3.setAction(xmlExportAction);
 		mnDatei.add(mntmNewMenuItem_3);	
 		
+		JMenuItem mntmNewMenuItem_4 = new JMenuItem();
+		mntmNewMenuItem_4.setAction(xmlImportAction);
+		mnDatei.add(mntmNewMenuItem_4);
+		
 		JMenu mnNew = new JMenu("Neu");
 		menuBar.add(mnNew);
 		
@@ -1349,6 +1360,7 @@ public class IWBLCI {
 						allVKs.get(txtPSName.getText()).addFluss(akFluss);
 						allProSys.get(txtPSName.getText()).
 							setVorUndKoppelProdukte(allVKs.get(txtPSName.getText()).getVk());
+						txtVKName.setText("");
 						lblStatus3.setText(">>> Der VK-Vektor enth\u00e4lt " + 
 								allVKs.get(txtPSName.getText()).getVk().size() + " Fl\u00fcsse <<<");										
 					} else {
@@ -2071,7 +2083,11 @@ public class IWBLCI {
 					productsTableModel.addRow(new Object[] {"" ,"Bedarf" 
 							,"" + bvf.getName() + " (" + allBVs.get(psn).getBV().get(bvf) + 
 							" " + bvf.getEinheit()+")"});		
-				}			
+				}
+				for (Fluss vk : allVKs.get(psn).getVk()) {
+					productsTableModel.addRow(new Object[] {"" ,"Vor- oder Koppelpr." 
+							,vk.getName() });		
+				}
 			}			
 			cl.show(panel, "listeProdukt");
 		}
@@ -2415,7 +2431,7 @@ public class IWBLCI {
 		private static final long serialVersionUID = -4377920048321969857L;
 		public xmlExportAction() {
 			putValue(NAME, "XML-Export");
-			putValue(SHORT_DESCRIPTION, "Exportieren des Objektbestandes nach XML");
+			putValue(SHORT_DESCRIPTION, "Exportieren des Objektbestandes in eine XML-Datei");
 		}
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
@@ -2425,11 +2441,13 @@ public class IWBLCI {
 	            Document document = builder.newDocument();
 	        
 	            Element root = document.createElement("XML");
-	            document.appendChild(root);	            
+	            document.appendChild(root);
+	            Element allefluesse = document.createElement("Fl\u00fcsse");
+	            root.appendChild(allefluesse);
 	            
 	            for(Fluss pf : allFlows) {
 	            	Element fluss = document.createElement("Fluss");
-		            root.appendChild(fluss);
+	            	allefluesse.appendChild(fluss);
 	            	Element name = document.createElement("Name");
 		            fluss.appendChild(name);
 		            name.appendChild(document.createTextNode(pf.getName()));
@@ -2440,42 +2458,113 @@ public class IWBLCI {
 		            fluss.appendChild(einheit);
 		            einheit.appendChild(document.createTextNode(pf.getEinheit().toString()));
 				}
+	            
+	            Element allemodule = document.createElement("Prozessmodule");
+	            root.appendChild(allemodule);
+	            
 				for(String mn : allModules.keySet()) {
 					Prozessmodul akModul = allModules.get(mn);
 					Element prozessmodul = document.createElement("Prozessmodul");
-					root.appendChild(prozessmodul);
+					allemodule.appendChild(prozessmodul);
 					Element name = document.createElement("Name");
 					prozessmodul.appendChild(name);
-		            name.appendChild(document.createTextNode(akModul.getName()));
+					name.appendChild(document.createTextNode(akModul.getName()));
+					Element efv = document.createElement("Elementarflussvektor");
+					prozessmodul.appendChild(efv);	            
 		            for(Fluss pf : akModul.getElementarflussvektor().keySet()){
+		            	Element fluss = document.createElement("Fluss");
+						efv.appendChild(fluss);	
 		            	Element fname = document.createElement("Flussname");
-		            	name.appendChild(fname);
+		            	fluss.appendChild(fname);
 		            	fname.appendChild(document.createTextNode(pf.getName()));
 		            	Element menge = document.createElement("Menge");
-		            	name.appendChild(menge);
+		            	fluss.appendChild(menge);
 		            	menge.appendChild(document.createTextNode(akModul.getElementarflussvektor().get(pf).toString()));
 		            }
+		            Element pfv = document.createElement("Produktflussvektor");
+					prozessmodul.appendChild(pfv);	  
 		            for(Fluss pf : akModul.getProduktflussvektor().keySet()){
+		            	Element fluss = document.createElement("Fluss");
+						pfv.appendChild(fluss);	
 		            	Element fname = document.createElement("Flussname");
-		            	name.appendChild(fname);
+		            	fluss.appendChild(fname);
 		            	fname.appendChild(document.createTextNode(pf.getName()));
 		            	Element menge = document.createElement("Menge");
-		            	name.appendChild(menge);
+		            	fluss.appendChild(menge);
 		            	menge.appendChild(document.createTextNode(akModul.getProduktflussvektor().get(pf).toString()));
 		            }
 
 				}
+				
+				Element alleprosys = document.createElement("Produktsysteme");
+	            root.appendChild(alleprosys);
 	            
-	            DOMSource domSource = new DOMSource(document);
-	            File fileOutput = new File("test.xml");
-	            StreamResult streamResult = new StreamResult(fileOutput);
-	            TransformerFactory tf = TransformerFactory.newInstance();
+	            for(String psm : allProSys.keySet()) {
+	            	Produktsystem akProSys = allProSys.get(psm);
+					Element produktsystem = document.createElement("Produktsystem");
+					alleprosys.appendChild(produktsystem);
+					Element name = document.createElement("Name");
+					produktsystem.appendChild(name);
+					name.appendChild(document.createTextNode(akProSys.getName()));
+					Element modullist = document.createElement("Module");
+					produktsystem.appendChild(modullist);
+					for (String modname  : allMNLs.get(psm).getMnl()) {
+						Element modul = document.createElement("Modul");
+						modullist.appendChild(modul);
+						Element mname = document.createElement("Name");
+						modul.appendChild(mname);
+						mname.appendChild(document.createTextNode(modname));
+					}					
+					Element bv = document.createElement("Bedarfsvektor");
+					produktsystem.appendChild(bv);		            	
+	            	for (Fluss bvf : allBVs.get(psm).getBV().keySet()) {
+	            		Element bedarf = document.createElement("Bedarf");
+	            		bv.appendChild(bedarf);
+	            		Element fluss =  document.createElement("Flussname");
+	            		bedarf.appendChild(fluss);
+	            		fluss.appendChild(document.createTextNode(bvf.getName()));
+	            		Element menge = document.createElement("Menge");
+	            		bedarf.appendChild(menge);
+	            		menge.appendChild(document.createTextNode(allBVs.get(psm).getBV().get(bvf).toString()));
+	            	}
+	            	Element vuk = document.createElement("Vor-und-Koppelprodukte");
+					produktsystem.appendChild(vuk);
+	            	for (Fluss vkf : allVKs.get(psm).getVk()){
+	            		Element produkt = document.createElement("Produkt");
+	            		vuk.appendChild(produkt);
+	            		Element prodname =  document.createElement("Produktname");
+	            		produkt.appendChild(prodname);
+	            		prodname.appendChild(document.createTextNode(vkf.getName()));
+	            	}
+	            	
+	            	
+	            }
+	            
+		        // JFileChooser-Objekt erstellen
+		        JFileChooser chooser = new JFileChooser();
+		        FileFilter filter = new FileNameExtensionFilter("XML-Dateien (*.xml)", "xml");
+		        chooser.setFileFilter(filter);
 
-	            Transformer serializer = tf.newTransformer();
-	            serializer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
-	            serializer.setOutputProperty(OutputKeys.INDENT, "yes");
-	            serializer.transform(domSource, streamResult);
-	                    
+		        // Dialog zum Speichern von Dateien anzeigen
+		        int rueckgabeWert = chooser.showSaveDialog(null);
+		        if(rueckgabeWert == JFileChooser.APPROVE_OPTION) {	        	
+		        	DOMSource domSource = new DOMSource(document);
+		        	File fileOutput = chooser.getSelectedFile();
+		        	if (FilenameUtils.getExtension(fileOutput.getName()).equalsIgnoreCase("xml")) {
+		        	    // filename is OK as-is
+		        	} else {
+		        		fileOutput = new File(fileOutput.toString() + ".xml");  // append .xml if "foo.jpg.xml" is OK
+		        	}
+		        	
+		        	StreamResult streamResult = new StreamResult(fileOutput);
+		            TransformerFactory tf = TransformerFactory.newInstance();
+
+		            Transformer serializer = tf.newTransformer();
+		            serializer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+		            serializer.setOutputProperty(OutputKeys.INDENT, "yes");
+		            serializer.transform(domSource, streamResult);
+		        }
+		        
 	        } catch(ParserConfigurationException e) {
 	            e.printStackTrace();
 	        } catch(Throwable e) {
@@ -2484,6 +2573,62 @@ public class IWBLCI {
 		}
 		
 	}
+	
+	private class xmlImportAction extends AbstractAction {
+		private static final long serialVersionUID = -4377920048321969857L;
+		public xmlImportAction() {
+			putValue(NAME, "XML-Import");
+			putValue(SHORT_DESCRIPTION, "Importieren eines Objektbestandes aus einer XML-Datei");
+		}
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+	        // JFileChooser-Objekt erstellen
+	        JFileChooser chooser = new JFileChooser();
+	        FileFilter filter = new FileNameExtensionFilter("XML-Dateien (*.xml)", "xml");
+	        chooser.setFileFilter(filter);
+	        
+	        // Dialog zum Laden von Dateien anzeigen
+	        int rueckgabeWert = chooser.showOpenDialog(null);
+	        if(rueckgabeWert == JFileChooser.APPROVE_OPTION) {
+	        	File fileInput = chooser.getSelectedFile();
+	        	DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+	        	try {
+					DocumentBuilder db = dbf.newDocumentBuilder();
+					try {
+						Document dom = db.parse(fileInput);
+						allFlows.clear();
+						Fluss.clear();
+						Element docEle = dom.getDocumentElement();
+						NodeList nl = docEle.getElementsByTagName("Fl\u00fcsse");
+
+//						NodeList nl = docEle.getElementsByTagName("Fluss");
+						System.out.println(nl.getLength());
+						for (int i = 0; i < nl.getLength(); i++) {
+							System.out.println(nl.item(i).getNodeName());
+							
+						}
+					
+						
+						
+						
+						
+						
+						
+					} catch (SAXException | IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}				
+				} catch (ParserConfigurationException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+	        	
+	        }
+			
+		}
+		
+	}
+	
 	private class aboutAction extends AbstractAction {
 		private static final long serialVersionUID = 8545097902506476895L;
 		public aboutAction() {

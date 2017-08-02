@@ -13,7 +13,7 @@ import java.util.HashSet;
  * Instanzvariablen zur Verfügung.
  * 
  * @author Dr.-Ing. Joachim Schwarte
- * @version 0.926
+ * @version 0.928
  */
 
 public class Fluss {	
@@ -92,5 +92,9 @@ public class Fluss {
 	
 	public static boolean containsName(String string) {
 		return allNames.contains(string);
+	}
+	
+	public static void clear() {
+		allNames.clear();
 	}
 }
