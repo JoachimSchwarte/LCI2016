@@ -14,7 +14,7 @@ import java.util.HashSet;
  * muss.
  * 
  * @author Dr.-Ing. Joachim Schwarte
- * @version 0.926
+ * @version 0.928
  */
 
 public class NameCheck {	
@@ -139,5 +139,14 @@ public class NameCheck {
 	
 	public static int sizeWVName() {
 	    return wvNames.size();			    
+	}
+	
+	/**
+	 * Löscht alle Klassenvariablen
+	 */
+	
+	public static void clear() {
+		fvNames.clear();
+		wvNames.clear();
 	}
 }

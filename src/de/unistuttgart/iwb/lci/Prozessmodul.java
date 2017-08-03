@@ -10,7 +10,7 @@ import java.util.HashMap;
  * Diese Klasse dient zur Erzeugung von Prozessmodulen.
  * 
  * @author Dr.-Ing. Joachim Schwarte
- * @version 0.927
+ * @version 0.928
  */
 
 public class Prozessmodul 
@@ -170,4 +170,13 @@ implements Flussvektoren, Wirkungsvektor {
 	public static Prozessmodul get(String string) {
 		return allPMs.get(string);		
 	}
+	
+	/**
+	 * Löscht alle Klassenvariablen
+	 */
+	
+	public static void clear() {
+		allPMs.clear();
+	}
 }
+

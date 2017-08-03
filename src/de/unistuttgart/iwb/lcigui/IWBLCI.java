@@ -408,7 +408,7 @@ public class IWBLCI {
 		JLabel lblInfo4 = new JLabel("Universit\u00e4t Stuttgart");
 		lblInfo4.setFont(new Font("Tahoma", Font.BOLD, 14));
 		panel_4.add(lblInfo4, "cell 1 5,alignx center,aligny top");
-		JLabel lblInfo5 = new JLabel("Version 0.928   01.08.2017");
+		JLabel lblInfo5 = new JLabel("Version 0.928   03.08.2017");
 		lblInfo5.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		panel_4.add(lblInfo5, "cell 1 7,alignx center,aligny top");
 
@@ -490,7 +490,7 @@ public class IWBLCI {
 		JLabel lblTodo4 = new JLabel("");
 		lblTodo4.setFont(new Font("Tahoma", Font.BOLD, 14));
 		panel_9.add(lblTodo4, "cell 1 5,alignx center,aligny top");
-		JLabel lblTodo5 = new JLabel("Version 0.928   01.08.2017");
+		JLabel lblTodo5 = new JLabel("Version 0.928   03.08.2017");
 		lblTodo5.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		panel_9.add(lblTodo5, "cell 1 7,alignx center,aligny top");
 		
@@ -2448,13 +2448,13 @@ public class IWBLCI {
 	            for(Fluss pf : allFlows) {
 	            	Element fluss = document.createElement("Fluss");
 	            	allefluesse.appendChild(fluss);
-	            	Element name = document.createElement("Name");
+	            	Element name = document.createElement("Fluss-Name");
 		            fluss.appendChild(name);
 		            name.appendChild(document.createTextNode(pf.getName()));
-		            Element typ = document.createElement("Typ");
+		            Element typ = document.createElement("Fluss-Typ");
 		            fluss.appendChild(typ);
 		            typ.appendChild(document.createTextNode(pf.getTyp().toString()));
-		            Element einheit = document.createElement("Einheit");
+		            Element einheit = document.createElement("Fluss-Einheit");
 		            fluss.appendChild(einheit);
 		            einheit.appendChild(document.createTextNode(pf.getEinheit().toString()));
 				}
@@ -2466,30 +2466,30 @@ public class IWBLCI {
 					Prozessmodul akModul = allModules.get(mn);
 					Element prozessmodul = document.createElement("Prozessmodul");
 					allemodule.appendChild(prozessmodul);
-					Element name = document.createElement("Name");
+					Element name = document.createElement("Prozessmodul-Name");
 					prozessmodul.appendChild(name);
 					name.appendChild(document.createTextNode(akModul.getName()));
 					Element efv = document.createElement("Elementarflussvektor");
 					prozessmodul.appendChild(efv);	            
 		            for(Fluss pf : akModul.getElementarflussvektor().keySet()){
-		            	Element fluss = document.createElement("Fluss");
+		            	Element fluss = document.createElement("EFV-Element");
 						efv.appendChild(fluss);	
-		            	Element fname = document.createElement("Flussname");
+		            	Element fname = document.createElement("FV-Element-Name");
 		            	fluss.appendChild(fname);
 		            	fname.appendChild(document.createTextNode(pf.getName()));
-		            	Element menge = document.createElement("Menge");
+		            	Element menge = document.createElement("FV-Element-Menge");
 		            	fluss.appendChild(menge);
 		            	menge.appendChild(document.createTextNode(akModul.getElementarflussvektor().get(pf).toString()));
 		            }
 		            Element pfv = document.createElement("Produktflussvektor");
 					prozessmodul.appendChild(pfv);	  
 		            for(Fluss pf : akModul.getProduktflussvektor().keySet()){
-		            	Element fluss = document.createElement("Fluss");
-						pfv.appendChild(fluss);	
-		            	Element fname = document.createElement("Flussname");
+		            	Element fluss = document.createElement("PFV-Element");
+						pfv.appendChild(fluss);
+		            	Element fname = document.createElement("FV-Element-Name");
 		            	fluss.appendChild(fname);
 		            	fname.appendChild(document.createTextNode(pf.getName()));
-		            	Element menge = document.createElement("Menge");
+		            	Element menge = document.createElement("FV-Element-Menge");
 		            	fluss.appendChild(menge);
 		            	menge.appendChild(document.createTextNode(akModul.getProduktflussvektor().get(pf).toString()));
 		            }
@@ -2503,36 +2503,36 @@ public class IWBLCI {
 	            	Produktsystem akProSys = allProSys.get(psm);
 					Element produktsystem = document.createElement("Produktsystem");
 					alleprosys.appendChild(produktsystem);
-					Element name = document.createElement("Name");
+					Element name = document.createElement("Produktsystem-Name");
 					produktsystem.appendChild(name);
 					name.appendChild(document.createTextNode(akProSys.getName()));
-					Element modullist = document.createElement("Module");
+					Element modullist = document.createElement("PS-Module");
 					produktsystem.appendChild(modullist);
 					for (String modname  : allMNLs.get(psm).getMnl()) {
-						Element modul = document.createElement("Modul");
+						Element modul = document.createElement("PS-Modul");
 						modullist.appendChild(modul);
-						Element mname = document.createElement("Name");
+						Element mname = document.createElement("PSM-Name");
 						modul.appendChild(mname);
 						mname.appendChild(document.createTextNode(modname));
 					}					
 					Element bv = document.createElement("Bedarfsvektor");
 					produktsystem.appendChild(bv);		            	
 	            	for (Fluss bvf : allBVs.get(psm).getBV().keySet()) {
-	            		Element bedarf = document.createElement("Bedarf");
+	            		Element bedarf = document.createElement("BV-Element");
 	            		bv.appendChild(bedarf);
-	            		Element fluss =  document.createElement("Flussname");
+	            		Element fluss =  document.createElement("BV-Element-Name");
 	            		bedarf.appendChild(fluss);
 	            		fluss.appendChild(document.createTextNode(bvf.getName()));
-	            		Element menge = document.createElement("Menge");
+	            		Element menge = document.createElement("BV-Element-Menge");
 	            		bedarf.appendChild(menge);
 	            		menge.appendChild(document.createTextNode(allBVs.get(psm).getBV().get(bvf).toString()));
 	            	}
 	            	Element vuk = document.createElement("Vor-und-Koppelprodukte");
 					produktsystem.appendChild(vuk);
 	            	for (Fluss vkf : allVKs.get(psm).getVk()){
-	            		Element produkt = document.createElement("Produkt");
+	            		Element produkt = document.createElement("VuK-Element");
 	            		vuk.appendChild(produkt);
-	            		Element prodname =  document.createElement("Produktname");
+	            		Element prodname =  document.createElement("VuK-Element-Name");
 	            		produkt.appendChild(prodname);
 	            		prodname.appendChild(document.createTextNode(vkf.getName()));
 	            	}
@@ -2596,22 +2596,175 @@ public class IWBLCI {
 					DocumentBuilder db = dbf.newDocumentBuilder();
 					try {
 						Document dom = db.parse(fileInput);
+						Element docEle = dom.getDocumentElement();
+						
+						NameCheck.clear();
+						
 						allFlows.clear();
 						Fluss.clear();
-						Element docEle = dom.getDocumentElement();
-						NodeList nl = docEle.getElementsByTagName("Fl\u00fcsse");
-
-//						NodeList nl = docEle.getElementsByTagName("Fluss");
-						System.out.println(nl.getLength());
+						NodeList nl = docEle.getElementsByTagName("Fluss");
 						for (int i = 0; i < nl.getLength(); i++) {
-							System.out.println(nl.item(i).getNodeName());
-							
+							NodeList nlc = nl.item(i).getChildNodes();
+							String flussname = "";
+							String flusstyp = "";
+							String flusseinheit = "";
+							for (int j = 0; j < nlc.getLength(); j++) {
+								if (nlc.item(j).getNodeName().equals("Fluss-Name")) {
+									flussname = nlc.item(j).getTextContent();
+								}
+								if (nlc.item(j).getNodeName().equals("Fluss-Typ")) {
+									flusstyp = nlc.item(j).getTextContent();
+								}
+								if (nlc.item(j).getNodeName().equals("Fluss-Einheit")) {
+									flusseinheit = nlc.item(j).getTextContent();
+								}	
+							}
+							FlussTyp ft = FlussTyp.valueOf(flusstyp);
+							FlussEinheit fe = FlussEinheit.valueOf(flusseinheit);
+							Fluss lFluss = new Fluss(flussname, ft, fe);
+							allFlows.add(lFluss);
+							allFLs.put(flussname, lFluss);
 						}
-					
-						
-						
-						
-						
+						allModules.clear();
+						Prozessmodul.clear();
+						nl = docEle.getElementsByTagName("Prozessmodul");
+						for (int i = 0; i < nl.getLength(); i++) {
+							NodeList nlc = nl.item(i).getChildNodes();
+							String pmname = "";	
+							String fvename = "";	
+							String fvemenge = "";
+							HashMap<Fluss, Double> pmfv = new HashMap<Fluss, Double>();						
+							for (int j = 0; j < nlc.getLength(); j++) {							
+								if (nlc.item(j).getNodeName().equals("Prozessmodul-Name")) {									
+									pmname = nlc.item(j).getTextContent();
+								}
+								if (nlc.item(j).getNodeName().equals("Elementarflussvektor") ||
+										nlc.item(j).getNodeName().equals("Produktflussvektor")) {									
+									NodeList nlc2 = nlc.item(j).getChildNodes();
+									for (int k = 0; k < nlc2.getLength(); k++) {
+										if (nlc2.item(k).getNodeName().equals("EFV-Element") ||
+												nlc2.item(k).getNodeName().equals("PFV-Element")) {											
+											NodeList nlc3 = nlc2.item(k).getChildNodes();
+											for (int l = 0; l < nlc3.getLength(); l++) {
+												if (nlc3.item(l).getNodeName().equals("FV-Element-Name")) {
+													fvename = nlc3.item(l).getTextContent();
+												}
+												if (nlc3.item(l).getNodeName().equals("FV-Element-Menge")) {
+													fvemenge = nlc3.item(l).getTextContent();
+													Fluss akFluss = null;
+													for(Fluss pf : allFlows){
+														if(fvename.equals(pf.getName())){
+															akFluss = pf;
+														}
+													}
+													pmfv.put(akFluss, Double.parseDouble(fvemenge));
+												}
+											}											
+										}
+									}
+								}
+							}
+							allModules.put(pmname, new Prozessmodul(pmname));
+							for (Fluss akFluss : pmfv.keySet()) {
+								allModules.get(pmname).addFluss(akFluss, pmfv.get(akFluss));
+							}
+						}
+						allProSys.clear();
+						allMNLs.clear();
+						allBVs.clear();
+						allVKs.clear();
+						Produktsystem.clear();
+						nl = docEle.getElementsByTagName("Produktsystem");
+						for (int i = 0; i < nl.getLength(); i++) {
+							NodeList nlc = nl.item(i).getChildNodes();
+							String psname = "";	
+							String bvename = "";
+							String bvemenge = "";
+							LinkedList<Flussvektoren> psms = new LinkedList<Flussvektoren>();
+							HashMap<Fluss, Double> bv = new HashMap<Fluss, Double>();
+							LinkedList<Fluss> vuk = new LinkedList<Fluss>();
+							ModulNamenListe mnl = new ModulNamenListe();
+							for (int j = 0; j < nlc.getLength(); j++) {	
+								if (nlc.item(j).getNodeName().equals("Produktsystem-Name")) {
+									psname = nlc.item(j).getTextContent();
+								}
+								if (nlc.item(j).getNodeName().equals("PS-Module")) {
+									NodeList nlc2 = nlc.item(j).getChildNodes();
+									for (int k = 0; k < nlc2.getLength(); k++) {
+										if (nlc2.item(k).getNodeName().equals("PS-Modul")) {
+											NodeList nlc3 = nlc2.item(k).getChildNodes();
+											for (int l = 0; l < nlc3.getLength(); l++) {
+												if (nlc3.item(l).getNodeName().equals("PSM-Name")) {
+													String modname = nlc3.item(l).getTextContent();
+													mnl.addName(modname);
+													if (Prozessmodul.containsName(modname)) {
+														psms.add(Prozessmodul.get(modname));
+													} else {
+														psms.add(Produktsystem.get(modname));
+													}
+												}											
+											}										
+										}
+									}
+								}
+								if (nlc.item(j).getNodeName().equals("Bedarfsvektor")) {
+									NodeList nlc2 = nlc.item(j).getChildNodes();
+									for (int k = 0; k < nlc2.getLength(); k++) {
+										if (nlc2.item(k).getNodeName().equals("BV-Element")) {
+											NodeList nlc3 = nlc2.item(k).getChildNodes();
+											for (int l = 0; l < nlc3.getLength(); l++) {
+												if (nlc3.item(l).getNodeName().equals("BV-Element-Name")) {
+													bvename = nlc3.item(l).getTextContent();
+												}
+												if (nlc3.item(l).getNodeName().equals("BV-Element-Menge")) {
+													bvemenge = nlc3.item(l).getTextContent();
+													Fluss akFluss = null;
+													for(Fluss pf : allFlows){
+														if(bvename.equals(pf.getName())){
+															akFluss = pf;
+														}
+													}
+													bv.put(akFluss, Double.parseDouble(bvemenge));
+												}
+											}											
+										}
+									}
+								}
+								if (nlc.item(j).getNodeName().equals("Vor-und-Koppelprodukte")) {
+									NodeList nlc2 = nlc.item(j).getChildNodes();
+									for (int k = 0; k < nlc2.getLength(); k++) {
+										if (nlc2.item(k).getNodeName().equals("VuK-Element")) {
+											NodeList nlc3 = nlc2.item(k).getChildNodes();
+											for (int l = 0; l < nlc3.getLength(); l++) {
+												if (nlc3.item(l).getNodeName().equals("VuK-Element-Name")) {
+													String flname = nlc3.item(l).getTextContent();
+													Fluss akFluss = null;
+													for(Fluss pf : allFlows){
+														if(flname.equals(pf.getName())){
+															akFluss = pf;
+														}
+													}
+													vuk.add(akFluss);
+												}											
+											}										
+										}
+									}									
+								}							
+							}
+							allProSys.put(psname, new Produktsystem(psname, bv, vuk));
+														
+							for (Flussvektoren fv : psms) {
+								allProSys.get(psname).addProzessmodul(fv);								
+							}
+							Bedarfsvektor bv2 = new Bedarfsvektor();
+							bv2.setBV(bv);
+							VorUndKoppelprodukte vuk2 = new VorUndKoppelprodukte();
+							vuk2.setVk(vuk);
+							allMNLs.put(psname, mnl);
+							allBVs.put(psname, bv2);
+							allVKs.put(psname, vuk2);
+						}
+				
 						
 						
 					} catch (SAXException | IOException e) {

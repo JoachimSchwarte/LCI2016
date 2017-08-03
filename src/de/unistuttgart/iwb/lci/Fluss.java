@@ -94,6 +94,10 @@ public class Fluss {
 		return allNames.contains(string);
 	}
 	
+	/**
+	 * Löscht alle Klassenvariablen
+	 */
+	
 	public static void clear() {
 		allNames.clear();
 	}
