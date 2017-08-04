@@ -12,7 +12,7 @@ import java.util.HashSet;
  * Wirkungskategorien repräsentieren.
  * 
  * @author Dr.-Ing. Joachim Schwarte
- * @version 0.926
+ * @version 0.929
  */
 
 public class Wirkungskategorie {
@@ -78,5 +78,13 @@ public class Wirkungskategorie {
 	
 	public static boolean containsName(String string) {
 		return allNames.contains(string);
+	}
+	
+	/**
+	 * Löscht alle Klassenvariablen
+	 */
+	
+	public static void clear() {
+		allNames.clear();
 	}
 }

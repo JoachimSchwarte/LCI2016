@@ -56,18 +56,13 @@ import javax.swing.JCheckBox;
 import javax.swing.JTable;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 
 import org.apache.commons.io.FilenameUtils;
 
 /**
  * @author Dr.-Ing. Joachim Schwarte
- * @version 0.928
+ * @version 0.929
  */
 
 public class IWBLCI {
@@ -119,8 +114,6 @@ public class IWBLCI {
 	private final Action listPKentesAction 	= new listPKentesAction();
 	private final Action listPKtionsAction 	= new listPKtionsAction();
 	private final Action calculateAction 	= new calculateAction();
-	private final Action saveAction 		= new saveAction();
-	private final Action loadAction 		= new loadAction();
 	private final Action xmlExportAction 	= new xmlExportAction();
 	private final Action xmlImportAction 	= new xmlImportAction();
 	private final Action aboutAction 		= new aboutAction();
@@ -206,7 +199,7 @@ public class IWBLCI {
 	 */
 	private void initialize() {
 		frmIwblciVersion = new JFrame();
-		frmIwblciVersion.setTitle("IWB-LCI   Version 0.928");
+		frmIwblciVersion.setTitle("IWB-LCI   Version 0.929");
 		frmIwblciVersion.setBounds(100, 100, 600, 480);
 		frmIwblciVersion.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);		
 		
@@ -408,7 +401,7 @@ public class IWBLCI {
 		JLabel lblInfo4 = new JLabel("Universit\u00e4t Stuttgart");
 		lblInfo4.setFont(new Font("Tahoma", Font.BOLD, 14));
 		panel_4.add(lblInfo4, "cell 1 5,alignx center,aligny top");
-		JLabel lblInfo5 = new JLabel("Version 0.928   03.08.2017");
+		JLabel lblInfo5 = new JLabel("Version 0.929   04.08.2017");
 		lblInfo5.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		panel_4.add(lblInfo5, "cell 1 7,alignx center,aligny top");
 
@@ -490,7 +483,7 @@ public class IWBLCI {
 		JLabel lblTodo4 = new JLabel("");
 		lblTodo4.setFont(new Font("Tahoma", Font.BOLD, 14));
 		panel_9.add(lblTodo4, "cell 1 5,alignx center,aligny top");
-		JLabel lblTodo5 = new JLabel("Version 0.928   03.08.2017");
+		JLabel lblTodo5 = new JLabel("Version 0.929   04.08.2017");
 		lblTodo5.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		panel_9.add(lblTodo5, "cell 1 7,alignx center,aligny top");
 		
@@ -919,14 +912,6 @@ public class IWBLCI {
 		
 		JMenu mnDatei = new JMenu("Datei");
 		menuBar.add(mnDatei);
-		
-		JMenuItem mntmNewMenuItem = new JMenuItem();
-		mntmNewMenuItem.setAction(saveAction);
-		mnDatei.add(mntmNewMenuItem);
-		
-		JMenuItem mntmNewMenuItem_1 = new JMenuItem();
-		mntmNewMenuItem_1.setAction(loadAction);
-		mnDatei.add(mntmNewMenuItem_1);
 		
 		JMenuItem mntmNewMenuItem_3 = new JMenuItem();
 		mntmNewMenuItem_3.setAction(xmlExportAction);
@@ -2228,205 +2213,7 @@ public class IWBLCI {
 			cl.show(panel, "berechnen");
 		}
 	}
-	private class saveAction extends AbstractAction {
-		private static final long serialVersionUID = -8513272127372924276L;
-		public saveAction() {
-			putValue(NAME, "Save");
-			putValue(SHORT_DESCRIPTION, "Abspeichern aller Objekte");
-		}
-		public void actionPerformed(ActionEvent e) {
-	        // JFileChooser-Objekt erstellen
-	        JFileChooser chooser = new JFileChooser();
-	        // Dialog zum Speichern von Dateien anzeigen
-	        int rueckgabeWert = chooser.showSaveDialog(null);
-	        if(rueckgabeWert == JFileChooser.APPROVE_OPTION) {
-	        	try {
-					FileOutputStream fs = new FileOutputStream(chooser.getSelectedFile());
-					ObjectOutputStream os = new ObjectOutputStream(fs);
-					os.writeInt(allFlows.size());
-					for(Fluss pf : allFlows) {
-						os.writeObject(pf.getName());
-						os.writeObject(pf.getTyp());
-						os.writeObject(pf.getEinheit());
-					}	
-					os.writeInt(allModules.size());
-					for(String mn : allModules.keySet()) {
-						os.writeObject(mn);
-						Prozessmodul akModul = allModules.get(mn);
-						os.writeInt(akModul.getElementarflussvektor().size());
-						for(Fluss pf : akModul.getElementarflussvektor().keySet()){
-							os.writeObject(pf.getName());
-							os.writeObject(akModul.getElementarflussvektor().get(pf));
-						}						
-						os.writeInt(akModul.getProduktflussvektor().size());
-						for(Fluss pf : akModul.getProduktflussvektor().keySet()){
-							os.writeObject(pf.getName());
-							os.writeObject(akModul.getProduktflussvektor().get(pf));
-						}
-					}
-					os.writeInt(allProSys.size());
-					for(String psm : allProSys.keySet()) {
-						os.writeObject(psm);
-						os.writeObject(allMNLs.get(psm));
-						os.writeInt(allBVs.get(psm).getBV().size());
-						for (Fluss bvf : allBVs.get(psm).getBV().keySet()) {
-							os.writeObject(bvf.getName());
-							os.writeObject(allBVs.get(psm).getBV().get(bvf));
-						}
-
-						os.writeInt(allVKs.get(psm).getVk().size());
-						for (Fluss vkf : allVKs.get(psm).getVk()){
-							os.writeObject(vkf.getName());
-						}					
-					}
-					os.close();
-					fs.close();
-				} catch (FileNotFoundException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-	        }
-			
-		}
-	}
-	private class loadAction extends AbstractAction {
-		private static final long serialVersionUID = -8070002616229474706L;
-		public loadAction() {
-			putValue(NAME, "Load");
-			putValue(SHORT_DESCRIPTION, "Laden eines Objektbestandes");
-		}
-		public void actionPerformed(ActionEvent e) {
-	        // JFileChooser-Objekt erstellen
-	        JFileChooser chooser = new JFileChooser();
-	        // Dialog zum Speichern von Dateien anzeigen
-	        int rueckgabeWert = chooser.showOpenDialog(null);
-	        if(rueckgabeWert == JFileChooser.APPROVE_OPTION) {
-	        	try {
-					FileInputStream fs = new FileInputStream(chooser.getSelectedFile());
-					ObjectInputStream os = new ObjectInputStream(fs);
-					allFlows.clear();
-					int nrFlows = os.readInt();
-					for (Integer i=0; i<nrFlows; i++){
-						String name = os.readObject().toString();
-						FlussTyp typ = (FlussTyp)os.readObject();
-						FlussEinheit einheit = (FlussEinheit)os.readObject();
-						Fluss lFluss = new Fluss(name, typ, einheit);
-						allFlows.add(lFluss);
-						allFLs.put(name, lFluss);
-					}		
-					allModules.clear();
-					int nrMods = os.readInt();
-					for (Integer i=0; i<nrMods; i++) {
-						String mn = (String)os.readObject();
-						allModules.put(mn, new Prozessmodul(mn));
-						int esize = os.readInt();
-						for (int j=0; j<(esize); j++) {
-							String fname = (String)os.readObject();
-							Fluss akFluss = null;
-							for(Fluss pf : allFlows){
-								if(fname.equals(pf.getName())){
-									akFluss = pf;
-								}
-							}								
-							Double menge = (Double)os.readObject();
-							allModules.get(mn).addFluss(akFluss, menge);
-						}
-						int psize = os.readInt();
-						for (int j=0; j<(psize); j++) {
-							String fname = (String)os.readObject();
-							Fluss akFluss = null;
-							for(Fluss pf : allFlows){
-								if(fname.equals(pf.getName())){
-									akFluss = pf;
-								}
-							}								
-							Double menge = (Double)os.readObject();
-							allModules.get(mn).addFluss(akFluss, menge);
-						}
-					}
-					allProSys.clear();
-					allMNLs.clear();
-					allBVs.clear();
-					allVKs.clear();
-					int nrSys = os.readInt();
-					
-					for (Integer i=0; i<nrSys; i++) {
-						String name = (String)os.readObject();
-						
-						if (allProSys.containsKey(name) == false) {
-							allProSys.put(name, new Produktsystem(name, new HashMap<Fluss, Double>(), 
-									new LinkedList<Fluss>()));							
-						}						
-						allMNLs.put(name, new ModulNamenListe());
-						allBVs.put(name, new Bedarfsvektor());
-						allVKs.put(name, new VorUndKoppelprodukte());
-						ModulNamenListe ml = (ModulNamenListe)os.readObject();
-						for (String mni : ml.getMnl()) {
-							boolean typmod = false;
-							for(String modn2 : allModules.keySet()) {
-								if (mni.equals(modn2)) {
-									typmod = true;
-								}
-							}
-							if (typmod == true){
-								allProSys.get(name).addProzessmodul(allModules.get(mni));
-							} else {
-								if (allProSys.containsKey(mni) == false) {
-									allProSys.put(mni, new Produktsystem(mni, new HashMap<Fluss, Double>(), 
-											new LinkedList<Fluss>()));							
-								}	
-								allProSys.get(name).addProzessmodul(allProSys.get(mni));
-							}
-							allMNLs.get(name).addName(mni);
-							
-						}
-						int nrbv = os.readInt();
-
-						for (int j=0; j<nrbv; j++) {
-							String bvname = (String)os.readObject();
-							Double bvwert = (Double)os.readObject();
-							Fluss akFluss = null;
-							for(Fluss pf : allFlows){
-								if (bvname.equals(pf.getName())){
-									akFluss = pf;
-								}
-							}
-							allBVs.get(name).addFluss(akFluss, bvwert);
-							allProSys.get(name).
-								setBedarfsvektor(allBVs.get(name).getBV());
-						}
-						int nrvk = os.readInt();
-						for (int j=0; j<nrvk; j++) {
-							String vkname = (String)os.readObject();
-							Fluss akFluss = null;
-							for(Fluss pf : allFlows){
-								if (vkname.equals(pf.getName())){
-									akFluss = pf;
-								}
-							}
-							allVKs.get(name).addFluss(akFluss);
-							allProSys.get(name).setVorUndKoppelProdukte(allVKs.get(name).getVk());							
-						}					
-					}
-					os.close();
-					fs.close();
-				} catch (FileNotFoundException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (ClassNotFoundException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-	        }
-			
-		}
-	}
+	
 	private class xmlExportAction extends AbstractAction {
 		private static final long serialVersionUID = -4377920048321969857L;
 		public xmlExportAction() {
@@ -2442,6 +2229,7 @@ public class IWBLCI {
 	        
 	            Element root = document.createElement("XML");
 	            document.appendChild(root);
+	            
 	            Element allefluesse = document.createElement("Fl\u00fcsse");
 	            root.appendChild(allefluesse);
 	            
@@ -2535,10 +2323,45 @@ public class IWBLCI {
 	            		Element prodname =  document.createElement("VuK-Element-Name");
 	            		produkt.appendChild(prodname);
 	            		prodname.appendChild(document.createTextNode(vkf.getName()));
-	            	}
-	            	
-	            	
+	            	}	            	
 	            }
+	            
+	            Element alleWKs = document.createElement("Wirkungskategorien");
+	            root.appendChild(alleWKs);
+	            
+	            for(String wkname : allWKs.keySet()) {
+	            	Wirkungskategorie wk = allWKs.get(wkname); 
+	            	Element wk2 = document.createElement("Wirkungskategorie");
+	            	alleWKs.appendChild(wk2);
+	            	Element name = document.createElement("WK-Name");
+	            	wk2.appendChild(name);
+		            name.appendChild(document.createTextNode(wk.getName()));
+		            Element einheit = document.createElement("WK-Einheit");
+		            wk2.appendChild(einheit);
+		            einheit.appendChild(document.createTextNode(wk.getEinheit().toString()));
+				}
+	            
+	            Element alleCFs = document.createElement("Charakterisierungsfaktoren");
+	            root.appendChild(alleCFs);
+	            
+	            for(String cfname : allCFs.keySet()) {
+	            	CharakterFaktor cf = allCFs.get(cfname); 
+	            	Element cf2 = document.createElement("Charakterisierungsfaktor");
+	            	alleCFs.appendChild(cf2);
+	            	Element name = document.createElement("CF-Name");
+	            	cf2.appendChild(name);
+		            name.appendChild(document.createTextNode(cf.getName()));
+	            	Element fluss = document.createElement("CF-Fluss");
+	            	cf2.appendChild(fluss);
+	            	fluss.appendChild(document.createTextNode(cf.getFluss().getName()));
+	            	Element wirk = document.createElement("CF-Wirkung");
+	            	cf2.appendChild(wirk);
+	            	wirk.appendChild(document.createTextNode(cf.getWirkung().getName()));
+	            	Element wert = document.createElement("CF-Wert");
+	            	cf2.appendChild(wert);
+	            	wert.appendChild(document.createTextNode(cf.getWert().toString()));
+
+				}
 	            
 		        // JFileChooser-Objekt erstellen
 		        JFileChooser chooser = new JFileChooser();
@@ -2601,6 +2424,7 @@ public class IWBLCI {
 						NameCheck.clear();
 						
 						allFlows.clear();
+						allFLs.clear();
 						Fluss.clear();
 						NodeList nl = docEle.getElementsByTagName("Fluss");
 						for (int i = 0; i < nl.getLength(); i++) {
@@ -2679,8 +2503,7 @@ public class IWBLCI {
 							NodeList nlc = nl.item(i).getChildNodes();
 							String psname = "";	
 							String bvename = "";
-							String bvemenge = "";
-							LinkedList<Flussvektoren> psms = new LinkedList<Flussvektoren>();
+							String bvemenge = "";							
 							HashMap<Fluss, Double> bv = new HashMap<Fluss, Double>();
 							LinkedList<Fluss> vuk = new LinkedList<Fluss>();
 							ModulNamenListe mnl = new ModulNamenListe();
@@ -2697,11 +2520,7 @@ public class IWBLCI {
 												if (nlc3.item(l).getNodeName().equals("PSM-Name")) {
 													String modname = nlc3.item(l).getTextContent();
 													mnl.addName(modname);
-													if (Prozessmodul.containsName(modname)) {
-														psms.add(Prozessmodul.get(modname));
-													} else {
-														psms.add(Produktsystem.get(modname));
-													}
+													
 												}											
 											}										
 										}
@@ -2751,11 +2570,8 @@ public class IWBLCI {
 									}									
 								}							
 							}
-							allProSys.put(psname, new Produktsystem(psname, bv, vuk));
-														
-							for (Flussvektoren fv : psms) {
-								allProSys.get(psname).addProzessmodul(fv);								
-							}
+							allProSys.put(psname, new Produktsystem(psname, bv, vuk));														
+							
 							Bedarfsvektor bv2 = new Bedarfsvektor();
 							bv2.setBV(bv);
 							VorUndKoppelprodukte vuk2 = new VorUndKoppelprodukte();
@@ -2764,6 +2580,39 @@ public class IWBLCI {
 							allBVs.put(psname, bv2);
 							allVKs.put(psname, vuk2);
 						}
+						for (String psname : allProSys.keySet()) {
+							LinkedList<Flussvektoren> psms = new LinkedList<Flussvektoren>();
+							for (String modname : allMNLs.get(psname).getMnl()) {
+								if (Prozessmodul.containsName(modname)) {
+									psms.add(Prozessmodul.get(modname));
+								} else {
+									psms.add(Produktsystem.get(modname));
+								}
+							}
+							for (Flussvektoren fv : psms) {
+								allProSys.get(psname).addProzessmodul(fv);								
+							}
+						}
+						allWKs.clear();
+						Wirkungskategorie.clear();
+						nl = docEle.getElementsByTagName("Wirkungskategorie");
+						for (int i = 0; i < nl.getLength(); i++) {
+							NodeList nlc = nl.item(i).getChildNodes();
+							String wkname = "";
+							String wkeinheit = "";
+							for (int j = 0; j < nlc.getLength(); j++) {
+								if (nlc.item(j).getNodeName().equals("WK-Name")) {
+									wkname = nlc.item(j).getTextContent();
+								}
+								if (nlc.item(j).getNodeName().equals("WK-Einheit")) {
+									wkeinheit = nlc.item(j).getTextContent();
+								}	
+							}
+							Wirkungsindikator wi = Wirkungsindikator.valueOf(wkeinheit);
+							Wirkungskategorie lwk = new Wirkungskategorie(wkname, wi);
+							allWKs.put(wkname, lwk);
+						}
+
 				
 						
 						

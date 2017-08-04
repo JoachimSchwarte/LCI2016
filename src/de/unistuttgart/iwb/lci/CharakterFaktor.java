@@ -14,7 +14,7 @@ import java.util.HashSet;
  * zwischen Flüssen und Wirkungskategorien hergestellt.
  * 
  * @author Dr.-Ing. Joachim Schwarte
- * @version 0.926
+ * @version 0.929
  */
 
 public class CharakterFaktor {
@@ -106,5 +106,13 @@ public class CharakterFaktor {
 	
 	public static boolean containsName(String string) {
 		return allNames.contains(string);
+	}
+	
+	/**
+	 * Löscht alle Klassenvariablen
+	 */
+	
+	public static void clear() {
+		allNames.clear();
 	}
 }
