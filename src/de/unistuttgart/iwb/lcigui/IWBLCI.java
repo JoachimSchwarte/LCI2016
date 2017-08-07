@@ -401,7 +401,7 @@ public class IWBLCI {
 		JLabel lblInfo4 = new JLabel("Universit\u00e4t Stuttgart");
 		lblInfo4.setFont(new Font("Tahoma", Font.BOLD, 14));
 		panel_4.add(lblInfo4, "cell 1 5,alignx center,aligny top");
-		JLabel lblInfo5 = new JLabel("Version 0.929   04.08.2017");
+		JLabel lblInfo5 = new JLabel("Version 0.929   07.08.2017");
 		lblInfo5.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		panel_4.add(lblInfo5, "cell 1 7,alignx center,aligny top");
 
@@ -483,7 +483,7 @@ public class IWBLCI {
 		JLabel lblTodo4 = new JLabel("");
 		lblTodo4.setFont(new Font("Tahoma", Font.BOLD, 14));
 		panel_9.add(lblTodo4, "cell 1 5,alignx center,aligny top");
-		JLabel lblTodo5 = new JLabel("Version 0.929   04.08.2017");
+		JLabel lblTodo5 = new JLabel("Version 0.929   07.08.2017");
 		lblTodo5.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		panel_9.add(lblTodo5, "cell 1 7,alignx center,aligny top");
 		
@@ -2363,6 +2363,34 @@ public class IWBLCI {
 
 				}
 	            
+	            Element alleBMs = document.createElement("Bewertungsmethoden");
+	            root.appendChild(alleBMs);
+	            
+	            for(String bmname : Bewertungsmethode.getAllBWs().keySet()) {
+	            	Bewertungsmethode bm = Bewertungsmethode.instance(bmname); 
+	            	Element bm2 = document.createElement("Bewertungsmethode");
+	            	alleBMs.appendChild(bm2);
+	            	Element name = document.createElement("BM-Name");
+	            	bm2.appendChild(name);
+		            name.appendChild(document.createTextNode(bm.getName()));
+		            
+		            Element faktoren = document.createElement("BM-Faktoren");
+	            	bm2.appendChild(faktoren);
+		            for (String fname : bm.getFaktorSet().keySet()) {
+		            	Element faktor = document.createElement("BM-Faktor");
+		            	faktoren.appendChild(faktor);
+		            	faktor.appendChild(document.createTextNode(fname));		            	
+		            }
+		            Element kategorien = document.createElement("BM-Kategorien");
+	            	bm2.appendChild(kategorien);
+		            for (String kname : bm.kategorieListe().keySet()) {
+		            	Element kat = document.createElement("BM-Kategorie");
+		            	kategorien.appendChild(kat);
+		            	kat.appendChild(document.createTextNode(kname));		            	
+		            }
+	            }
+	            
+	            
 		        // JFileChooser-Objekt erstellen
 		        JFileChooser chooser = new JFileChooser();
 		        FileFilter filter = new FileNameExtensionFilter("XML-Dateien (*.xml)", "xml");
@@ -2612,7 +2640,51 @@ public class IWBLCI {
 							Wirkungskategorie lwk = new Wirkungskategorie(wkname, wi);
 							allWKs.put(wkname, lwk);
 						}
+						allCFs.clear();
+						CharakterFaktor.clear();
+						nl = docEle.getElementsByTagName("Charakterisierungsfaktor");
+						for (int i = 0; i < nl.getLength(); i++) {
+							NodeList nlc = nl.item(i).getChildNodes();
+							String cfname = "";
+							String cffluss = "";
+							String cfwirkung = "";
+							String cfwert = "";
+							for (int j = 0; j < nlc.getLength(); j++) {
+								if (nlc.item(j).getNodeName().equals("CF-Name")) {
+									cfname = nlc.item(j).getTextContent();
+								}
+								if (nlc.item(j).getNodeName().equals("CF-Fluss")) {
+									cffluss = nlc.item(j).getTextContent();
+								}
+								if (nlc.item(j).getNodeName().equals("CF-Wirkung")) {
+									cfwirkung = nlc.item(j).getTextContent();
+								}
+								if (nlc.item(j).getNodeName().equals("CF-Wert")) {
+									cfwert = nlc.item(j).getTextContent();
+								}
+							}
+							Fluss akFluss = null;
+							for (Fluss pf : allFlows){
+								if(cffluss.equals(pf.getName())){
+									akFluss = pf;
+								}
+							}
+							Wirkungskategorie akWirk = null;
+							for (String wkst : allWKs.keySet()) {
+								if(cfwirkung.equals(wkst)){
+									akWirk = allWKs.get(wkst);									
+								}	
+							}
+							Double akWert = Double.parseDouble(cfwert);
+							allCFs.put(cfname, new CharakterFaktor(cfname, akFluss, akWirk, akWert));
+						}
+						Bewertungsmethode.clear();
+						
+						ProduktBilanziert.clear();
 
+						Produktkomponente.clear();
+						
+						Produktkomposition.clear();
 				
 						
 						

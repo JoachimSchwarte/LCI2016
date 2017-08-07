@@ -11,7 +11,7 @@ import java.util.LinkedList;
  * Diese Klasse dient zur Erzeugung von Produktkompositionen.
  * 
  * @author Dr.-Ing. Joachim Schwarte
- * @version 0.927
+ * @version 0.929
  */
 
 public class Produktkomposition implements Wirkungsvektor {
@@ -140,5 +140,13 @@ public class Produktkomposition implements Wirkungsvektor {
 	
 	public LinkedList<Wirkungsvektor> getZusammensetzung() {
 		return zusammensetzung;
+	}	
+	
+	/**
+	 * Löscht alle Klassenvariablen
+	 */
+	
+	public static void clear() {
+		allPKtions.clear();
 	}
 }

@@ -15,7 +15,7 @@ import java.util.HashMap;
  * die zu einer Bewertungsmethode gehören, zusammen.
  * 
  * @author Dr.-Ing. Joachim Schwarte
- * @version 0.926
+ * @version 0.929
  */
 
 public class Bewertungsmethode {
@@ -136,5 +136,13 @@ public class Bewertungsmethode {
 	 
 	public static HashMap<String, Bewertungsmethode> getAllBWs() {
 		return allBWs;
+	}
+	
+	/**
+	 * Löscht alle Klassenvariablen
+	 */
+	
+	public static void clear() {
+		allBWs.clear();
 	}
 }
