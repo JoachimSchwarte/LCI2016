@@ -401,7 +401,7 @@ public class IWBLCI {
 		JLabel lblInfo4 = new JLabel("Universit\u00e4t Stuttgart");
 		lblInfo4.setFont(new Font("Tahoma", Font.BOLD, 14));
 		panel_4.add(lblInfo4, "cell 1 5,alignx center,aligny top");
-		JLabel lblInfo5 = new JLabel("Version 0.929   07.08.2017");
+		JLabel lblInfo5 = new JLabel("Version 0.929   08.08.2017");
 		lblInfo5.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		panel_4.add(lblInfo5, "cell 1 7,alignx center,aligny top");
 
@@ -483,7 +483,7 @@ public class IWBLCI {
 		JLabel lblTodo4 = new JLabel("");
 		lblTodo4.setFont(new Font("Tahoma", Font.BOLD, 14));
 		panel_9.add(lblTodo4, "cell 1 5,alignx center,aligny top");
-		JLabel lblTodo5 = new JLabel("Version 0.929   07.08.2017");
+		JLabel lblTodo5 = new JLabel("Version 0.929   08.08.2017");
 		lblTodo5.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		panel_9.add(lblTodo5, "cell 1 7,alignx center,aligny top");
 		
@@ -2390,6 +2390,32 @@ public class IWBLCI {
 		            }
 	            }
 	            
+	            Element allePDs = document.createElement("Produktdeklarationen");
+	            root.appendChild(allePDs);
+	            
+	            for(String pdname : ProduktBilanziert.getAll().keySet()) {
+	            	ProduktBilanziert pd = ProduktBilanziert.get(pdname); 
+	            	Element pd2 = document.createElement("Produktdeklaration");
+	            	allePDs.appendChild(pd2);
+	            	Element name = document.createElement("PD-Name");
+	            	pd2.appendChild(name);
+		            name.appendChild(document.createTextNode(pd.getName()));
+		            Element methode = document.createElement("PD-Methode");
+	            	pd2.appendChild(methode);
+		            methode.appendChild(document.createTextNode(pd.getBM().getName()));
+		            Element wirkung = document.createElement("PD-Wirkungen");
+	            	pd2.appendChild(wirkung);
+	            	for (Wirkungskategorie w : pd.getWirkungsvektor(pd.getBM()).keySet()) {
+	            		Element w2 = document.createElement("PD-Wirkung");
+	            		wirkung.appendChild(w2);
+	            		Element wname = document.createElement("PDW-Name");
+		            	w2.appendChild(wname);
+		            	wname.appendChild(document.createTextNode(w.getName()));
+		            	Element wwert = document.createElement("PDW-Wert");
+		            	w2.appendChild(wwert);
+		            	wwert.appendChild(document.createTextNode(pd.getWirkungsvektor(pd.getBM()).get(w).toString()));
+	            	}
+	            }
 	            
 		        // JFileChooser-Objekt erstellen
 		        JFileChooser chooser = new JFileChooser();
@@ -2679,6 +2705,43 @@ public class IWBLCI {
 							allCFs.put(cfname, new CharakterFaktor(cfname, akFluss, akWirk, akWert));
 						}
 						Bewertungsmethode.clear();
+						nl = docEle.getElementsByTagName("Bewertungsmethode");
+						for (int i = 0; i < nl.getLength(); i++) {
+							NodeList nlc = nl.item(i).getChildNodes();
+							String bmname = "";							
+							HashMap<String, CharakterFaktor> fakset = new HashMap<String, CharakterFaktor>();
+							HashMap<String, Wirkungskategorie> katset = new HashMap<String, Wirkungskategorie>();
+							for (int j = 0; j < nlc.getLength(); j++) {	
+								if (nlc.item(j).getNodeName().equals("BM-Name")) {
+									bmname = nlc.item(j).getTextContent();
+								}
+								if (nlc.item(j).getNodeName().equals("BM-Faktoren")) {
+									NodeList nlc2 = nlc.item(j).getChildNodes();
+									for (int k = 0; k < nlc2.getLength(); k++) {
+										if (nlc2.item(k).getNodeName().equals("BM-Faktor")) {
+											String fakname = nlc2.item(k).getTextContent();
+											fakset.put(fakname, allCFs.get(fakname));
+										}
+									}										
+								}
+								if (nlc.item(j).getNodeName().equals("BM-Kategorien")) {
+									NodeList nlc2 = nlc.item(j).getChildNodes();
+									for (int k = 0; k < nlc2.getLength(); k++) {
+										if (nlc2.item(k).getNodeName().equals("BM-Kategorie")) {
+											String katname = nlc2.item(k).getTextContent();
+											katset.put(katname, allWKs.get(katname));
+										}
+									}
+								}
+							}
+							Bewertungsmethode akbm = Bewertungsmethode.instance(bmname);
+							for (String fn : fakset.keySet()) {
+								akbm.addFaktor(fakset.get(fn));
+							}
+							for (String kn : katset.keySet()) {
+								akbm.addWK(katset.get(kn));
+							}
+						}
 						
 						ProduktBilanziert.clear();
 
