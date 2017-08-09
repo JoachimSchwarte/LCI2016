@@ -7,7 +7,7 @@ package de.unistuttgart.iwb.lcitest;
 
 /**
  * @author Dr.-Ing. Joachim Schwarte
- * @version 0.927
+ * @version 0.93
  */
 
 import static org.junit.Assert.*;
@@ -18,17 +18,17 @@ import org.junit.Test;
 import de.unistuttgart.iwb.lci.*;
 
 public class IwbLciTest {
-	Fluss a = new Fluss("A", FlussTyp.Elementar, FlussEinheit.kg);
-	Fluss b = new Fluss("B", FlussTyp.Elementar, FlussEinheit.kg);
-	Fluss c = new Fluss("C", FlussTyp.Elementar, FlussEinheit.kg);
-	Fluss d = new Fluss("D", FlussTyp.Elementar, FlussEinheit.g);
-	Fluss e = new Fluss("E", FlussTyp.Elementar, FlussEinheit.Stk);
-	Fluss f = new Fluss("F", FlussTyp.Elementar, FlussEinheit.Stk);
-	Fluss x = new Fluss("X", FlussTyp.Produkt, FlussEinheit.kg);
-	Fluss y = new Fluss("Y", FlussTyp.Produkt, FlussEinheit.kg);
-	Fluss z = new Fluss("Z", FlussTyp.Produkt, FlussEinheit.Stk);
-	Fluss w = new Fluss("W", FlussTyp.Produkt, FlussEinheit.Stk);
-	Fluss v = new Fluss("V", FlussTyp.Produkt, FlussEinheit.Stk);
+	Fluss a = Fluss.instance("A", FlussTyp.Elementar, FlussEinheit.kg);
+	Fluss b = Fluss.instance("B", FlussTyp.Elementar, FlussEinheit.kg);
+	Fluss c = Fluss.instance("C", FlussTyp.Elementar, FlussEinheit.kg);
+	Fluss d = Fluss.instance("D", FlussTyp.Elementar, FlussEinheit.g);
+	Fluss e = Fluss.instance("E", FlussTyp.Elementar, FlussEinheit.Stk);
+	Fluss f = Fluss.instance("F", FlussTyp.Elementar, FlussEinheit.Stk);
+	Fluss x = Fluss.instance("X", FlussTyp.Produkt, FlussEinheit.kg);
+	Fluss y = Fluss.instance("Y", FlussTyp.Produkt, FlussEinheit.kg);
+	Fluss z = Fluss.instance("Z", FlussTyp.Produkt, FlussEinheit.Stk);
+	Fluss w = Fluss.instance("W", FlussTyp.Produkt, FlussEinheit.Stk);
+	Fluss v = Fluss.instance("V", FlussTyp.Produkt, FlussEinheit.Stk);
 	Prozessmodul Modul1 = new Prozessmodul();
 	Prozessmodul Modul2 = new Prozessmodul();
 	Prozessmodul Modul3 = new Prozessmodul();

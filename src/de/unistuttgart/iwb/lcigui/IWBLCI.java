@@ -62,7 +62,7 @@ import org.apache.commons.io.FilenameUtils;
 
 /**
  * @author Dr.-Ing. Joachim Schwarte
- * @version 0.929
+ * @version 0.93
  */
 
 public class IWBLCI {
@@ -74,10 +74,6 @@ public class IWBLCI {
 	private JFrame frmIwblciVersion;
 	private JPanel panel = new JPanel();
 	private CardLayout cl = new CardLayout(0, 0);
-	private LinkedList<Fluss>allFlows = 
-			new LinkedList<Fluss>();
-	private HashMap<String,Fluss>allFLs = 
-			new HashMap<String, Fluss>();
 	private HashMap<String, Prozessmodul>allModules =
 			new HashMap<String, Prozessmodul>();
 	private HashMap<String, Produktsystem>allProSys = 
@@ -199,7 +195,7 @@ public class IWBLCI {
 	 */
 	private void initialize() {
 		frmIwblciVersion = new JFrame();
-		frmIwblciVersion.setTitle("IWB-LCI   Version 0.929");
+		frmIwblciVersion.setTitle("IWB-LCI   Version 0.93");
 		frmIwblciVersion.setBounds(100, 100, 600, 480);
 		frmIwblciVersion.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);		
 		
@@ -401,7 +397,7 @@ public class IWBLCI {
 		JLabel lblInfo4 = new JLabel("Universit\u00e4t Stuttgart");
 		lblInfo4.setFont(new Font("Tahoma", Font.BOLD, 14));
 		panel_4.add(lblInfo4, "cell 1 5,alignx center,aligny top");
-		JLabel lblInfo5 = new JLabel("Version 0.929   09.08.2017");
+		JLabel lblInfo5 = new JLabel("Version 0.93   09.08.2017");
 		lblInfo5.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		panel_4.add(lblInfo5, "cell 1 7,alignx center,aligny top");
 
@@ -483,7 +479,7 @@ public class IWBLCI {
 		JLabel lblTodo4 = new JLabel("");
 		lblTodo4.setFont(new Font("Tahoma", Font.BOLD, 14));
 		panel_9.add(lblTodo4, "cell 1 5,alignx center,aligny top");
-		JLabel lblTodo5 = new JLabel("Version 0.929   09.08.2017");
+		JLabel lblTodo5 = new JLabel("Version 0.93   09.08.2017");
 		lblTodo5.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		panel_9.add(lblTodo5, "cell 1 7,alignx center,aligny top");
 		
@@ -1037,19 +1033,11 @@ public class IWBLCI {
 				if (name.equals("")) {
 					lblStatusmeldung.setText(">>> Es wurde kein Name angegeben. <<<");
 				} else {
-					boolean nameVorhanden = false;
-					for(Fluss pf : allFlows) {
-						if (name.equals(pf.getName())) {
-							nameVorhanden = true;
-						}
-					}
-					if (nameVorhanden == true) {
+					if (Fluss.containsName(name)) {
 						lblStatusmeldung.setText(">>> Der angegebene Name ist bereits vorhanden. <<<");
 					} else {
-						Fluss lFluss = new Fluss(name, typ, einheit);
-						allFlows.add(lFluss);
-						allFLs.put(name, lFluss);
-						lblStatusmeldung.setText(">>> Anzahl Flussobjekte: " + allFlows.size() + " <<<");
+						Fluss.instance(name, typ, einheit);
+						lblStatusmeldung.setText(">>> Anzahl Flussobjekte: " + Fluss.getAllNames().size() + " <<<");
 						txtName.setText("");
 						comboBox.setSelectedIndex(0);
 						comboBox_1.setSelectedIndex(0);
@@ -1110,19 +1098,8 @@ public class IWBLCI {
 				if (fname.equals("") || (menge == 0.0)) {
 					lblStatus2.setText(">>> unvollst\u00e4ndige Eingabe <<<");
 				} else {
-					boolean nameVorhanden = false;
-					for(Fluss pf : allFlows) {
-						if (fname.equals(pf.getName())) {
-							nameVorhanden = true;
-						}
-					}
-					if (nameVorhanden == true) {
-						Fluss akFluss = null;
-						for(Fluss pf : allFlows){
-							if (fname.equals(pf.getName())){
-								akFluss = pf;
-							}
-						}
+					if (Fluss.containsName(fname)) {
+						Fluss akFluss = Fluss.getInstance(fname);
 						String mname = txtModName.getText();
 						allModules.get(mname).addFluss(akFluss, menge);
 						txtFlussName.setText("");
@@ -1274,19 +1251,8 @@ public class IWBLCI {
 				if (fname.equals("") || (menge == 0.0)) {
 					lblStatus3.setText(">>> unvollst\u00e4ndige Eingabe <<<");
 				} else {
-					boolean nameVorhanden = false;
-					for(Fluss pf : allFlows) {
-						if (fname.equals(pf.getName())) {
-							nameVorhanden = true;
-						}
-					}
-					if (nameVorhanden == true) {
-						Fluss akFluss = null;
-						for(Fluss pf : allFlows){
-							if (fname.equals(pf.getName())){
-								akFluss = pf;
-							}
-						}
+					if (Fluss.containsName(fname)) {
+						Fluss akFluss = Fluss.getInstance(fname);
 						allBVs.get(txtPSName.getText()).addFluss(akFluss, menge);
 						allProSys.get(txtPSName.getText()).
 							setBedarfsvektor(allBVs.get(txtPSName.getText()).getBV());
@@ -1329,21 +1295,9 @@ public class IWBLCI {
 				String vkname = txtVKName.getText();
 				if (vkname.equals("")) {
 					lblStatus3.setText(">>> unvollst\u00e4ndige Eingabe <<<");
-				} else {
-					boolean nameVorhanden = false;
-					for(Fluss pf : allFlows) {
-						if (vkname.equals(pf.getName())) {
-							nameVorhanden = true;
-						}
-					}					
-
-					if (nameVorhanden == true) {
-						Fluss akFluss = null;
-						for(Fluss pf : allFlows){
-							if (vkname.equals(pf.getName())){
-								akFluss = pf;
-							}
-						}
+				} else {					
+					if (Fluss.containsName(vkname)) {
+						Fluss akFluss = Fluss.getInstance(vkname);
 						allVKs.get(txtPSName.getText()).addFluss(akFluss);
 						allProSys.get(txtPSName.getText()).
 							setVorUndKoppelProdukte(allVKs.get(txtPSName.getText()).getVk());
@@ -1547,7 +1501,7 @@ public class IWBLCI {
 						Wirkungskategorie.containsName(wkName) == true &&
 						faktorZahl == true) {
 					allCFs.put(cfName, new CharakterFaktor(cfName, 
-							allFLs.get(flName), allWKs.get(wkName) , faktor));	
+							Fluss.getInstance(flName), allWKs.get(wkName) , faktor));
 					txtP15n1.setText("");
 					txtP15n2.setText("");
 					txtP15n3.setText("");
@@ -1838,15 +1792,8 @@ public class IWBLCI {
 				if (fname.equals("") || (mengeZahl == false)) {
 					lblStatus4.setText(">>> unkorrekte oder unvollst\u00e4ndige Eingabe <<<");
 				} else {
-					boolean nameVorhanden = false;
-					Fluss fo = allFlows.getFirst();
-					for(Fluss pf : allFlows) {
-						if (fname.equals(pf.getName())) {
-							nameVorhanden = true;
-							fo = pf;
-						}
-					}
-					if (nameVorhanden == true) {
+					if (Fluss.containsName(fname)) {
+						Fluss fo = Fluss.getInstance(fname);
 						Boolean nameInModul = false;
 						String mname = txtModName3.getText();
 						if (allModules.get(mname).getElementarflussvektor().
@@ -2013,7 +1960,8 @@ public class IWBLCI {
 		}
 		public void actionPerformed(ActionEvent e) {
 			flowsTableModel.setRowCount(0);
-			for(Fluss fluss : allFlows) {
+			for(String flussname : Fluss.getAllInstances().keySet()) {
+				Fluss fluss = Fluss.getInstance(flussname);
 				flowsTableModel.addRow(new Object[] {fluss.getName(), fluss.getTyp(), fluss.getEinheit()});
 			}
 			
@@ -2235,7 +2183,8 @@ public class IWBLCI {
 	            Element allefluesse = document.createElement("Fl\u00fcsse");
 	            root.appendChild(allefluesse);
 	            
-	            for(Fluss pf : allFlows) {
+	            for(String pfname : Fluss.getAllInstances().keySet()) {
+	            	Fluss pf = Fluss.getInstance(pfname); 
 	            	Element fluss = document.createElement("Fluss");
 	            	allefluesse.appendChild(fluss);
 	            	Element name = document.createElement("Fluss-Name");
@@ -2516,8 +2465,6 @@ public class IWBLCI {
 						
 						NameCheck.clear();
 						
-						allFlows.clear();
-						allFLs.clear();
 						Fluss.clear();
 						NodeList nl = docEle.getElementsByTagName("Fluss");
 						for (int i = 0; i < nl.getLength(); i++) {
@@ -2538,9 +2485,7 @@ public class IWBLCI {
 							}
 							FlussTyp ft = FlussTyp.valueOf(flusstyp);
 							FlussEinheit fe = FlussEinheit.valueOf(flusseinheit);
-							Fluss lFluss = new Fluss(flussname, ft, fe);
-							allFlows.add(lFluss);
-							allFLs.put(flussname, lFluss);
+							Fluss.instance(flussname, ft, fe);
 						}
 						allModules.clear();
 						Prozessmodul.clear();
@@ -2568,12 +2513,7 @@ public class IWBLCI {
 												}
 												if (nlc3.item(l).getNodeName().equals("FV-Element-Menge")) {
 													fvemenge = nlc3.item(l).getTextContent();
-													Fluss akFluss = null;
-													for(Fluss pf : allFlows){
-														if(fvename.equals(pf.getName())){
-															akFluss = pf;
-														}
-													}
+													Fluss akFluss = Fluss.getInstance(fvename);
 													pmfv.put(akFluss, Double.parseDouble(fvemenge));
 												}
 											}											
@@ -2630,12 +2570,7 @@ public class IWBLCI {
 												}
 												if (nlc3.item(l).getNodeName().equals("BV-Element-Menge")) {
 													bvemenge = nlc3.item(l).getTextContent();
-													Fluss akFluss = null;
-													for(Fluss pf : allFlows){
-														if(bvename.equals(pf.getName())){
-															akFluss = pf;
-														}
-													}
+													Fluss akFluss = Fluss.getInstance(bvename);
 													bv.put(akFluss, Double.parseDouble(bvemenge));
 												}
 											}											
@@ -2650,12 +2585,7 @@ public class IWBLCI {
 											for (int l = 0; l < nlc3.getLength(); l++) {
 												if (nlc3.item(l).getNodeName().equals("VuK-Element-Name")) {
 													String flname = nlc3.item(l).getTextContent();
-													Fluss akFluss = null;
-													for(Fluss pf : allFlows){
-														if(flname.equals(pf.getName())){
-															akFluss = pf;
-														}
-													}
+													Fluss akFluss = Fluss.getInstance(flname);
 													vuk.add(akFluss);
 												}											
 											}										
@@ -2728,12 +2658,7 @@ public class IWBLCI {
 									cfwert = nlc.item(j).getTextContent();
 								}
 							}
-							Fluss akFluss = null;
-							for (Fluss pf : allFlows){
-								if(cffluss.equals(pf.getName())){
-									akFluss = pf;
-								}
-							}
+							Fluss akFluss = Fluss.getInstance(cffluss);
 							Wirkungskategorie akWirk = null;
 							for (String wkst : allWKs.keySet()) {
 								if(cfwirkung.equals(wkst)){
