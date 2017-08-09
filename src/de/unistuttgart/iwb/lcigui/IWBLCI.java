@@ -401,7 +401,7 @@ public class IWBLCI {
 		JLabel lblInfo4 = new JLabel("Universit\u00e4t Stuttgart");
 		lblInfo4.setFont(new Font("Tahoma", Font.BOLD, 14));
 		panel_4.add(lblInfo4, "cell 1 5,alignx center,aligny top");
-		JLabel lblInfo5 = new JLabel("Version 0.929   08.08.2017");
+		JLabel lblInfo5 = new JLabel("Version 0.929   09.08.2017");
 		lblInfo5.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		panel_4.add(lblInfo5, "cell 1 7,alignx center,aligny top");
 
@@ -483,7 +483,7 @@ public class IWBLCI {
 		JLabel lblTodo4 = new JLabel("");
 		lblTodo4.setFont(new Font("Tahoma", Font.BOLD, 14));
 		panel_9.add(lblTodo4, "cell 1 5,alignx center,aligny top");
-		JLabel lblTodo5 = new JLabel("Version 0.929   08.08.2017");
+		JLabel lblTodo5 = new JLabel("Version 0.929   09.08.2017");
 		lblTodo5.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		panel_9.add(lblTodo5, "cell 1 7,alignx center,aligny top");
 		
@@ -1292,7 +1292,9 @@ public class IWBLCI {
 							setBedarfsvektor(allBVs.get(txtPSName.getText()).getBV());
 						lblStatus3.setText(">>> Der Bedarfsvektor enth\u00e4lt " + 
 								allBVs.get(txtPSName.getText()).getBV().size() + " Fl\u00dcsse <<<");
-						btnWei2.setEnabled(true);						
+						btnWei2.setEnabled(true);	
+						txtBV.setText("");
+						txtBVMenge.setText("");
 					} else {
 						lblStatus3.setText(">>> unbekannter Flussname <<<");
 					}					
@@ -2417,6 +2419,43 @@ public class IWBLCI {
 	            	}
 	            }
 	            
+	            Element allePKentes = document.createElement("Produktkomponenten");
+	            root.appendChild(allePKentes);
+	            
+	            for(String pkentename : Produktkomponente.getAll().keySet()) {
+	            	Produktkomponente pkente = Produktkomponente.get(pkentename);
+	            	Element pk2 = document.createElement("Produktkomponente");
+	            	allePKentes.appendChild(pk2);
+	            	Element name = document.createElement("PKomponente-Name");
+	            	pk2.appendChild(name);
+	            	name.appendChild(document.createTextNode(pkente.getName()));
+	            	Element prod = document.createElement("PKomponente-Produkt");
+	            	pk2.appendChild(prod);
+	            	prod.appendChild(document.createTextNode(pkente.getKomponente().getName()));
+	            	Element menge = document.createElement("PKomponente-Menge");
+	            	pk2.appendChild(menge);
+	            	menge.appendChild(document.createTextNode(pkente.getMenge().toString()));
+	            }
+	            
+	            Element allePKtions = document.createElement("Produktkompositionen");
+	            root.appendChild(allePKtions);
+	            
+	            for(String pktionname : Produktkomposition.getAll().keySet()) {
+	            	Produktkomposition pktion = Produktkomposition.get(pktionname);
+	            	Element pk2 = document.createElement("Produktkomposition");
+	            	allePKtions.appendChild(pk2);
+	            	Element name = document.createElement("PKomposition-Name");
+	            	pk2.appendChild(name);
+	            	name.appendChild(document.createTextNode(pktion.getName()));
+	            	Element zusa = document.createElement("PKomposition-Zusammensetzung");
+	            	pk2.appendChild(zusa);
+	            	for (Wirkungsvektor w : Produktkomposition.get(pktionname).getZusammensetzung()) {
+	            		Element z2 = document.createElement("PKZ-Bestandteil");
+		            	zusa.appendChild(z2);
+		            	z2.appendChild(document.createTextNode(w.getName()));
+	            	}            	
+	            }
+	            
 		        // JFileChooser-Objekt erstellen
 		        JFileChooser chooser = new JFileChooser();
 		        FileFilter filter = new FileNameExtensionFilter("XML-Dateien (*.xml)", "xml");
@@ -2738,18 +2777,134 @@ public class IWBLCI {
 							for (String fn : fakset.keySet()) {
 								akbm.addFaktor(fakset.get(fn));
 							}
+							fakset.clear();
 							for (String kn : katset.keySet()) {
 								akbm.addWK(katset.get(kn));
 							}
+							katset.clear();
 						}
 						
 						ProduktBilanziert.clear();
+						allPBs.clear();
+						nl = docEle.getElementsByTagName("Produktdeklaration");
+						for (int i = 0; i < nl.getLength(); i++) {
+							NodeList nlc = nl.item(i).getChildNodes();
+							String pdname = "";	
+							String pdmethode = "";	
+							String pdwname = "";
+							String pdwwert = "";
+							HashMap<Wirkungskategorie, Double> pdwv = new HashMap<Wirkungskategorie, Double>();
+							for (int j = 0; j < nlc.getLength(); j++) {
+								if (nlc.item(j).getNodeName().equals("PD-Name")) {
+									pdname = nlc.item(j).getTextContent();
+								}
+								if (nlc.item(j).getNodeName().equals("PD-Methode")) {
+									pdmethode = nlc.item(j).getTextContent();
+								}
+								if (nlc.item(j).getNodeName().equals("PD-Wirkungen")) {
+									NodeList nlc2 = nlc.item(j).getChildNodes();
+									for (int k = 0; k < nlc2.getLength(); k++) {
+										if (nlc2.item(k).getNodeName().equals("PD-Wirkung")) {
+											NodeList nlc3 = nlc2.item(k).getChildNodes();
+											for (int l = 0; l < nlc3.getLength(); l++) {
+												if (nlc3.item(l).getNodeName().equals("PDW-Name")) {
+													pdwname = nlc3.item(l).getTextContent();
+												}
+												if (nlc3.item(l).getNodeName().equals("PDW-Wert")) {
+													pdwwert = nlc3.item(l).getTextContent();
+												}
+											}
+											pdwv.put(allWKs.get(pdwname), Double.parseDouble(pdwwert));
+										}
+									}
+								}
+							}
+							ProduktBilanziert akpb = new ProduktBilanziert(pdname);
+							akpb.setBM(Bewertungsmethode.getAllBWs().get(pdmethode));
+							for (Wirkungskategorie w : pdwv.keySet()) {
+								akpb.addWirkung(w, pdwv.get(w));
+							}	
+							pdwv.clear();
+							allPBs.put(pdname, akpb);
+						}
 
 						Produktkomponente.clear();
+						nl = docEle.getElementsByTagName("Produktkomponente");
+						for (int i = 0; i < nl.getLength(); i++) {
+							NodeList nlc = nl.item(i).getChildNodes();
+							String pkname = "";
+							String pkprod = "";
+							String pkmenge = "";
+							for (int j = 0; j < nlc.getLength(); j++) {
+								if (nlc.item(j).getNodeName().equals("PKomponente-Name")) {
+									pkname = nlc.item(j).getTextContent();
+								}
+								if (nlc.item(j).getNodeName().equals("PKomponente-Produkt")) {
+									pkprod = nlc.item(j).getTextContent();
+								}
+								if (nlc.item(j).getNodeName().equals("PKomponente-Menge")) {
+									pkmenge = nlc.item(j).getTextContent();
+								}								
+							}
+							Wirkungsvektor kompo = new Prozessmodul();
+							if (Prozessmodul.containsName(pkprod)) {
+								kompo = Prozessmodul.get(pkprod);					
+							}
+							if (Produktsystem.containsName(pkprod)) {
+								kompo = Produktsystem.get(pkprod);					
+							}
+							if (ProduktBilanziert.containsName(pkprod)) {
+								kompo = ProduktBilanziert.get(pkprod);					
+							}
+							if (Produktkomponente.containsName(pkprod)) {
+								kompo = Produktkomponente.get(pkprod);					
+							}
+							if (Produktkomposition.containsName(pkprod)) {
+								kompo = Produktkomposition.get(pkprod);					
+							}				
+							Produktkomponente.newInstance(pkname, kompo, Double.parseDouble(pkmenge));
+						}
 						
 						Produktkomposition.clear();
-				
-						
+						nl = docEle.getElementsByTagName("Produktkomposition");
+						for (int i = 0; i < nl.getLength(); i++) {
+							NodeList nlc = nl.item(i).getChildNodes();
+							String koname = "";	
+							LinkedList<String> zusa = new LinkedList<String>();
+							for (int j = 0; j < nlc.getLength(); j++) {
+								if (nlc.item(j).getNodeName().equals("PKomposition-Name")) {
+									koname = nlc.item(j).getTextContent();
+								}
+								if (nlc.item(j).getNodeName().equals("PKomposition-Zusammensetzung")) {
+									NodeList nlc2 = nlc.item(j).getChildNodes();
+									for (int k = 0; k < nlc2.getLength(); k++) {
+										if (nlc2.item(k).getNodeName().equals("PKZ-Bestandteil")) {
+											zusa.add(nlc2.item(k).getTextContent());									
+										}										
+									}								
+								}
+							}
+							Produktkomposition akpk = Produktkomposition.instance(koname);
+							for (String pkprod : zusa) {
+								Wirkungsvektor kompo = new Prozessmodul();
+								if (Prozessmodul.containsName(pkprod)) {
+									kompo = Prozessmodul.get(pkprod);					
+								}
+								if (Produktsystem.containsName(pkprod)) {
+									kompo = Produktsystem.get(pkprod);					
+								}
+								if (ProduktBilanziert.containsName(pkprod)) {
+									kompo = ProduktBilanziert.get(pkprod);					
+								}
+								if (Produktkomponente.containsName(pkprod)) {
+									kompo = Produktkomponente.get(pkprod);					
+								}
+								if (Produktkomposition.containsName(pkprod)) {
+									kompo = Produktkomposition.get(pkprod);					
+								}
+								akpk.addKomponente(kompo);								
+							}
+						}					
 						
 					} catch (SAXException | IOException e) {
 						// TODO Auto-generated catch block

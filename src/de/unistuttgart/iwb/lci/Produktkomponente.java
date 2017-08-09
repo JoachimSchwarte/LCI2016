@@ -27,7 +27,7 @@ public class Produktkomponente implements Wirkungsvektor {
 	
 	private String name;
 	private Wirkungsvektor komponente;
-	private double menge;
+	private Double menge;
 	
 	// Konstruktor:
 
@@ -43,7 +43,7 @@ public class Produktkomponente implements Wirkungsvektor {
 	// Methoden:
 	
 	/**
-	 * Der dreiparametrige Methode newInstance erzeugt 
+	 * Die dreiparametrige Methode newInstance erzeugt 
 	 * unter Verwendung des privaten Konstruktors eine vollständige
 	 * Produktkomponente.
 	 * @param name
@@ -129,7 +129,7 @@ public class Produktkomponente implements Wirkungsvektor {
 	 * ... die Mengenangabe.
 	 */
 
-	public double getMenge() {
+	public Double getMenge() {
 		return menge;
 	}
 	
