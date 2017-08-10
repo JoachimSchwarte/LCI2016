@@ -74,16 +74,6 @@ public class IWBLCI {
 	private JFrame frmIwblciVersion;
 	private JPanel panel = new JPanel();
 	private CardLayout cl = new CardLayout(0, 0);
-	private HashMap<String, Prozessmodul>allModules =
-			new HashMap<String, Prozessmodul>();
-	private HashMap<String, Produktsystem>allProSys = 
-			new HashMap<String, Produktsystem>();
-	private HashMap<String, Bedarfsvektor>allBVs = 
-			new HashMap<String, Bedarfsvektor>();
-	private HashMap<String, VorUndKoppelprodukte>allVKs = 
-			new HashMap<String, VorUndKoppelprodukte>();
-	private HashMap<String, ModulNamenListe>allMNLs = 
-			new HashMap<String, ModulNamenListe>();
 	private HashMap<String, Wirkungskategorie>allWKs = 
 			new HashMap<String, Wirkungskategorie>();
 	private HashMap<String, ProduktBilanziert>allPBs = 
@@ -397,7 +387,7 @@ public class IWBLCI {
 		JLabel lblInfo4 = new JLabel("Universit\u00e4t Stuttgart");
 		lblInfo4.setFont(new Font("Tahoma", Font.BOLD, 14));
 		panel_4.add(lblInfo4, "cell 1 5,alignx center,aligny top");
-		JLabel lblInfo5 = new JLabel("Version 0.93   09.08.2017");
+		JLabel lblInfo5 = new JLabel("Version 0.93   10.08.2017");
 		lblInfo5.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		panel_4.add(lblInfo5, "cell 1 7,alignx center,aligny top");
 
@@ -479,7 +469,7 @@ public class IWBLCI {
 		JLabel lblTodo4 = new JLabel("");
 		lblTodo4.setFont(new Font("Tahoma", Font.BOLD, 14));
 		panel_9.add(lblTodo4, "cell 1 5,alignx center,aligny top");
-		JLabel lblTodo5 = new JLabel("Version 0.93   09.08.2017");
+		JLabel lblTodo5 = new JLabel("Version 0.93   10.08.2017");
 		lblTodo5.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		panel_9.add(lblTodo5, "cell 1 7,alignx center,aligny top");
 		
@@ -1057,23 +1047,11 @@ public class IWBLCI {
 				if (name.equals("")) {
 					lblStatus2.setText(">>> Es wurde kein Name angegeben. <<<");
 				} else {
-					boolean nameVorhanden = false;
-					
-					for(String mod : allModules.keySet()) {
-						if (name.equals(mod)) {
-							nameVorhanden = true;
-						}
-					}
-					for(String mod : allProSys.keySet()) {
-						if (name.equals(mod)) {
-							nameVorhanden = true;
-						}
-					}
-					if (nameVorhanden == true) {
+					if (NameCheck.containsFVName(name)) {
 						lblStatus2.setText(">>> Der angegebene Name ist bereits vorhanden. <<<");
 					} else {
-						allModules.put(name, new Prozessmodul(name));
-						lblStatus2.setText(">>> Anzahl Prozessmodule: " + allModules.size() + " <<<");
+						Prozessmodul.instance(name);
+						lblStatus2.setText(">>> Anzahl Prozessmodule: " + Prozessmodul.getAllInstances().size() + " <<<");
 						btnSpei2.setEnabled(false);
 						txtModName.setEnabled(false);
 						btnAddFluss.setEnabled(true);
@@ -1101,12 +1079,12 @@ public class IWBLCI {
 					if (Fluss.containsName(fname)) {
 						Fluss akFluss = Fluss.getInstance(fname);
 						String mname = txtModName.getText();
-						allModules.get(mname).addFluss(akFluss, menge);
+						Prozessmodul.getInstance(mname).addFluss(akFluss, menge);
 						txtFlussName.setText("");
 						txtMenge.setText("");
 						btnFertig.setEnabled(true);
-						int anzPFluss = allModules.get(mname).getProduktflussvektor().size();
-						int anzEFluss = allModules.get(mname).getElementarflussvektor().size();
+						int anzPFluss = Prozessmodul.getInstance(mname).getProduktflussvektor().size();
+						int anzEFluss = Prozessmodul.getInstance(mname).getElementarflussvektor().size();
 						int anzGesamt = anzPFluss + anzEFluss;
 						lblStatus2.setText(">>> Prozessmodul " + mname + " besitzt " +
 								anzGesamt + " Fl\u00fcsse <<<");
@@ -1147,12 +1125,12 @@ public class IWBLCI {
 				} else {
 					boolean nameVorhanden = false;
 					
-					for(String mod : allModules.keySet()) {
+					for(String mod : Prozessmodul.getAllInstances().keySet()) {
 						if (name.equals(mod)) {
 							nameVorhanden = true;
 						}
 					}
-					for(String mod : allProSys.keySet()) {
+					for(String mod : Produktsystem.getAllInstances().keySet()) {
 						if (name.equals(mod)) {
 							nameVorhanden = true;
 						}
@@ -1160,12 +1138,9 @@ public class IWBLCI {
 					if (nameVorhanden == true) {
 						lblStatus3.setText(">>> Der angegebene Name ist bereits vorhanden. <<<");
 					} else {
-						allProSys.put(name, new Produktsystem(name, new HashMap<Fluss, Double>(), 
-								new LinkedList<Fluss>()));
-						allMNLs.put(name, new ModulNamenListe());
-						allBVs.put(name, new Bedarfsvektor());
-						allVKs.put(name, new VorUndKoppelprodukte());
-						lblStatus3.setText(">>> Anzahl Produktsysteme: " + allProSys.size() + " <<<");
+						Produktsystem.instance(name, new HashMap<Fluss, Double>(), 
+								new LinkedList<Fluss>());
+						lblStatus3.setText(">>> Anzahl Produktsysteme: " + Produktsystem.getAllInstances().size() + " <<<");
 
 						btnSpei3.setEnabled(false);
 						txtPSName.setEnabled(false);
@@ -1190,14 +1165,14 @@ public class IWBLCI {
 				} else {
 					boolean nameVorhanden = false;
 					boolean typmod = false;
-					for(String modn2 : allModules.keySet()) {
+					for(String modn2 : Prozessmodul.getAllInstances().keySet()) {
 						if (modname.equals(modn2)) {
 							nameVorhanden = true;
 							typmod = true;
 						}
 					}
 					if (nameVorhanden == false) {
-						for(String modn3 : allProSys.keySet()) {
+						for(String modn3 : Produktsystem.getAllInstances().keySet()) {
 							if (modname.equals(modn3)) {
 								nameVorhanden = true;
 								typmod = false;
@@ -1206,13 +1181,12 @@ public class IWBLCI {
 					}
 					if (nameVorhanden == true) {
 						if (typmod == true){
-							allProSys.get(txtPSName.getText()).addProzessmodul(allModules.get(modname));
+							Produktsystem.getAllInstances().get(txtPSName.getText()).addProzessmodul(Prozessmodul.getInstance(modname));
 						} else {
-							allProSys.get(txtPSName.getText()).addProzessmodul(allProSys.get(modname));
+							Produktsystem.getAllInstances().get(txtPSName.getText()).addProzessmodul(Produktsystem.getAllInstances().get(modname));
 						}
-						allMNLs.get(txtPSName.getText()).addName(modname);
 						lblStatus3.setText(">>> Produktsystem " + txtPSName.getText() +
-								" besteht aus " + allProSys.get(txtPSName.getText()).getModulAnzahl() 
+								" besteht aus " + Produktsystem.getAllInstances().get(txtPSName.getText()).getModulAnzahl() 
 								+ " Elementen <<<");
 						txtModName2.setText("");
 						btnWeiter.setEnabled(true);
@@ -1253,11 +1227,9 @@ public class IWBLCI {
 				} else {
 					if (Fluss.containsName(fname)) {
 						Fluss akFluss = Fluss.getInstance(fname);
-						allBVs.get(txtPSName.getText()).addFluss(akFluss, menge);
-						allProSys.get(txtPSName.getText()).
-							setBedarfsvektor(allBVs.get(txtPSName.getText()).getBV());
+						Produktsystem.getInstance(txtPSName.getText()).addBedarf(akFluss, Double.parseDouble(txtBVMenge.getText()));
 						lblStatus3.setText(">>> Der Bedarfsvektor enth\u00e4lt " + 
-								allBVs.get(txtPSName.getText()).getBV().size() + " Fl\u00dcsse <<<");
+								Produktsystem.getInstance(txtPSName.getText()).getBedarfsvektor().size() + " Fl\u00dcsse <<<");
 						btnWei2.setEnabled(true);	
 						txtBV.setText("");
 						txtBVMenge.setText("");
@@ -1298,12 +1270,10 @@ public class IWBLCI {
 				} else {					
 					if (Fluss.containsName(vkname)) {
 						Fluss akFluss = Fluss.getInstance(vkname);
-						allVKs.get(txtPSName.getText()).addFluss(akFluss);
-						allProSys.get(txtPSName.getText()).
-							setVorUndKoppelProdukte(allVKs.get(txtPSName.getText()).getVk());
+						Produktsystem.getInstance(txtPSName.getText()).addVuK(akFluss);
 						txtVKName.setText("");
 						lblStatus3.setText(">>> Der VK-Vektor enth\u00e4lt " + 
-								allVKs.get(txtPSName.getText()).getVk().size() + " Fl\u00fcsse <<<");										
+								Produktsystem.getInstance(txtPSName.getText()).getVorUndKoppelprodukte().size() + " Fl\u00fcsse <<<");										
 					} else {
 						lblStatus3.setText(">>> unbekannter Flussname <<<");
 					}					
@@ -1621,12 +1591,13 @@ public class IWBLCI {
 						pkName.equals("") == false &&
 						NameCheck.containsWVName(koName) == true &&
 						mengeZahl == true) {
-					Wirkungsvektor kompo = new Prozessmodul();
+					Wirkungsvektor kompo = Prozessmodul.instance("dummy");
 					if (Prozessmodul.containsName(koName)) {
-						kompo = Prozessmodul.get(koName);					
+						kompo = Prozessmodul.getInstance(koName);					
 					}
+					Prozessmodul.removeInstance("dummy");
 					if (Produktsystem.containsName(koName)) {
-						kompo = Produktsystem.get(koName);					
+						kompo = Produktsystem.getInstance(koName);					
 					}
 					if (ProduktBilanziert.containsName(koName)) {
 						kompo = ProduktBilanziert.get(koName);					
@@ -1696,12 +1667,13 @@ public class IWBLCI {
 				String PKtionName = txtP21n1.getText();
 				String PKenteName = txtP21n2.getText();
 				if (NameCheck.containsWVName(PKenteName) == true) {
-					Wirkungsvektor kompo = new Prozessmodul();
+					Wirkungsvektor kompo = Prozessmodul.instance("dummy");
 					if (Prozessmodul.containsName(PKenteName)) {
-						kompo = Prozessmodul.get(PKenteName);					
+						kompo = Prozessmodul.getInstance(PKenteName);					
 					}
+					Prozessmodul.removeInstance("dummy");
 					if (Produktsystem.containsName(PKenteName)) {
-						kompo = Produktsystem.get(PKenteName);					
+						kompo = Produktsystem.getInstance(PKenteName);					
 					}
 					if (ProduktBilanziert.containsName(PKenteName)) {
 						kompo = ProduktBilanziert.get(PKenteName);					
@@ -1756,7 +1728,7 @@ public class IWBLCI {
 				} else {
 					boolean nameModules = false;			
 					
-					for(String mod : allModules.keySet()) {
+					for(String mod : Prozessmodul.getAllInstances().keySet()) {
 						if (name.equals(mod)) {
 							nameModules = true;
 						}
@@ -1796,28 +1768,28 @@ public class IWBLCI {
 						Fluss fo = Fluss.getInstance(fname);
 						Boolean nameInModul = false;
 						String mname = txtModName3.getText();
-						if (allModules.get(mname).getElementarflussvektor().
+						if (Prozessmodul.getInstance(mname).getElementarflussvektor().
 								containsKey(fo)){
 							nameInModul = true;
 						}
-						if (allModules.get(mname).getProduktflussvektor().
+						if (Prozessmodul.getInstance(mname).getProduktflussvektor().
 								containsKey(fo)){
 							nameInModul = true;
 						}
 						if (nameInModul==true) {
 							if (menge == 0.0) {
-								allModules.get(mname).removeFluss(fo);
+								Prozessmodul.getInstance(mname).removeFluss(fo);
 								lblStatus4.setText(">>> Der angegebene Fluss wurde aus dem Modul gel\u00f6scht. <<<");
 							} else {
-								allModules.get(mname).removeFluss(fo);
-								allModules.get(mname).addFluss(fo, menge);
+								Prozessmodul.getInstance(mname).removeFluss(fo);
+								Prozessmodul.getInstance(mname).addFluss(fo, menge);
 								lblStatus4.setText(">>> Die Mengenangabe wurde ge\u00e4ndert. <<<");
 							}
 						} else {
 							if (menge == 0.0) {
 								lblStatus4.setText(">>> Mengenangabe fehlt. <<<");
 							} else {
-								allModules.get(mname).addFluss(fo, menge);
+								Prozessmodul.getInstance(mname).addFluss(fo, menge);
 								lblStatus4.setText(">>> Der Fluss wurde hinzugef\u00dcgt. <<<");								
 							}							
 						}				
@@ -1976,8 +1948,8 @@ public class IWBLCI {
 		}
 		public void actionPerformed(ActionEvent e) {
 			modulesTableModel.setRowCount(0);
-			for(String mn : allModules.keySet()) {
-				Prozessmodul akModul = allModules.get(mn);
+			for(String mn : Prozessmodul.getAllInstances().keySet()) {
+				Prozessmodul akModul = Prozessmodul.getInstance(mn);
 				modulesTableModel.addRow(new Object[] {mn, "", ""});
 				for(Fluss pf : akModul.getElementarflussvektor().keySet()){
 					modulesTableModel.addRow(new Object[] {"", pf.getName(), 
@@ -1999,11 +1971,12 @@ public class IWBLCI {
 		}
 		public void actionPerformed(ActionEvent e) {
 			productsTableModel.setRowCount(0);
-			for(String psn : allProSys.keySet()) {
+			for(String psn : Produktsystem.getAllInstances().keySet()) {
 				productsTableModel.addRow(new Object[] {psn, "", ""});
-				for (String mni : allMNLs.get(psn).getMnl()){
+				for (Flussvektoren mnif : Produktsystem.getInstance(psn).getModulliste()){
+					String mni = mnif.getName();
 					boolean typmod = false;
-					for(String modn2 : allModules.keySet()) {
+					for(String modn2 : Prozessmodul.getAllInstances().keySet()) {
 						if (mni.equals(modn2)) {
 							typmod = true;
 						}
@@ -2014,12 +1987,13 @@ public class IWBLCI {
 						productsTableModel.addRow(new Object[] {"","Subsystem", mni});	
 					}					
 				}
-				for (Fluss bvf : allBVs.get(psn).getBV().keySet()) {
+				for (Fluss bvf : Produktsystem.getInstance(psn).getBedarfsvektor().keySet()) {
 					productsTableModel.addRow(new Object[] {"" ,"Bedarf" 
-							,"" + bvf.getName() + " (" + allBVs.get(psn).getBV().get(bvf) + 
-							" " + bvf.getEinheit()+")"});		
+							,"" + bvf.getName() + " (" + 
+							Produktsystem.getInstance(psn).getBedarfsvektor().get(bvf) + 
+							" " + bvf.getEinheit()+")"});
 				}
-				for (Fluss vk : allVKs.get(psn).getVk()) {
+				for (Fluss vk : Produktsystem.getInstance(psn).getVorUndKoppelprodukte()) {
 					productsTableModel.addRow(new Object[] {"" ,"Vor- oder Koppelpr." 
 							,vk.getName() });		
 				}
@@ -2142,10 +2116,10 @@ public class IWBLCI {
 		public void actionPerformed(ActionEvent e) {		
 			resultsTableModel.setRowCount(0);
 			HashMap<Fluss, Double> sysErgebnis = new HashMap<Fluss, Double>();
-			if (allProSys.size() > 0) {
-				for(String sysName : allProSys.keySet()) {
+			if (Produktsystem.getAllInstances().size() > 0) {
+				for(String sysName : Produktsystem.getAllInstances().keySet()) {
 					resultsTableModel.addRow(new Object[] {sysName,"",""});
-					Produktsystem sysAktuell = allProSys.get(sysName);
+					Produktsystem sysAktuell = Produktsystem.getAllInstances().get(sysName);
 					try {
 						if (sysAktuell.getElementarflussvektor().size() > 0) {
 							sysErgebnis = sysAktuell.getElementarflussvektor();
@@ -2201,8 +2175,8 @@ public class IWBLCI {
 	            Element allemodule = document.createElement("Prozessmodule");
 	            root.appendChild(allemodule);
 	            
-				for(String mn : allModules.keySet()) {
-					Prozessmodul akModul = allModules.get(mn);
+				for(String mn : Prozessmodul.getAllInstances().keySet()) {
+					Prozessmodul akModul = Prozessmodul.getInstance(mn);
 					Element prozessmodul = document.createElement("Prozessmodul");
 					allemodule.appendChild(prozessmodul);
 					Element name = document.createElement("Prozessmodul-Name");
@@ -2238,8 +2212,8 @@ public class IWBLCI {
 				Element alleprosys = document.createElement("Produktsysteme");
 	            root.appendChild(alleprosys);
 	            
-	            for(String psm : allProSys.keySet()) {
-	            	Produktsystem akProSys = allProSys.get(psm);
+	            for(String psm : Produktsystem.getAllInstances().keySet()) {
+	            	Produktsystem akProSys = Produktsystem.getAllInstances().get(psm);
 					Element produktsystem = document.createElement("Produktsystem");
 					alleprosys.appendChild(produktsystem);
 					Element name = document.createElement("Produktsystem-Name");
@@ -2247,7 +2221,8 @@ public class IWBLCI {
 					name.appendChild(document.createTextNode(akProSys.getName()));
 					Element modullist = document.createElement("PS-Module");
 					produktsystem.appendChild(modullist);
-					for (String modname  : allMNLs.get(psm).getMnl()) {
+					for (Flussvektoren mod  : Produktsystem.getInstance(psm).getModulliste()) {
+						String modname = mod.getName();
 						Element modul = document.createElement("PS-Modul");
 						modullist.appendChild(modul);
 						Element mname = document.createElement("PSM-Name");
@@ -2256,7 +2231,7 @@ public class IWBLCI {
 					}					
 					Element bv = document.createElement("Bedarfsvektor");
 					produktsystem.appendChild(bv);		            	
-	            	for (Fluss bvf : allBVs.get(psm).getBV().keySet()) {
+	            	for (Fluss bvf : Produktsystem.getInstance(psm).getBedarfsvektor().keySet()) {
 	            		Element bedarf = document.createElement("BV-Element");
 	            		bv.appendChild(bedarf);
 	            		Element fluss =  document.createElement("BV-Element-Name");
@@ -2264,11 +2239,12 @@ public class IWBLCI {
 	            		fluss.appendChild(document.createTextNode(bvf.getName()));
 	            		Element menge = document.createElement("BV-Element-Menge");
 	            		bedarf.appendChild(menge);
-	            		menge.appendChild(document.createTextNode(allBVs.get(psm).getBV().get(bvf).toString()));
+	            		menge.appendChild(document.createTextNode(Produktsystem.getInstance(psm).
+	            				getBedarfsvektor().get(bvf).toString()));
 	            	}
 	            	Element vuk = document.createElement("Vor-und-Koppelprodukte");
 					produktsystem.appendChild(vuk);
-	            	for (Fluss vkf : allVKs.get(psm).getVk()){
+	            	for (Fluss vkf : Produktsystem.getInstance(psm).getVorUndKoppelprodukte()){
 	            		Element produkt = document.createElement("VuK-Element");
 	            		vuk.appendChild(produkt);
 	            		Element prodname =  document.createElement("VuK-Element-Name");
@@ -2487,7 +2463,6 @@ public class IWBLCI {
 							FlussEinheit fe = FlussEinheit.valueOf(flusseinheit);
 							Fluss.instance(flussname, ft, fe);
 						}
-						allModules.clear();
 						Prozessmodul.clear();
 						nl = docEle.getElementsByTagName("Prozessmodul");
 						for (int i = 0; i < nl.getLength(); i++) {
@@ -2521,25 +2496,22 @@ public class IWBLCI {
 									}
 								}
 							}
-							allModules.put(pmname, new Prozessmodul(pmname));
+							Prozessmodul.instance(pmname);
 							for (Fluss akFluss : pmfv.keySet()) {
-								allModules.get(pmname).addFluss(akFluss, pmfv.get(akFluss));
+								Prozessmodul.getInstance(pmname).addFluss(akFluss, pmfv.get(akFluss));
 							}
 						}
-						allProSys.clear();
-						allMNLs.clear();
-						allBVs.clear();
-						allVKs.clear();
 						Produktsystem.clear();
 						nl = docEle.getElementsByTagName("Produktsystem");
+						HashMap<String, LinkedList<String>> mnls = new HashMap<String, LinkedList<String>>();
 						for (int i = 0; i < nl.getLength(); i++) {
 							NodeList nlc = nl.item(i).getChildNodes();
 							String psname = "";	
 							String bvename = "";
-							String bvemenge = "";							
+							String bvemenge = "";	
+							LinkedList<String> mnl = new LinkedList<String>();
 							HashMap<Fluss, Double> bv = new HashMap<Fluss, Double>();
 							LinkedList<Fluss> vuk = new LinkedList<Fluss>();
-							ModulNamenListe mnl = new ModulNamenListe();
 							for (int j = 0; j < nlc.getLength(); j++) {	
 								if (nlc.item(j).getNodeName().equals("Produktsystem-Name")) {
 									psname = nlc.item(j).getTextContent();
@@ -2551,9 +2523,8 @@ public class IWBLCI {
 											NodeList nlc3 = nlc2.item(k).getChildNodes();
 											for (int l = 0; l < nlc3.getLength(); l++) {
 												if (nlc3.item(l).getNodeName().equals("PSM-Name")) {
-													String modname = nlc3.item(l).getTextContent();
-													mnl.addName(modname);
-													
+													String modname = nlc3.item(l).getTextContent();	
+													mnl.add(modname);
 												}											
 											}										
 										}
@@ -2593,27 +2564,17 @@ public class IWBLCI {
 									}									
 								}							
 							}
-							allProSys.put(psname, new Produktsystem(psname, bv, vuk));														
-							
-							Bedarfsvektor bv2 = new Bedarfsvektor();
-							bv2.setBV(bv);
-							VorUndKoppelprodukte vuk2 = new VorUndKoppelprodukte();
-							vuk2.setVk(vuk);
-							allMNLs.put(psname, mnl);
-							allBVs.put(psname, bv2);
-							allVKs.put(psname, vuk2);
+							Produktsystem.instance(psname, bv, vuk);
+							mnls.put(psname, mnl);																			
 						}
-						for (String psname : allProSys.keySet()) {
-							LinkedList<Flussvektoren> psms = new LinkedList<Flussvektoren>();
-							for (String modname : allMNLs.get(psname).getMnl()) {
-								if (Prozessmodul.containsName(modname)) {
-									psms.add(Prozessmodul.get(modname));
+						for (String psname : mnls.keySet()) {
+							LinkedList<String> mnl = mnls.get(psname);
+							for (String m : mnl) {
+								if (Prozessmodul.containsName(m)) {
+									Produktsystem.getInstance(psname).addProzessmodul(Prozessmodul.getInstance(m));
 								} else {
-									psms.add(Produktsystem.get(modname));
-								}
-							}
-							for (Flussvektoren fv : psms) {
-								allProSys.get(psname).addProzessmodul(fv);								
+									Produktsystem.getInstance(psname).addProzessmodul(Produktsystem.getInstance(m));
+								} 
 							}
 						}
 						allWKs.clear();
@@ -2771,12 +2732,13 @@ public class IWBLCI {
 									pkmenge = nlc.item(j).getTextContent();
 								}								
 							}
-							Wirkungsvektor kompo = new Prozessmodul();
+							Wirkungsvektor kompo = Prozessmodul.instance("dummy");
 							if (Prozessmodul.containsName(pkprod)) {
-								kompo = Prozessmodul.get(pkprod);					
+								kompo = Prozessmodul.getInstance(pkprod);					
 							}
+							Prozessmodul.removeInstance("dummy");
 							if (Produktsystem.containsName(pkprod)) {
-								kompo = Produktsystem.get(pkprod);					
+								kompo = Produktsystem.getInstance(pkprod);					
 							}
 							if (ProduktBilanziert.containsName(pkprod)) {
 								kompo = ProduktBilanziert.get(pkprod);					
@@ -2811,12 +2773,13 @@ public class IWBLCI {
 							}
 							Produktkomposition akpk = Produktkomposition.instance(koname);
 							for (String pkprod : zusa) {
-								Wirkungsvektor kompo = new Prozessmodul();
+								Wirkungsvektor kompo = Prozessmodul.instance("dummy");
 								if (Prozessmodul.containsName(pkprod)) {
-									kompo = Prozessmodul.get(pkprod);					
+									kompo = Prozessmodul.getInstance(pkprod);					
 								}
+								Prozessmodul.removeInstance("dummy");
 								if (Produktsystem.containsName(pkprod)) {
-									kompo = Produktsystem.get(pkprod);					
+									kompo = Produktsystem.getInstance(pkprod);					
 								}
 								if (ProduktBilanziert.containsName(pkprod)) {
 									kompo = ProduktBilanziert.get(pkprod);					

@@ -12,15 +12,16 @@ import Jama.Matrix;
  * Diese Klasse dient zur Erzeugung von Produktsystemen.
  * 
  * @author Dr.-Ing. Joachim Schwarte
- * @version 0.928
+ * @version 0.93
  */
 
 public class Produktsystem 
 implements Flussvektoren, Wirkungsvektor {
 	
+	
 	// Klassenvariable:
 	
-	private static HashMap<String, Produktsystem> allPSs = new HashMap<String, Produktsystem>();
+	private static HashMap<String, Produktsystem> allInstances = new HashMap<String, Produktsystem>();
 	
 	// Instanzvariablen:
 	
@@ -37,10 +38,22 @@ implements Flussvektoren, Wirkungsvektor {
 			= new HashMap<Fluss, Double>();
 	
 	// Konstruktor:
+
+	private Produktsystem(String string, 
+			HashMap<Fluss, Double> f,
+			LinkedList<Fluss> vk) {
+		name = string;
+		bedarfsvektor = f;
+		vorUndKoppelProdukte = vk;
+		NameCheck.getInstance().addFVName(name);
+		NameCheck.getInstance().addWVName(name);
+		allInstances.put(name, this);
+	}
+	
+	// Methoden:
 	
 	/**
-	 * Der dreiparametrige Konstruktor erzeugt ein neues
-	 * Produktsystem.
+	 * Erzeugt ein neues oder überschreibt ein bestehendes Produktsystem
 	 * @param string
 	 * übergibt der Namen des Produktsystems. Dieser kann frei 
 	 * gewählt werden.
@@ -49,20 +62,21 @@ implements Flussvektoren, Wirkungsvektor {
 	 * ist der Bedarfsvektor
 	 * @param vk
 	 * ist die Liste der Vor- und Koppelprodukte
+	 * @return
+	 * ... das neue oder bearbeitete Produktsystem
 	 */
-
-	public Produktsystem(String string, 
+	
+	public static Produktsystem instance(String name, 
 			HashMap<Fluss, Double> f,
 			LinkedList<Fluss> vk) {
-		name = string;
-		bedarfsvektor = f;
-		vorUndKoppelProdukte = vk;
-		NameCheck.getInstance().addFVName(name);
-		NameCheck.getInstance().addWVName(name);
-		allPSs.put(name, this);
+		if (allInstances.containsKey(name) == false) {
+			new Produktsystem(name, f, vk);
+		} else {
+			allInstances.get(name).setBedarfsvektor(f);
+			allInstances.get(name).setVorUndKoppelProdukte(vk);
+		}
+		return allInstances.get(name);
 	}
-	
-	// Methoden:
 	
 	/**
 	 * @return
@@ -247,7 +261,7 @@ implements Flussvektoren, Wirkungsvektor {
 	 */
 	
 	public static boolean containsName(String string) {
-		return allPSs.containsKey(string);
+		return allInstances.containsKey(string);
 	}
 	
 	/**
@@ -255,8 +269,8 @@ implements Flussvektoren, Wirkungsvektor {
 	 * ... alle vorhandenen Produktsysteme
 	 */
 	
-	public static HashMap<String, Produktsystem> getAll() {
-		return allPSs;
+	public static HashMap<String, Produktsystem> getAllInstances() {
+		return allInstances;
 	}
 	
 	/**
@@ -267,8 +281,8 @@ implements Flussvektoren, Wirkungsvektor {
 	 * ... das gesuchte Produktsystem
 	 */
 	
-	public static Produktsystem get(String string) {
-		return allPSs.get(string);		
+	public static Produktsystem getInstance(String string) {
+		return allInstances.get(string);		
 	}
 	
 	/**
@@ -276,15 +290,27 @@ implements Flussvektoren, Wirkungsvektor {
 	 */
 	
 	public static void clear() {
-		allPSs.clear();
+		allInstances.clear();
+	}
+	
+	public void addBedarf(Fluss fluss, Double wert) {
+		bedarfsvektor.put(fluss, wert);
 	}
 	
 	public HashMap<Fluss, Double> getBedarfsvektor() {
 		return bedarfsvektor;
 	}
 	
+	public void addVuK(Fluss fluss) {
+		vorUndKoppelProdukte.add(fluss);
+	}
+	
 	public LinkedList<Fluss> getVorUndKoppelprodukte() {
 		return vorUndKoppelProdukte;
+	}
+	
+	public LinkedList<Flussvektoren> getModulliste() {
+		return modulliste;
 	}
 
 }

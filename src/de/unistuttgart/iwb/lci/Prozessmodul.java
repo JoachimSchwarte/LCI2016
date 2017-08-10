@@ -10,7 +10,7 @@ import java.util.HashMap;
  * Diese Klasse dient zur Erzeugung von Prozessmodulen.
  * 
  * @author Dr.-Ing. Joachim Schwarte
- * @version 0.928
+ * @version 0.93
  */
 
 public class Prozessmodul 
@@ -18,7 +18,7 @@ implements Flussvektoren, Wirkungsvektor {
 	
 	// Klassenvariable:
 	
-	private static HashMap<String, Prozessmodul> allPMs = new HashMap<String, Prozessmodul>();
+	private static HashMap<String, Prozessmodul> allInstances = new HashMap<String, Prozessmodul>();
 	
 	// Instanzvariablen:
 	
@@ -29,36 +29,34 @@ implements Flussvektoren, Wirkungsvektor {
 			new HashMap<Fluss, Double>(); //Produktflüsse
 	
 	// Konstruktor:
-	
-	/**
-	 * Der parameterlose Konstruktor erzeugt ein leeres und
-	 * unbenanntes Prozessmodul.
-	 */
-	
-	public Prozessmodul() {
-		super();
-		setName(("PM" + NameCheck.sizeWVName()));
-		NameCheck.getInstance().addFVName(getName());
-		NameCheck.getInstance().addWVName(getName());
-		allPMs.put(getName(), this);
-	}
-	
-	/**
-	 * Der einparametrige Konstruktor erzeugt ein leeres 
-	 * benanntes Prozessmodul.
-	 * @param name
-	 * Der Name des Prozessmoduls
-	 */
-	
-	public Prozessmodul(String name) {
+			
+	private Prozessmodul(String name) {
 		super();
 		setName(name);
 		NameCheck.getInstance().addFVName(getName());
 		NameCheck.getInstance().addWVName(getName());
-		allPMs.put(getName(), this);
+		allInstances.put(getName(), this);
 	}
 	
 	// Methoden:
+	
+	/**
+	 * Erzeugt ein leeres benanntes Prozessmodul durch Aufruf des
+	 * privaten Konstruktors sofern noch kein Prozessmodul gleichem
+	 * Namens existiert. Ansonsten wird das existierende Prozessmodul
+	 * zurückgegeben.
+	 * @param name
+	 * Der Name des Prozessmoduls
+	 * @return
+	 * ... das Prozessmodul
+	 */
+	
+	public static Prozessmodul instance(String name) {
+		if (allInstances.containsKey(name) == false) {
+			new Prozessmodul(name);
+		}
+		return allInstances.get(name);
+	}
 	
 	@Override
 	public HashMap<Fluss, Double> getElementarflussvektor() {
@@ -147,7 +145,7 @@ implements Flussvektoren, Wirkungsvektor {
 	 */
 	
 	public static boolean containsName(String string) {
-		return allPMs.containsKey(string);
+		return allInstances.containsKey(string);
 	}
 	
 	/**
@@ -155,8 +153,8 @@ implements Flussvektoren, Wirkungsvektor {
 	 * ... alle vorhandenen Prozessmodule
 	 */
 	
-	public static HashMap<String, Prozessmodul> getAll() {
-		return allPMs;
+	public static HashMap<String, Prozessmodul> getAllInstances() {
+		return allInstances;
 	}
 	
 	/**
@@ -167,8 +165,18 @@ implements Flussvektoren, Wirkungsvektor {
 	 * ... das gesuchte Prozessmodul
 	 */
 	
-	public static Prozessmodul get(String string) {
-		return allPMs.get(string);		
+	public static Prozessmodul getInstance(String string) {
+		return allInstances.get(string);		
+	}
+	
+	/**
+	 * Löscht ein Prozessmodul
+	 * @param string
+	 * Name des zu löschenden Prozessmoduls
+	 */
+	
+	public static void removeInstance(String string) {
+		allInstances.remove(string);
 	}
 	
 	/**
@@ -176,7 +184,7 @@ implements Flussvektoren, Wirkungsvektor {
 	 */
 	
 	public static void clear() {
-		allPMs.clear();
+		allInstances.clear();
 	}
 }
 
