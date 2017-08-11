@@ -5,7 +5,7 @@
 
 package de.unistuttgart.iwb.lci;
 
-import java.util.HashSet;
+import java.util.HashMap;
 
 /**
  * Diese Klasse dient zur Erzeugung von Objekten, die
@@ -14,14 +14,14 @@ import java.util.HashSet;
  * zwischen Flüssen und Wirkungskategorien hergestellt.
  * 
  * @author Dr.-Ing. Joachim Schwarte
- * @version 0.929
+ * @version 0.93
  */
 
 public class CharakterFaktor {
 	
 	// Klassenvariable:
 	
-	private static HashSet<String> allNames = new HashSet<String>();
+	private static HashMap<String, CharakterFaktor> allInstances = new HashMap<String, CharakterFaktor>();
 	
 	// Instanzvariablen:
 	
@@ -31,13 +31,22 @@ public class CharakterFaktor {
 	private Double wert;
 	
 	// Konstruktor:
+
+	private CharakterFaktor(String name, Fluss fluss, Wirkungskategorie wirkung, Double wert) {
+		super();
+		this.name = name;
+		this.fluss = fluss;
+		this.wirkung = wirkung;
+		this.wert = wert;
+		allInstances.put(name, this);
+	}
+	
+	// Methoden (Getter für die Instanzvariablen):
 	
 	/**
-	 * Der vierparametrige Konstruktor erzeugt ein 
-	 * vollständiges CharakterFaktor-Objekt.
+	 * Erzeugt einen neuen Charakterisierungsfaktor
 	 * @param name
 	 * kann frei gewählt werden.
-	 * Auf Anwendungsebene ist Namenseindeutigkeit anzustreben. 
 	 * @param fluss
 	 * ist ein Objekt der Klasse Fluss.
 	 * @param wirkung
@@ -45,18 +54,13 @@ public class CharakterFaktor {
 	 * @param wert
 	 * quantifiziert die Wirkung des Flusses bzgl. der angegebenen
 	 * Kategorie.
+	 * @return
+	 * ... den Charakterisierungsvektor
 	 */
 	
-	public CharakterFaktor(String name, Fluss fluss, Wirkungskategorie wirkung, Double wert) {
-		super();
-		this.name = name;
-		this.fluss = fluss;
-		this.wirkung = wirkung;
-		this.wert = wert;
-		allNames.add(name);
+	public static CharakterFaktor instance(String name, Fluss fluss, Wirkungskategorie wirkung, Double wert) {
+		return new CharakterFaktor(name, fluss, wirkung, wert);
 	}
-	
-	// Methoden (Getter für die Instanzvariablen):
 	
 	/**
 	 * @return
@@ -105,7 +109,7 @@ public class CharakterFaktor {
 	 */
 	
 	public static boolean containsName(String string) {
-		return allNames.contains(string);
+		return allInstances.containsKey(string);
 	}
 	
 	/**
@@ -113,6 +117,14 @@ public class CharakterFaktor {
 	 */
 	
 	public static void clear() {
-		allNames.clear();
+		allInstances.clear();
+	}
+	
+	public static CharakterFaktor getInstance(String string) {
+		return allInstances.get(string);
+	}
+	
+	public static HashMap<String, CharakterFaktor> getAllInstances() {
+		return allInstances;
 	}
 }

@@ -5,21 +5,21 @@
 
 package de.unistuttgart.iwb.lci;
 
-import java.util.HashSet;
+import java.util.HashMap;
 
 /**
  * Diese Klasse dient zur Erzeugung von Objekten, die
  * Wirkungskategorien repräsentieren.
  * 
  * @author Dr.-Ing. Joachim Schwarte
- * @version 0.929
+ * @version 0.93
  */
 
 public class Wirkungskategorie {
 	
 	// Klassenvariable:
 	
-	private static HashSet<String> allNames = new HashSet<String>();
+	private static HashMap<String, Wirkungskategorie> allInstances = new HashMap<String, Wirkungskategorie>();
 	
 	// Instanzvariablen:
 	
@@ -28,25 +28,30 @@ public class Wirkungskategorie {
 	
 	// Konstruktor basierend auf den Instanzvariablen:
 	
-	/**
-	 * Der zweiparametrige Konstruktor erzeugt ein 
-	 * vollständiges Objekt Klasse Wirkungskategorie.
-	 * @param name
-	 * kann frei gewählt werden.
-	 * Auf Anwendungsebene ist Namenseindeutigkeit anzustreben. 
-	 * @param einheit
-	 * legt die Einheit fest, in der die Wirkungskategorie
-	 * quantifiziert wird.
-	 */
-	
-	public Wirkungskategorie(String name, Wirkungsindikator einheit) {
+	private Wirkungskategorie(String name, Wirkungsindikator einheit) {
 		super();
 		this.name = name;
 		this.einheit = einheit;
-		allNames.add(name);
+		allInstances.put(name, this);
 	}
 	
 	// Methoden (Getter für die Instanzvariablen):
+	
+	/**
+	 * Erzeugt eine neue Wirkungskategorie.
+	 * @param name
+	 * der Name der neuen Wirkungskategorie.
+	 * @param einheit
+	 * legt die Einheit fest, in der die Wirkungskategorie
+	 * quantifiziert wird.
+	 * @return
+	 * ... die neue Wirkungskategorie
+	 */
+	
+	public static Wirkungskategorie instance(String name, Wirkungsindikator einheit) {
+		Wirkungskategorie wk = new Wirkungskategorie(name, einheit);
+		return wk;	
+	}
 
 	/**
 	 * @return
@@ -77,7 +82,7 @@ public class Wirkungskategorie {
 	 */
 	
 	public static boolean containsName(String string) {
-		return allNames.contains(string);
+		return allInstances.keySet().contains(string);
 	}
 	
 	/**
@@ -85,6 +90,10 @@ public class Wirkungskategorie {
 	 */
 	
 	public static void clear() {
-		allNames.clear();
+		allInstances.clear();
+	}
+	
+	public static HashMap<String, Wirkungskategorie> getAllInstances() {
+		return allInstances;
 	}
 }

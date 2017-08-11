@@ -13,7 +13,7 @@ import java.util.HashMap;
  * Produkt").
  * 
  * @author Dr.-Ing. Joachim Schwarte
- * @version 0.929
+ * @version 0.93
  */
 
 public class ProduktBilanziert 
@@ -21,7 +21,7 @@ implements Wirkungsvektor {
 	
 	// Klassenvariable:
 	
-	private static HashMap<String, ProduktBilanziert> allPBs = new HashMap<String, ProduktBilanziert>();
+	private static HashMap<String, ProduktBilanziert> allInstances = new HashMap<String, ProduktBilanziert>();
 	
 	// Instanzvariablen:
 	
@@ -30,23 +30,29 @@ implements Wirkungsvektor {
 	private HashMap<Wirkungskategorie, Double> wvAlle = new HashMap<Wirkungskategorie, Double>();
 	
 	// Konstruktor:
+
+	private ProduktBilanziert(String name) {
+		super();
+		this.name = name;
+		NameCheck.getInstance().addWVName(name);
+		allInstances.put(name, this);
+	}
+
+	// Methoden:
 	
 	/**
-	 * Der einparametrige Konstruktor erzeugt ein benanntes 
+	 * Erzeugt ein benanntes 
 	 * Produktobjekt, das noch keine Daten aus einer 
 	 * Wirkungsabschätzung enthält.
 	 * @param name
 	 * ist der Name des bilanzierten Produkts.
+	 * @return
+	 * ... das Produktobjekt
 	 */
-
-	public ProduktBilanziert(String name) {
-		super();
-		this.name = name;
-		NameCheck.getInstance().addWVName(name);
-		allPBs.put(name, this);
+	
+	public static ProduktBilanziert instance(String name) {
+		return new ProduktBilanziert(name);
 	}
-
-	// Methoden:
 	
 	/**
 	 * Legt die (wesentliche) Bewertungsmethode fest.
@@ -112,7 +118,7 @@ implements Wirkungsvektor {
 	 */
 	
 	public static boolean containsName(String string) {
-		return allPBs.containsKey(string);
+		return allInstances.containsKey(string);
 	}
 	
 	/**
@@ -120,8 +126,8 @@ implements Wirkungsvektor {
 	 * ... alle vorhandenen Produktdeklarationen
 	 */
 	
-	public static HashMap<String, ProduktBilanziert> getAll() {
-		return allPBs;
+	public static HashMap<String, ProduktBilanziert> getAllInstances() {
+		return allInstances;
 	}
 	
 	/**
@@ -132,8 +138,8 @@ implements Wirkungsvektor {
 	 * ... die gesuchte Produktdeklaration
 	 */
 	
-	public static ProduktBilanziert get(String string) {
-		return allPBs.get(string);		
+	public static ProduktBilanziert getIntance(String string) {
+		return allInstances.get(string);		
 	}
 	
 	/**
@@ -141,6 +147,6 @@ implements Wirkungsvektor {
 	 */
 	
 	public static void clear() {
-		allPBs.clear();
+		allInstances.clear();
 	}
 }

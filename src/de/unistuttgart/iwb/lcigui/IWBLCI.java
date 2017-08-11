@@ -74,12 +74,6 @@ public class IWBLCI {
 	private JFrame frmIwblciVersion;
 	private JPanel panel = new JPanel();
 	private CardLayout cl = new CardLayout(0, 0);
-	private HashMap<String, Wirkungskategorie>allWKs = 
-			new HashMap<String, Wirkungskategorie>();
-	private HashMap<String, ProduktBilanziert>allPBs = 
-			new HashMap<String, ProduktBilanziert>();
-	private HashMap<String, CharakterFaktor>allCFs = 
-			new HashMap<String, CharakterFaktor>();
 	private final Action newFlowAction 		= new newFlowAction();
 	private final Action newModuleAction 	= new newModuleAction();
 	private final Action newProductAction 	= new newProductAction();
@@ -1321,8 +1315,8 @@ public class IWBLCI {
 					if (Wirkungskategorie.containsName(name)) {
 						lblStatusWK.setText(">>> Der angegebene Name ist bereits vorhanden. <<<");
 					} else {
-						allWKs.put(name, new Wirkungskategorie(name, wi));
-						lblStatusWK.setText(">>> Anzahl Wirkungskategorien: " + allWKs.size() + " <<<");
+						Wirkungskategorie.instance(name, wi);
+						lblStatusWK.setText(">>> Anzahl Wirkungskategorien: " + Wirkungskategorie.getAllInstances().size() + " <<<");
 						txtNameWK.setText("");
 						comboBoxWK.setSelectedIndex(0);
 					}	
@@ -1350,9 +1344,9 @@ public class IWBLCI {
 							lblP12n1.setText(">>> Die Bewertungsmethode ist unbekannt. <<<");
 							if (bwNew == true) {
 								Bewertungsmethode bwNeu = Bewertungsmethode.instance(bwName);
-								allPBs.put(name, new ProduktBilanziert(name));
-								allPBs.get(name).setBM(bwNeu);
-								lblP12n1.setText(">>> Anzahl Produktdeklarationen: " + allPBs.size() + " <<<");
+								ProduktBilanziert.instance(name);
+								ProduktBilanziert.getAllInstances().get(name).setBM(bwNeu);
+								lblP12n1.setText(">>> Anzahl Produktdeklarationen: " + ProduktBilanziert.getAllInstances().size() + " <<<");
 								btnP12n1.setEnabled(false);
 								txtP12n1.setEnabled(false);
 								btnP12n2.setEnabled(true);
@@ -1365,9 +1359,9 @@ public class IWBLCI {
 								chbP12n2.setSelected(false);		
 							} 
 						} else {
-							allPBs.put(name, new ProduktBilanziert(name));
-							allPBs.get(name).setBM(Bewertungsmethode.instance(bwName));
-							lblP12n1.setText(">>> Anzahl Produktdeklarationen: " + allPBs.size() + " <<<");
+							ProduktBilanziert.instance(name);
+							ProduktBilanziert.getAllInstances().get(name).setBM(Bewertungsmethode.instance(bwName));
+							lblP12n1.setText(">>> Anzahl Produktdeklarationen: " + ProduktBilanziert.getAllInstances().size() + " <<<");
 							btnP12n1.setEnabled(false);
 							txtP12n1.setEnabled(false);
 							btnP12n2.setEnabled(true);
@@ -1400,18 +1394,18 @@ public class IWBLCI {
 					lblP12n1.setText(">>> unvollst\u00e4ndige Eingabe <<<");
 				} else {
 					if (Wirkungskategorie.containsName(fname)) {
-						Wirkungskategorie wk2 = allWKs.get(fname);
+						Wirkungskategorie wk2 = Wirkungskategorie.getAllInstances().get(fname);
 						String mname = txtP12n1.getText();
 						String bmName = txtP12n4.getText();
 						if (wkNew == true) {
 							Bewertungsmethode.instance(bmName).addWK(wk2);
 						}
 						if (Bewertungsmethode.instance(bmName).kategorieListe().keySet().contains(wk2.getName())) {
-							allPBs.get(mname).addWirkung(wk2, menge);
+							ProduktBilanziert.getAllInstances().get(mname).addWirkung(wk2, menge);
 							txtP12n2.setText("");
 							txtP12n3.setText("");
 							btnP12n3.setEnabled(true);
-							int anzPWKs = allPBs.get(mname).getWirkungsvektor(Bewertungsmethode.instance(bmName)).size();					
+							int anzPWKs = ProduktBilanziert.getAllInstances().get(mname).getWirkungsvektor(Bewertungsmethode.instance(bmName)).size();					
 							lblP12n1.setText(">>> Die Produktdeklaration " + mname + " besitzt " +
 									anzPWKs + " Wirkungen <<<");
 						} else {
@@ -1470,14 +1464,14 @@ public class IWBLCI {
 						Fluss.containsName(flName) == true &&
 						Wirkungskategorie.containsName(wkName) == true &&
 						faktorZahl == true) {
-					allCFs.put(cfName, new CharakterFaktor(cfName, 
-							Fluss.getInstance(flName), allWKs.get(wkName) , faktor));
+					CharakterFaktor.instance(cfName, 
+							Fluss.getInstance(flName), Wirkungskategorie.getAllInstances().get(wkName) , faktor);
 					txtP15n1.setText("");
 					txtP15n2.setText("");
 					txtP15n3.setText("");
 					txtP15n4.setText("");
 					lblP15n1.setText(">>> Anzahl Charakterisierungfaktoren: "
-							+ allCFs.size() + " <<<");					
+							+ CharakterFaktor.getAllInstances().size() + " <<<");					
 				} else {
 					if (faktorZahl == false) {
 						lblP15n1.setText(">>> Es wurde kein Zahlenwert angegeben <<<"); 
@@ -1532,8 +1526,8 @@ public class IWBLCI {
 				String cfName = txtP17n2.getText();
 				if (Bewertungsmethode.instance(bmName).getFaktorSet().containsKey(cfName) == false &&
 						cfName.equals("") == false &&
-						allCFs.containsKey(cfName)) {
-					Bewertungsmethode.instance(bmName).addFaktor(allCFs.get(cfName));	
+						CharakterFaktor.getAllInstances().containsKey(cfName)) {
+					Bewertungsmethode.instance(bmName).addFaktor(CharakterFaktor.getAllInstances().get(cfName));	
 					btnP17n3.setEnabled(true);
 					txtP17n2.setText("");
 					lblP17n1.setText(">>> Diese Methode enthält "
@@ -1545,7 +1539,7 @@ public class IWBLCI {
 					if (Bewertungsmethode.instance(bmName).getFaktorSet().containsKey(cfName) == true) {
 						lblP17n1.setText(">>> Der angegebene Charakterisierungsfaktor ist bereits vorhanden <<<");
 					}
-					if (allCFs.containsKey(cfName) == false) {
+					if (CharakterFaktor.getAllInstances().containsKey(cfName) == false) {
 						lblP17n1.setText(">>> Den angegebene Charakterisierungsfaktor gibt es nicht <<<");
 					}
 					if (cfName.equals("")) {
@@ -1600,7 +1594,7 @@ public class IWBLCI {
 						kompo = Produktsystem.getInstance(koName);					
 					}
 					if (ProduktBilanziert.containsName(koName)) {
-						kompo = ProduktBilanziert.get(koName);					
+						kompo = ProduktBilanziert.getIntance(koName);					
 					}
 					if (Produktkomponente.containsName(koName)) {
 						kompo = Produktkomponente.get(koName);					
@@ -1676,7 +1670,7 @@ public class IWBLCI {
 						kompo = Produktsystem.getInstance(PKenteName);					
 					}
 					if (ProduktBilanziert.containsName(PKenteName)) {
-						kompo = ProduktBilanziert.get(PKenteName);					
+						kompo = ProduktBilanziert.getIntance(PKenteName);					
 					}
 					if (Produktkomponente.containsName(PKenteName)) {
 						kompo = Produktkomponente.get(PKenteName);					
@@ -2009,9 +2003,9 @@ public class IWBLCI {
 		}
 		public void actionPerformed(ActionEvent e) {
 			wksTableModel.setRowCount(0);
-			for(String wkName : allWKs.keySet()) {
-				wksTableModel.addRow(new Object[] {allWKs.get(wkName).getName(), 
-						allWKs.get(wkName).getEinheit()});
+			for(String wkName : Wirkungskategorie.getAllInstances().keySet()) {
+				wksTableModel.addRow(new Object[] {Wirkungskategorie.getAllInstances().get(wkName).getName(), 
+						Wirkungskategorie.getAllInstances().get(wkName).getEinheit()});
 			}
 			
 			cl.show(panel, "listeWKs");
@@ -2025,8 +2019,8 @@ public class IWBLCI {
 		}
 		public void actionPerformed(ActionEvent e) {
 			pbsTableModel.setRowCount(0);
-			for(String mn : allPBs.keySet()) {
-				ProduktBilanziert akPB = allPBs.get(mn);
+			for(String mn : ProduktBilanziert.getAllInstances().keySet()) {
+				ProduktBilanziert akPB = ProduktBilanziert.getAllInstances().get(mn);
 				pbsTableModel.addRow(new Object[] {mn + " / " + akPB.getBM().getName(), "", ""});
 				Bewertungsmethode akBM = akPB.getBM();
 				for(Wirkungskategorie w : akPB.getWirkungsvektor(akBM).keySet()){
@@ -2045,8 +2039,8 @@ public class IWBLCI {
 		}
 		public void actionPerformed(ActionEvent e) {
 			cfsTableModel.setRowCount(0);
-			for (String cf : allCFs.keySet()) {
-				CharakterFaktor akcf = allCFs.get(cf);
+			for (String cf : CharakterFaktor.getAllInstances().keySet()) {
+				CharakterFaktor akcf = CharakterFaktor.getAllInstances().get(cf);
 				cfsTableModel.addRow(new Object[] {akcf.getName(), akcf.getFluss().getName(),
 						akcf.getWirkung().getName(), akcf.getWert()});
 			}
@@ -2256,8 +2250,8 @@ public class IWBLCI {
 	            Element alleWKs = document.createElement("Wirkungskategorien");
 	            root.appendChild(alleWKs);
 	            
-	            for(String wkname : allWKs.keySet()) {
-	            	Wirkungskategorie wk = allWKs.get(wkname); 
+	            for(String wkname : Wirkungskategorie.getAllInstances().keySet()) {
+	            	Wirkungskategorie wk = Wirkungskategorie.getAllInstances().get(wkname); 
 	            	Element wk2 = document.createElement("Wirkungskategorie");
 	            	alleWKs.appendChild(wk2);
 	            	Element name = document.createElement("WK-Name");
@@ -2271,8 +2265,8 @@ public class IWBLCI {
 	            Element alleCFs = document.createElement("Charakterisierungsfaktoren");
 	            root.appendChild(alleCFs);
 	            
-	            for(String cfname : allCFs.keySet()) {
-	            	CharakterFaktor cf = allCFs.get(cfname); 
+	            for(String cfname : CharakterFaktor.getAllInstances().keySet()) {
+	            	CharakterFaktor cf = CharakterFaktor.getAllInstances().get(cfname); 
 	            	Element cf2 = document.createElement("Charakterisierungsfaktor");
 	            	alleCFs.appendChild(cf2);
 	            	Element name = document.createElement("CF-Name");
@@ -2320,8 +2314,8 @@ public class IWBLCI {
 	            Element allePDs = document.createElement("Produktdeklarationen");
 	            root.appendChild(allePDs);
 	            
-	            for(String pdname : ProduktBilanziert.getAll().keySet()) {
-	            	ProduktBilanziert pd = ProduktBilanziert.get(pdname); 
+	            for(String pdname : ProduktBilanziert.getAllInstances().keySet()) {
+	            	ProduktBilanziert pd = ProduktBilanziert.getIntance(pdname); 
 	            	Element pd2 = document.createElement("Produktdeklaration");
 	            	allePDs.appendChild(pd2);
 	            	Element name = document.createElement("PD-Name");
@@ -2577,7 +2571,6 @@ public class IWBLCI {
 								} 
 							}
 						}
-						allWKs.clear();
 						Wirkungskategorie.clear();
 						nl = docEle.getElementsByTagName("Wirkungskategorie");
 						for (int i = 0; i < nl.getLength(); i++) {
@@ -2593,10 +2586,8 @@ public class IWBLCI {
 								}	
 							}
 							Wirkungsindikator wi = Wirkungsindikator.valueOf(wkeinheit);
-							Wirkungskategorie lwk = new Wirkungskategorie(wkname, wi);
-							allWKs.put(wkname, lwk);
+							Wirkungskategorie.instance(wkname, wi);
 						}
-						allCFs.clear();
 						CharakterFaktor.clear();
 						nl = docEle.getElementsByTagName("Charakterisierungsfaktor");
 						for (int i = 0; i < nl.getLength(); i++) {
@@ -2621,13 +2612,13 @@ public class IWBLCI {
 							}
 							Fluss akFluss = Fluss.getInstance(cffluss);
 							Wirkungskategorie akWirk = null;
-							for (String wkst : allWKs.keySet()) {
+							for (String wkst : Wirkungskategorie.getAllInstances().keySet()) {
 								if(cfwirkung.equals(wkst)){
-									akWirk = allWKs.get(wkst);									
+									akWirk = Wirkungskategorie.getAllInstances().get(wkst);									
 								}	
 							}
 							Double akWert = Double.parseDouble(cfwert);
-							allCFs.put(cfname, new CharakterFaktor(cfname, akFluss, akWirk, akWert));
+							CharakterFaktor.instance(cfname, akFluss, akWirk, akWert);
 						}
 						Bewertungsmethode.clear();
 						nl = docEle.getElementsByTagName("Bewertungsmethode");
@@ -2645,7 +2636,7 @@ public class IWBLCI {
 									for (int k = 0; k < nlc2.getLength(); k++) {
 										if (nlc2.item(k).getNodeName().equals("BM-Faktor")) {
 											String fakname = nlc2.item(k).getTextContent();
-											fakset.put(fakname, allCFs.get(fakname));
+											fakset.put(fakname, CharakterFaktor.getAllInstances().get(fakname));
 										}
 									}										
 								}
@@ -2654,7 +2645,7 @@ public class IWBLCI {
 									for (int k = 0; k < nlc2.getLength(); k++) {
 										if (nlc2.item(k).getNodeName().equals("BM-Kategorie")) {
 											String katname = nlc2.item(k).getTextContent();
-											katset.put(katname, allWKs.get(katname));
+											katset.put(katname, Wirkungskategorie.getAllInstances().get(katname));
 										}
 									}
 								}
@@ -2671,7 +2662,6 @@ public class IWBLCI {
 						}
 						
 						ProduktBilanziert.clear();
-						allPBs.clear();
 						nl = docEle.getElementsByTagName("Produktdeklaration");
 						for (int i = 0; i < nl.getLength(); i++) {
 							NodeList nlc = nl.item(i).getChildNodes();
@@ -2700,18 +2690,17 @@ public class IWBLCI {
 													pdwwert = nlc3.item(l).getTextContent();
 												}
 											}
-											pdwv.put(allWKs.get(pdwname), Double.parseDouble(pdwwert));
+											pdwv.put(Wirkungskategorie.getAllInstances().get(pdwname), Double.parseDouble(pdwwert));
 										}
 									}
 								}
 							}
-							ProduktBilanziert akpb = new ProduktBilanziert(pdname);
+							ProduktBilanziert akpb = ProduktBilanziert.instance(pdname);
 							akpb.setBM(Bewertungsmethode.getAllBWs().get(pdmethode));
 							for (Wirkungskategorie w : pdwv.keySet()) {
 								akpb.addWirkung(w, pdwv.get(w));
 							}	
 							pdwv.clear();
-							allPBs.put(pdname, akpb);
 						}
 
 						Produktkomponente.clear();
@@ -2741,7 +2730,7 @@ public class IWBLCI {
 								kompo = Produktsystem.getInstance(pkprod);					
 							}
 							if (ProduktBilanziert.containsName(pkprod)) {
-								kompo = ProduktBilanziert.get(pkprod);					
+								kompo = ProduktBilanziert.getIntance(pkprod);					
 							}
 							if (Produktkomponente.containsName(pkprod)) {
 								kompo = Produktkomponente.get(pkprod);					
@@ -2782,7 +2771,7 @@ public class IWBLCI {
 									kompo = Produktsystem.getInstance(pkprod);					
 								}
 								if (ProduktBilanziert.containsName(pkprod)) {
-									kompo = ProduktBilanziert.get(pkprod);					
+									kompo = ProduktBilanziert.getIntance(pkprod);					
 								}
 								if (Produktkomponente.containsName(pkprod)) {
 									kompo = Produktkomponente.get(pkprod);					
