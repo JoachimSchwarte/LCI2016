@@ -24,6 +24,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Vector;
 
 import javax.swing.Action;
 import javax.swing.DefaultComboBoxModel;
@@ -62,7 +63,7 @@ import org.apache.commons.io.FilenameUtils;
 
 /**
  * @author Dr.-Ing. Joachim Schwarte
- * @version 0.931
+ * @version 0.933
  */
 
 public class IWBLCI {
@@ -94,6 +95,7 @@ public class IWBLCI {
 	private final Action listPKentesAction 	= new listPKentesAction();
 	private final Action listPKtionsAction 	= new listPKtionsAction();
 	private final Action calculateAction 	= new calculateAction();
+	private final Action calculate2Action 	= new calculate2Action();
 	private final Action xmlExportAction 	= new xmlExportAction();
 	private final Action xmlImportAction 	= new xmlImportAction();
 	private final Action aboutAction 		= new aboutAction();
@@ -140,6 +142,10 @@ public class IWBLCI {
 	private JTable pkentesTable 	= new JTable();
 	private JTable pktionsTable 	= new JTable();
 	private JTable resultsTable 	= new JTable();
+	private JTable results2Table 	= new JTable();	
+	private JComboBox<ObjektTyp> coboP23n1 = new JComboBox<ObjektTyp>();
+	private JComboBox<String> coboP23n2 = new JComboBox<String>();
+	private JComboBox<String> coboP23n3 = new JComboBox<String>();
 	DefaultTableModel flowsTableModel 		= new DefaultTableModel(0,3);
 	DefaultTableModel modulesTableModel 	= new DefaultTableModel(0,3);
 	DefaultTableModel productsTableModel 	= new DefaultTableModel(0,3);
@@ -150,6 +156,7 @@ public class IWBLCI {
 	DefaultTableModel pkentesTableModel 	= new DefaultTableModel(0,3);
 	DefaultTableModel pktionsTableModel 	= new DefaultTableModel(0,2);
 	DefaultTableModel resultsTableModel 	= new DefaultTableModel(0,3);
+	DefaultTableModel results2TableModel 	= new DefaultTableModel(0,3);
 
 	/**
 	 * Launch the application.
@@ -179,7 +186,7 @@ public class IWBLCI {
 	 */
 	private void initialize() {
 		frmIwblciVersion = new JFrame();
-		frmIwblciVersion.setTitle("IWB-LCI   Version 0.931");
+		frmIwblciVersion.setTitle("IWB-LCI   Version 0.933");
 		frmIwblciVersion.setBounds(100, 100, 600, 480);
 		frmIwblciVersion.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);		
 		
@@ -381,7 +388,7 @@ public class IWBLCI {
 		JLabel lblInfo4 = new JLabel("Universit\u00e4t Stuttgart");
 		lblInfo4.setFont(new Font("Tahoma", Font.BOLD, 14));
 		panel_4.add(lblInfo4, "cell 1 5,alignx center,aligny top");
-		JLabel lblInfo5 = new JLabel("Version 0.931   14.08.2017");
+		JLabel lblInfo5 = new JLabel("Version 0.933   14.08.2017");
 		lblInfo5.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		panel_4.add(lblInfo5, "cell 1 7,alignx center,aligny top");
 
@@ -463,7 +470,7 @@ public class IWBLCI {
 		JLabel lblTodo4 = new JLabel("");
 		lblTodo4.setFont(new Font("Tahoma", Font.BOLD, 14));
 		panel_9.add(lblTodo4, "cell 1 5,alignx center,aligny top");
-		JLabel lblTodo5 = new JLabel("Version 0.931   14.08.2017");
+		JLabel lblTodo5 = new JLabel("Version 0.933   14.08.2017");
 		lblTodo5.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		panel_9.add(lblTodo5, "cell 1 7,alignx center,aligny top");
 		
@@ -883,6 +890,46 @@ public class IWBLCI {
 		tcm10.getColumn(1).setHeaderValue("Produktkomponente");
 		panel_22.add(new JScrollPane(pktionsTable), "cell 0 1,alignx center,aligny top");
 		
+		// Panel 23
+		
+		JPanel panel_23 = new JPanel();
+		panel.add(panel_23, "berechnen2");		
+		panel_23.setLayout(new MigLayout("", "[108px,grow][108px][108px][108px,grow]", 
+				"[20px][20px][20px][20px][20px][20px][20px][20px][20px,grow]"));	
+		JLabel lblWirkung = new JLabel("Wirkungsabsch\u00e4tzung");
+		lblWirkung.setFont(new Font("Tahoma", Font.BOLD, 14));
+		panel_23.add(lblWirkung, "cell 1 0 2 1,alignx center,aligny top");
+		
+		JLabel lblP23n1 = new JLabel("Objekt-Typ");
+		panel_23.add(lblP23n1, "cell 1 1,grow");		
+		
+		coboP23n1.setModel(new DefaultComboBoxModel<ObjektTyp>(ObjektTyp.values()));
+		panel_23.add(coboP23n1, "cell 2 1,grow");
+		
+		JLabel lblP23n2 = new JLabel("Objekt-Name");
+		panel_23.add(lblP23n2, "cell 1 2,grow");
+		
+		panel_23.add(coboP23n2, "cell 2 2,grow");
+		coboP23n2.setEnabled(false);
+		
+		JLabel lblP23n3 = new JLabel("Bewertungsmethode");
+		panel_23.add(lblP23n3, "cell 1 3,grow");
+		
+		panel_23.add(coboP23n3, "cell 2 3,grow");
+		coboP23n3.setEnabled(false);
+		
+		JButton btnP23n1 = new JButton("Berechnungsergebnisse anzeigen");
+		btnP23n1.setEnabled(false);
+		panel_23.add(btnP23n1, "cell 1 4 2 0,alignx center");
+		
+		results2Table.setModel(results2TableModel);
+		TableColumnModel tcm11 = results2Table.getColumnModel();
+		tcm11.getColumn(0).setHeaderValue("Wirkungskategorie");
+		tcm11.getColumn(1).setHeaderValue("Wert");
+		tcm11.getColumn(2).setHeaderValue("Wirkungsindikator");
+		panel_23.add(new JScrollPane(results2Table), "cell 0 5 4 10,alignx center,aligny top");
+	
+		
 		/*
 		 * Organisation der Menuleiste
 		 */
@@ -989,9 +1036,13 @@ public class IWBLCI {
 		JMenu mnBerechnen = new JMenu("Berechnen");
 		menuBar.add(mnBerechnen);
 		
-		JMenuItem mntmLci = new JMenuItem("LCI");
+		JMenuItem mntmLci = new JMenuItem();
 		mntmLci.setAction(calculateAction);
 		mnBerechnen.add(mntmLci);
+		
+		JMenuItem mntmWirk = new JMenuItem();
+		mntmWirk.setAction(calculate2Action);
+		mnBerechnen.add(mntmWirk);
 		
 		JMenu mnHilfe = new JMenu("Hilfe");
 		menuBar.add(mnHilfe);
@@ -1594,20 +1645,20 @@ public class IWBLCI {
 						kompo = Produktsystem.getInstance(koName);					
 					}
 					if (ProduktBilanziert.containsName(koName)) {
-						kompo = ProduktBilanziert.getIntance(koName);					
+						kompo = ProduktBilanziert.getInstance(koName);					
 					}
 					if (Produktkomponente.containsName(koName)) {
 						kompo = Produktkomponente.get(koName);					
 					}
 					if (Produktkomposition.containsName(koName)) {
-						kompo = Produktkomposition.get(koName);					
+						kompo = Produktkomposition.getInstance(koName);					
 					}				
 					Produktkomponente.newInstance(pkName, kompo, menge);
 					txtP19n1.setText("");
 					txtP19n2.setText("");
 					txtP19n3.setText("");	
 					lblP19n1.setText(">>> Anzahl Produktkomponenten: "
-							+ Produktkomponente.getAll().size() + " <<<");
+							+ Produktkomponente.getAllInstances().size() + " <<<");
 				} else {
 					if (mengeZahl == false) {
 						lblP19n1.setText(">>> Es wurde kein Zahlenwert angegeben <<<"); 
@@ -1641,7 +1692,7 @@ public class IWBLCI {
 					btnP21n1.setEnabled(false);
 					btnP21n2.setEnabled(true);
 					lblP21n1.setText(">>> Anzahl Produktkompositionen: " +
-							Produktkomposition.getAll().size() +
+							Produktkomposition.getAllInstances().size() +
 							" <<<");				 
 				} else {
 					if (NameCheck.containsWVName(PKtionName) == true) {
@@ -1670,13 +1721,13 @@ public class IWBLCI {
 						kompo = Produktsystem.getInstance(PKenteName);					
 					}
 					if (ProduktBilanziert.containsName(PKenteName)) {
-						kompo = ProduktBilanziert.getIntance(PKenteName);					
+						kompo = ProduktBilanziert.getInstance(PKenteName);					
 					}
 					if (Produktkomponente.containsName(PKenteName)) {
 						kompo = Produktkomponente.get(PKenteName);					
 					}
 					if (Produktkomposition.containsName(PKenteName)) {
-						kompo = Produktkomposition.get(PKenteName);					
+						kompo = Produktkomposition.getInstance(PKenteName);					
 					}
 					Produktkomposition.instance(PKtionName).addKomponente(kompo);
 					int koAnz = Produktkomposition.instance(PKtionName).getKompAnz();
@@ -1809,7 +1860,126 @@ public class IWBLCI {
 				lblStatus4.setText(">>> ... <<<");
 			}
 		});
+		
+		/*
+		 * Wirkungsabschätzung
+		 */
+		
+		coboP23n1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				coboP23n2.setEnabled(true);
+				coboP23n3.setEnabled(false);
+				results2TableModel.setRowCount(0);
+				if (coboP23n1.getSelectedItem().toString().equals("Prozessmodul")) {
+					Vector<String> nameVektor = new Vector<String>();
+					for (String obName : Prozessmodul.getAllInstances().keySet()) {
+						nameVektor.addElement(obName);
+					}
+					coboP23n2.setModel(new DefaultComboBoxModel<String>(nameVektor));
+				}
+				if (coboP23n1.getSelectedItem().toString().equals("Produktsystem")) {
+					Vector<String> nameVektor = new Vector<String>();
+					for (String obName : Produktsystem.getAllInstances().keySet()) {
+						nameVektor.addElement(obName);
+					}
+					coboP23n2.setModel(new DefaultComboBoxModel<String>(nameVektor));
+				}
+				if (coboP23n1.getSelectedItem().toString().equals("Produktdeklaration")) {
+					Vector<String> nameVektor = new Vector<String>();
+					for (String obName : ProduktBilanziert.getAllInstances().keySet()) {
+						nameVektor.addElement(obName);
+					}
+					coboP23n2.setModel(new DefaultComboBoxModel<String>(nameVektor));
+				}
+				if (coboP23n1.getSelectedItem().toString().equals("Produktkomponente")) {
+					Vector<String> nameVektor = new Vector<String>();
+					for (String obName : Produktkomponente.getAllInstances().keySet()) {
+						nameVektor.addElement(obName);
+					}
+					coboP23n2.setModel(new DefaultComboBoxModel<String>(nameVektor));
+				}
+				if (coboP23n1.getSelectedItem().toString().equals("Produktkomposition")) {
+					Vector<String> nameVektor = new Vector<String>();
+					for (String obName : Produktkomposition.getAllInstances().keySet()) {
+						nameVektor.addElement(obName);
+					}
+					coboP23n2.setModel(new DefaultComboBoxModel<String>(nameVektor));
+				}				
+			}		
+		});
+		coboP23n2.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Vector<String> methVektor = new Vector<String>();
+				for (String methName : Bewertungsmethode.getAllBWs().keySet()) {
+					methVektor.addElement(methName);
+				}
+				coboP23n3.setModel(new DefaultComboBoxModel<String>(methVektor));
+				coboP23n3.setEnabled(true);
+			}
+		});
+		coboP23n3.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				btnP23n1.setEnabled(true);
+			}
+		});
+		btnP23n1.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				coboP23n2.setEnabled(false);
+				coboP23n3.setEnabled(false);
+				btnP23n1.setEnabled(false);
+				if (coboP23n1.getSelectedItem().toString().equals("Prozessmodul")) {
+					Prozessmodul akObj = Prozessmodul.getInstance(coboP23n2.getSelectedItem().toString());
+					Bewertungsmethode akMeth = Bewertungsmethode.instance(coboP23n3.getSelectedItem().toString());
+					for (Wirkungskategorie wName : akObj.getWirkungsvektor(akMeth).keySet()) {
+						results2TableModel.addRow(new Object[] {wName.getName(), 
+								akObj.getWirkungsvektor(akMeth).get(wName), 
+								wName.getEinheit().toString()});
+					}
+				}
+				if (coboP23n1.getSelectedItem().toString().equals("Produktsystem")) {
+					Produktsystem akObj = Produktsystem.getInstance(coboP23n2.getSelectedItem().toString());
+					Bewertungsmethode akMeth = Bewertungsmethode.instance(coboP23n3.getSelectedItem().toString());
+					for (Wirkungskategorie wName : akObj.getWirkungsvektor(akMeth).keySet()) {
+						results2TableModel.addRow(new Object[] {wName.getName(), 
+								akObj.getWirkungsvektor(akMeth).get(wName), 
+								wName.getEinheit().toString()});
+					}
+				}
+				if (coboP23n1.getSelectedItem().toString().equals("Produktdeklaration")) {
+					ProduktBilanziert akObj = ProduktBilanziert.getInstance(coboP23n2.getSelectedItem().toString());
+					Bewertungsmethode akMeth = Bewertungsmethode.instance(coboP23n3.getSelectedItem().toString());
+					for (Wirkungskategorie wName : akObj.getWirkungsvektor(akMeth).keySet()) {
+						results2TableModel.addRow(new Object[] {wName.getName(), 
+								akObj.getWirkungsvektor(akMeth).get(wName), 
+								wName.getEinheit().toString()});
+					}
+				}
+				if (coboP23n1.getSelectedItem().toString().equals("Produktkomponente")) {
+					Produktkomponente akObj = Produktkomponente.getInstance(coboP23n2.getSelectedItem().toString());
+					Bewertungsmethode akMeth = Bewertungsmethode.instance(coboP23n3.getSelectedItem().toString());
+					for (Wirkungskategorie wName : akObj.getWirkungsvektor(akMeth).keySet()) {
+						results2TableModel.addRow(new Object[] {wName.getName(), 
+								akObj.getWirkungsvektor(akMeth).get(wName), 
+								wName.getEinheit().toString()});
+					}
+				}
+				if (coboP23n1.getSelectedItem().toString().equals("Produktkomposition")) {
+					Produktkomposition akObj = Produktkomposition.getInstance(coboP23n2.getSelectedItem().toString());
+					Bewertungsmethode akMeth = Bewertungsmethode.instance(coboP23n3.getSelectedItem().toString());
+					for (Wirkungskategorie wName : akObj.getWirkungsvektor(akMeth).keySet()) {
+						results2TableModel.addRow(new Object[] {wName.getName(), 
+								akObj.getWirkungsvektor(akMeth).get(wName), 
+								wName.getEinheit().toString()});
+					}
+				}
+			}
+		});
 	}
+	
+	
 	
 	/*
 	 * Actions der Menupunkte
@@ -2075,7 +2245,7 @@ public class IWBLCI {
 		}
 		public void actionPerformed(ActionEvent e) {
 			pkentesTableModel.setRowCount(0);
-			for (String pkenteName : Produktkomponente.getAll().keySet()) {
+			for (String pkenteName : Produktkomponente.getAllInstances().keySet()) {
 				String pkunquName = Produktkomponente.getInstance(pkenteName).getKomponente().getName();
 				double menge = Produktkomponente.getInstance(pkenteName).getMenge();
 				pkentesTableModel.addRow(new Object[] {pkenteName, pkunquName, menge});
@@ -2091,7 +2261,7 @@ public class IWBLCI {
 		}
 		public void actionPerformed(ActionEvent e) {
 			pktionsTableModel.setRowCount(0);
-			for (String pktionName : Produktkomposition.getAll().keySet()) {
+			for (String pktionName : Produktkomposition.getAllInstances().keySet()) {
 				pktionsTableModel.addRow(new Object[] {pktionName, ""});
 				for (Wirkungsvektor wv : Produktkomposition.instance(pktionName).getZusammensetzung()) {
 					pktionsTableModel.addRow(new Object[] {"", wv.getName()});
@@ -2129,6 +2299,19 @@ public class IWBLCI {
 				}
 			}
 			cl.show(panel, "berechnen");
+		}
+	}
+	
+	private class calculate2Action extends AbstractAction {
+		private static final long serialVersionUID = 7449057427765901652L;
+		public calculate2Action() {
+			putValue(NAME, "Wirkungsabsch\u00e4tzung berechnen");
+			putValue(SHORT_DESCRIPTION, "Wirkungsabsch\u00e4tzung f\u00fcr einzelne Objekte");
+		}
+		public void actionPerformed(ActionEvent e) {
+			cl.show(panel, "berechnen2");
+			coboP23n2.setEnabled(false);
+			coboP23n3.setEnabled(false);
 		}
 	}
 	
@@ -2315,7 +2498,7 @@ public class IWBLCI {
 	            root.appendChild(allePDs);
 	            
 	            for(String pdname : ProduktBilanziert.getAllInstances().keySet()) {
-	            	ProduktBilanziert pd = ProduktBilanziert.getIntance(pdname); 
+	            	ProduktBilanziert pd = ProduktBilanziert.getInstance(pdname); 
 	            	Element pd2 = document.createElement("Produktdeklaration");
 	            	allePDs.appendChild(pd2);
 	            	Element name = document.createElement("PD-Name");
@@ -2341,7 +2524,7 @@ public class IWBLCI {
 	            Element allePKentes = document.createElement("Produktkomponenten");
 	            root.appendChild(allePKentes);
 	            
-	            for(String pkentename : Produktkomponente.getAll().keySet()) {
+	            for(String pkentename : Produktkomponente.getAllInstances().keySet()) {
 	            	Produktkomponente pkente = Produktkomponente.get(pkentename);
 	            	Element pk2 = document.createElement("Produktkomponente");
 	            	allePKentes.appendChild(pk2);
@@ -2359,8 +2542,8 @@ public class IWBLCI {
 	            Element allePKtions = document.createElement("Produktkompositionen");
 	            root.appendChild(allePKtions);
 	            
-	            for(String pktionname : Produktkomposition.getAll().keySet()) {
-	            	Produktkomposition pktion = Produktkomposition.get(pktionname);
+	            for(String pktionname : Produktkomposition.getAllInstances().keySet()) {
+	            	Produktkomposition pktion = Produktkomposition.getInstance(pktionname);
 	            	Element pk2 = document.createElement("Produktkomposition");
 	            	allePKtions.appendChild(pk2);
 	            	Element name = document.createElement("PKomposition-Name");
@@ -2368,7 +2551,7 @@ public class IWBLCI {
 	            	name.appendChild(document.createTextNode(pktion.getName()));
 	            	Element zusa = document.createElement("PKomposition-Zusammensetzung");
 	            	pk2.appendChild(zusa);
-	            	for (Wirkungsvektor w : Produktkomposition.get(pktionname).getZusammensetzung()) {
+	            	for (Wirkungsvektor w : Produktkomposition.getInstance(pktionname).getZusammensetzung()) {
 	            		Element z2 = document.createElement("PKZ-Bestandteil");
 		            	zusa.appendChild(z2);
 		            	z2.appendChild(document.createTextNode(w.getName()));
@@ -2730,13 +2913,13 @@ public class IWBLCI {
 								kompo = Produktsystem.getInstance(pkprod);					
 							}
 							if (ProduktBilanziert.containsName(pkprod)) {
-								kompo = ProduktBilanziert.getIntance(pkprod);					
+								kompo = ProduktBilanziert.getInstance(pkprod);					
 							}
 							if (Produktkomponente.containsName(pkprod)) {
 								kompo = Produktkomponente.get(pkprod);					
 							}
 							if (Produktkomposition.containsName(pkprod)) {
-								kompo = Produktkomposition.get(pkprod);					
+								kompo = Produktkomposition.getInstance(pkprod);					
 							}				
 							Produktkomponente.newInstance(pkname, kompo, Double.parseDouble(pkmenge));
 						}
@@ -2775,15 +2958,15 @@ public class IWBLCI {
 									kompo = Produktsystem.getInstance(pkprod);					
 								}
 								if (ProduktBilanziert.containsName(pkprod)) {
-									kompo = ProduktBilanziert.getIntance(pkprod);					
+									kompo = ProduktBilanziert.getInstance(pkprod);					
 								}
 								if (Produktkomponente.containsName(pkprod)) {
 									kompo = Produktkomponente.get(pkprod);					
 								}
 								if (Produktkomposition.containsName(pkprod)) {
-									kompo = Produktkomposition.get(pkprod);					
+									kompo = Produktkomposition.getInstance(pkprod);					
 								}
-								Produktkomposition.get(koname).addKomponente(kompo);								
+								Produktkomposition.getInstance(koname).addKomponente(kompo);								
 							}
 						}						
 						

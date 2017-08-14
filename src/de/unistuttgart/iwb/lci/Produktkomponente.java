@@ -14,7 +14,7 @@ import java.util.HashMap;
  * diese durch eine Mengenangabe.
  * 
  * @author Dr.-Ing. Joachim Schwarte
- * @version 0.929
+ * @version 0.933
  */
 
 public class Produktkomponente implements Wirkungsvektor {
@@ -151,7 +151,7 @@ public class Produktkomponente implements Wirkungsvektor {
 	 * ... alle vorhandenen Produktkomponenten
 	 */
 	
-	public static HashMap<String, Produktkomponente> getAll() {
+	public static HashMap<String, Produktkomponente> getAllInstances() {
 		return allPKentes;
 	}
 	

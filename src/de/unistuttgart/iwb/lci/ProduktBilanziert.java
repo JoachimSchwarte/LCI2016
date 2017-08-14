@@ -13,7 +13,7 @@ import java.util.HashMap;
  * Produkt").
  * 
  * @author Dr.-Ing. Joachim Schwarte
- * @version 0.93
+ * @version 0.933
  */
 
 public class ProduktBilanziert 
@@ -138,7 +138,7 @@ implements Wirkungsvektor {
 	 * ... die gesuchte Produktdeklaration
 	 */
 	
-	public static ProduktBilanziert getIntance(String string) {
+	public static ProduktBilanziert getInstance(String string) {
 		return allInstances.get(string);		
 	}
 	
