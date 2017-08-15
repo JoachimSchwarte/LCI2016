@@ -12,7 +12,7 @@ import Jama.Matrix;
  * Diese Klasse dient zur Erzeugung von Produktsystemen.
  * 
  * @author Dr.-Ing. Joachim Schwarte
- * @version 0.934
+ * @version 0.935
  */
 
 public class Produktsystem 
@@ -53,8 +53,50 @@ implements Flussvektoren, Wirkungsvektor {
 	// Methoden:
 	
 	/**
-	 * Erzeugt ein neues oder überschreibt ein bestehendes Produktsystem
+	 * Löscht alle Klassenvariablen
+	 */
+	
+	public static void clear() {
+		allInstances.clear();
+	}
+	
+	/**
+	 * Überprüft, ob bereits ein Produktsystem
+	 * des genannten Namens existiert.
 	 * @param string
+	 * ist der zu prüfende Name
+	 * @return
+	 * ... den Wahrheitswert, den die Überprüfung liefert
+	 */
+	
+	public static boolean containsName(String string) {
+		return allInstances.containsKey(string);
+	}
+	
+	/**
+	 * @return
+	 * ... alle vorhandenen Produktsysteme
+	 */
+	
+	public static HashMap<String, Produktsystem> getAllInstances() {
+		return allInstances;
+	}
+	
+	/**
+	 * Liefert ein Produktsystem
+	 * @param string
+	 * Name des Produktsystems
+	 * @return
+	 * ... das gesuchte Produktsystem
+	 */
+	
+	public static Produktsystem getInstance(String string) {
+		return allInstances.get(string);		
+	}
+	
+	/**
+	 * Erzeugt ein neues oder überschreibt ein bestehendes Produktsystem
+	 * @param name
 	 * übergibt der Namen des Produktsystems. Dieser kann frei 
 	 * gewählt werden.
 	 * Auf Anwendungsebene ist Namenseindeutigkeit anzustreben. 
@@ -78,13 +120,20 @@ implements Flussvektoren, Wirkungsvektor {
 		return allInstances.get(name);
 	}
 	
+
+	
+
+	
 	/**
-	 * @return
-	 * ... den Namen des Produktsystems.
+	 * Fügt dem Bedarfsvektor einen Eintrag hinzu
+	 * @param fluss
+	 * Name des Flusses
+	 * @param wert
+	 * benötigte Menge im Bedarfsvektor
 	 */
 	
-	public String getName() {
-		return name;
+	public void addBedarf(Fluss fluss, Double wert) {
+		bedarfsvektor.put(fluss, wert);
 	}
 	
 	/**
@@ -101,29 +150,14 @@ implements Flussvektoren, Wirkungsvektor {
 	}
 	
 	/**
-	 * @throws ArithmeticException
-	 * wenn im Skalierungsvektor ein Element mit negativem
-	 * Vorzeichen auftritt. Fehlertext: "Vorzeichenfehler 
-	 * im Skalierungsvektor"
+	 * Fügt der Liste der Vor- und Koppelprodukte einen Eintrag
+	 * hinzu.
+	 * @param fluss
+	 * Der Fluss, der der Liste hinzugefügt werden soll
 	 */
-
-	@Override
-	public HashMap<Fluss, Double> getElementarflussvektor() throws ArithmeticException {
-		aktualisiere();		// siehe unten
-		return efv;
-	}
 	
-	/**
-	 * @throws ArithmeticException
-	 * wenn im Skalierungsvektor ein Element mit negativem
-	 * Vorzeichen auftritt. Fehlertext: "Vorzeichenfehler 
-	 * im Skalierungsvektor"
-	 */
-
-	@Override
-	public HashMap<Fluss, Double> getProduktflussvektor() throws ArithmeticException {
-		aktualisiere();		// siehe unten
-		return pfv;
+	public void addVuK(Fluss fluss) {
+		vorUndKoppelProdukte.add(fluss);
 	}
 	
 	private void aktualisiere() throws ArithmeticException {
@@ -203,6 +237,28 @@ implements Flussvektoren, Wirkungsvektor {
 	
 	/**
 	 * @return
+	 * den Bedarfsvektor des Produktsystems
+	 */
+	
+	public HashMap<Fluss, Double> getBedarfsvektor() {
+		return bedarfsvektor;
+	}
+
+	/**
+	 * @throws ArithmeticException
+	 * wenn im Skalierungsvektor ein Element mit negativem
+	 * Vorzeichen auftritt. Fehlertext: "Vorzeichenfehler 
+	 * im Skalierungsvektor"
+	 */
+
+	@Override
+	public HashMap<Fluss, Double> getElementarflussvektor() throws ArithmeticException {
+		aktualisiere();		// siehe unten
+		return efv;
+	}
+	
+	/**
+	 * @return
 	 * ... die Anzahl der Module (Prozessmodule und Subsysteme) 
 	 * aus denen sich das Produktsystem zusammensetzt.
 	 */
@@ -212,24 +268,39 @@ implements Flussvektoren, Wirkungsvektor {
 	}
 	
 	/**
-	 * Überschreibt den vorhandenen Bedarfsvektor
-	 * @param bv
-	 * ist der neue Bedarfsvektor
+	 * @return
+	 * die Liste der im Produktsystem enthaltenden Module
 	 */
 	
-	public void setBedarfsvektor(HashMap<Fluss, Double> bv) {
-		bedarfsvektor = bv;
+	public LinkedList<Flussvektoren> getModulliste() {
+		return modulliste;
+	}
+	
+	@Override
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * @throws ArithmeticException
+	 * wenn im Skalierungsvektor ein Element mit negativem
+	 * Vorzeichen auftritt. Fehlertext: "Vorzeichenfehler 
+	 * im Skalierungsvektor"
+	 */
+
+	@Override
+	public HashMap<Fluss, Double> getProduktflussvektor() throws ArithmeticException {
+		aktualisiere();		
+		return pfv;
 	}
 	
 	/**
-	 * Überschreibt die vorhandene Liste der Vor- und
-	 * Koppelprodukte
-	 * @param vk
-	 * ist die neue Liste der Vor- und Koppelprodukte
+	 * @return
+	 * ... die Liste der Vor- und Koppleprodukte
 	 */
-	
-	public void setVorUndKoppelProdukte(LinkedList<Fluss> vk) {
-		vorUndKoppelProdukte = vk;
+
+	public LinkedList<Fluss> getVorUndKoppelprodukte() {
+		return vorUndKoppelProdukte;
 	}
 	
 	@Override
@@ -252,70 +323,51 @@ implements Flussvektoren, Wirkungsvektor {
 	}
 	
 	/**
-	 * Überprüft, ob bereits ein Produktsystem
-	 * des genannten Namens existiert.
-	 * @param string
-	 * ist der zu prüfende Name
-	 * @return
-	 * ... den Wahrheitswert, den die Überprüfung liefert
+	 * Überschreibt den vorhandenen Bedarfsvektor
+	 * @param bv
+	 * ist der neue Bedarfsvektor
 	 */
 	
-	public static boolean containsName(String string) {
-		return allInstances.containsKey(string);
+	public void setBedarfsvektor(HashMap<Fluss, Double> bv) {
+		bedarfsvektor = bv;
 	}
 	
-	/**
-	 * @return
-	 * ... alle vorhandenen Produktsysteme
-	 */
-	
-	public static HashMap<String, Produktsystem> getAllInstances() {
-		return allInstances;
-	}
-	
-	/**
-	 * Liefert ein Produktsystem
-	 * @param string
-	 * Name des Produktsystems
-	 * @return
-	 * ... das gesuchte Produktsystem
-	 */
-	
-	public static Produktsystem getInstance(String string) {
-		return allInstances.get(string);		
-	}
-	
-	/**
-	 * Löscht alle Klassenvariablen
-	 */
-	
-	public static void clear() {
-		allInstances.clear();
-	}
-	
-	public void addBedarf(Fluss fluss, Double wert) {
-		bedarfsvektor.put(fluss, wert);
-	}
-	
-	public HashMap<Fluss, Double> getBedarfsvektor() {
-		return bedarfsvektor;
-	}
-	
-	public void addVuK(Fluss fluss) {
-		vorUndKoppelProdukte.add(fluss);
-	}
-	
-	public LinkedList<Fluss> getVorUndKoppelprodukte() {
-		return vorUndKoppelProdukte;
-	}
-	
-	public LinkedList<Flussvektoren> getModulliste() {
-		return modulliste;
-	}
-
 	@Override
 	public void setName(String string) {
 		this.name = string;			
 	}
+	
+	/**
+	 * Überschreibt die vorhandene Liste der Vor- und
+	 * Koppelprodukte
+	 * @param vk
+	 * ist die neue Liste der Vor- und Koppelprodukte
+	 */
+	
+	public void setVorUndKoppelProdukte(LinkedList<Fluss> vk) {
+		vorUndKoppelProdukte = vk;
+	}
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
 
 }

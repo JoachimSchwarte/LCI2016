@@ -8,15 +8,22 @@ import java.util.HashMap;
 
 /**
  * Dieses Interface muss von all jenen Klassen implementiert werden,
- * zu deren Objekten jeweils ein Wirkungsvektor angeben oder 
+ * zu deren Objekten jeweils ein Wirkungsvektor angegeben oder 
  * berechnet werden kann, so dass diese Objekte als Komponenten 
  * innerhalb einer Produktkomposition auftreten können.
  * 
  * @author Dr.-Ing. Joachim Schwarte
- * @version 0.934
+ * @version 0.935
  */
 
 public interface Wirkungsvektor {
+	
+	/**
+	 * @return
+	 * ... den Namen des Objektes vom Interface-Typ Wirkungsvektor
+	 */
+	
+	public String getName();
 	
 	/**
 	 * @param bm
@@ -28,7 +35,12 @@ public interface Wirkungsvektor {
 	
 	public HashMap<Wirkungskategorie, Double> getWirkungsvektor(Bewertungsmethode bm);
 	
-	public String getName();
+	/**
+	 * Überschreibt den Namen eines Objektes vom Interface-Typ
+	 * Wirkungsvektor
+	 * @param string
+	 * der neue Name des Objekts
+	 */
 	
 	public void setName(String string);
 }

@@ -14,7 +14,7 @@ import java.util.HashMap;
  * auftreten können.
  * 
  * @author Dr.-Ing. Joachim Schwarte
- * @version 0.927
+ * @version 0.935
  */
 
 public interface Flussvektoren {
@@ -28,10 +28,15 @@ public interface Flussvektoren {
 	
 	/**
 	 * @return
+	 * ... den Namen des Objektes vom Interface-Typ Flussvektoren
+	 */
+	
+	public String getName();
+	
+	/**
+	 * @return
 	 * ... den Produktflussvektor des aktuellen Objekts.
 	 */
 	
 	public HashMap<Fluss, Double> getProduktflussvektor();
-	
-	public String getName();
 }
