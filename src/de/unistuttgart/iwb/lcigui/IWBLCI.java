@@ -63,7 +63,7 @@ import org.apache.commons.io.FilenameUtils;
 
 /**
  * @author Dr.-Ing. Joachim Schwarte
- * @version 0.933
+ * @version 0.934
  */
 
 public class IWBLCI {
@@ -1648,7 +1648,7 @@ public class IWBLCI {
 						kompo = ProduktBilanziert.getInstance(koName);					
 					}
 					if (Produktkomponente.containsName(koName)) {
-						kompo = Produktkomponente.get(koName);					
+						kompo = Produktkomponente.getInstance(koName);					
 					}
 					if (Produktkomposition.containsName(koName)) {
 						kompo = Produktkomposition.getInstance(koName);					
@@ -1724,7 +1724,7 @@ public class IWBLCI {
 						kompo = ProduktBilanziert.getInstance(PKenteName);					
 					}
 					if (Produktkomponente.containsName(PKenteName)) {
-						kompo = Produktkomponente.get(PKenteName);					
+						kompo = Produktkomponente.getInstance(PKenteName);					
 					}
 					if (Produktkomposition.containsName(PKenteName)) {
 						kompo = Produktkomposition.getInstance(PKenteName);					
@@ -2525,7 +2525,7 @@ public class IWBLCI {
 	            root.appendChild(allePKentes);
 	            
 	            for(String pkentename : Produktkomponente.getAllInstances().keySet()) {
-	            	Produktkomponente pkente = Produktkomponente.get(pkentename);
+	            	Produktkomponente pkente = Produktkomponente.getInstance(pkentename);
 	            	Element pk2 = document.createElement("Produktkomponente");
 	            	allePKentes.appendChild(pk2);
 	            	Element name = document.createElement("PKomponente-Name");
@@ -2903,25 +2903,8 @@ public class IWBLCI {
 								if (nlc.item(j).getNodeName().equals("PKomponente-Menge")) {
 									pkmenge = nlc.item(j).getTextContent();
 								}								
-							}
-							Wirkungsvektor kompo = Prozessmodul.instance("dummy");
-							if (Prozessmodul.containsName(pkprod)) {
-								kompo = Prozessmodul.getInstance(pkprod);					
-							}
-							Prozessmodul.removeInstance("dummy");
-							if (Produktsystem.containsName(pkprod)) {
-								kompo = Produktsystem.getInstance(pkprod);					
-							}
-							if (ProduktBilanziert.containsName(pkprod)) {
-								kompo = ProduktBilanziert.getInstance(pkprod);					
-							}
-							if (Produktkomponente.containsName(pkprod)) {
-								kompo = Produktkomponente.get(pkprod);					
-							}
-							if (Produktkomposition.containsName(pkprod)) {
-								kompo = Produktkomposition.getInstance(pkprod);					
-							}				
-							Produktkomponente.newInstance(pkname, kompo, Double.parseDouble(pkmenge));
+							}		
+							Produktkomponente.newInstance(pkname, pkprod, Double.parseDouble(pkmenge));
 						}
 						
 						Produktkomposition.clear();
@@ -2952,7 +2935,7 @@ public class IWBLCI {
 								Wirkungsvektor kompo = Prozessmodul.instance("dummy");
 								if (Prozessmodul.containsName(pkprod)) {
 									kompo = Prozessmodul.getInstance(pkprod);					
-								}
+								} 
 								Prozessmodul.removeInstance("dummy");
 								if (Produktsystem.containsName(pkprod)) {
 									kompo = Produktsystem.getInstance(pkprod);					
@@ -2961,7 +2944,7 @@ public class IWBLCI {
 									kompo = ProduktBilanziert.getInstance(pkprod);					
 								}
 								if (Produktkomponente.containsName(pkprod)) {
-									kompo = Produktkomponente.get(pkprod);					
+									kompo = Produktkomponente.getInstance(pkprod);					
 								}
 								if (Produktkomposition.containsName(pkprod)) {
 									kompo = Produktkomposition.getInstance(pkprod);					

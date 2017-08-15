@@ -7,7 +7,7 @@ package de.unistuttgart.iwb.lcitest;
 
 /**
  * @author Dr.-Ing. Joachim Schwarte
- * @version 0.93
+ * @version 0.934
  */
 
 import static org.junit.Assert.*;
@@ -168,16 +168,9 @@ public class IwbLciTest {
 		BM2.addFaktor(C22);
 		PB1.addWirkung(W1, 3.);
 		PB1.addWirkung(W2, 5.);
-		PB1.addWirkung(W3, 7.);
-		Komponente1 = Produktkomponente.updateInstance("Modul3doppelt", Modul3, 2.);
-		Komponente2 = Produktkomponente.updateInstance("Modul4vierfach", Modul4, 4.);
-		Komponente3 = Produktkomponente.updateInstance("GesamtDreifach", Gesamt, 3.);
-		Komponente4 = Produktkomponente.updateInstance("PB1fünffach", PB1, 5.);
-		
+		PB1.addWirkung(W3, 7.);		
 	}
 	private void initialize3() {
-		Komponente4 = Produktkomponente.updateInstance("PB1fünffach", PB1, 5.);
-		Komponente6 = Produktkomponente.updateInstance("EinsBisFuenfDoppelt", EinsBisFuenf, 2.);
 		PK1.addKomponente(Komponente4);
 		PK1.addKomponente(Komponente6);
 	}

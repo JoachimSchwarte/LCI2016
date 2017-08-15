@@ -14,7 +14,7 @@ import java.util.HashMap;
  * diese durch eine Mengenangabe.
  * 
  * @author Dr.-Ing. Joachim Schwarte
- * @version 0.933
+ * @version 0.934
  */
 
 public class Produktkomponente implements Wirkungsvektor {
@@ -65,38 +65,34 @@ public class Produktkomponente implements Wirkungsvektor {
 		return allPKentes.get(name);
 	}
 	
-	/**
-	 * Gibt eine bereits vorhandene Produktkomponente zurück.
-	 * @param name
-	 * Name der gesuchten Produktkomponente
-	 * @return
-	 * ... die gesuchte Produktkomponente
-	 */
-	
-	public static Produktkomponente getInstance(String name) { 
-		return allPKentes.get(name);
-	}
-	
-	/**
-	 * Dient vorläufig zum Aktualisieren des Wirkungsvektors.
-	 * @param name
-	 * der Name der Produktkomponente. 
-	 * @param komponente
-	 * ist ein bliebiges Objekt einer Klasse, die das Interface
-	 * Wirkungsvektor implementiert.
-	 * @param menge
-	 * ist die zugehörige Mengenangabe. 
-	 * @return
-	 * ... die Produktkomponente
-	 */
-	
-	public static Produktkomponente updateInstance(String name, Wirkungsvektor komponente, double menge) { 		
-		allPKentes.put(name, new Produktkomponente(name, komponente, menge));
+	public static Produktkomponente newInstance(String name, String kompoName, double menge) {
+		Wirkungsvektor kompo = Prozessmodul.instance("dummy"); 
+		Prozessmodul.removeInstance("dummy");
+		kompo.setName(kompoName);
+		if (allPKentes.containsKey(name) == false) {
+			new Produktkomponente(name, kompo, menge);	
+		} 
 		return allPKentes.get(name);
 	}
 
 	@Override
 	public HashMap<Wirkungskategorie, Double> getWirkungsvektor(Bewertungsmethode bm) {
+		String kompoName = komponente.getName();
+		if (Prozessmodul.containsName(kompoName)) {
+			komponente = Prozessmodul.getInstance(kompoName);					
+		}
+		if (Produktsystem.containsName(kompoName)) {
+			komponente = Produktsystem.getInstance(kompoName);					
+		}
+		if (ProduktBilanziert.containsName(kompoName)) {
+			komponente = ProduktBilanziert.getInstance(kompoName);					
+		}
+		if (Produktkomponente.containsName(kompoName)) {
+			komponente = Produktkomponente.getInstance(kompoName);					
+		}
+		if (Produktkomposition.containsName(kompoName)) {
+			komponente = Produktkomposition.getInstance(kompoName);					
+		}
 		HashMap<Wirkungskategorie, Double> wvKomponente = komponente.getWirkungsvektor(bm);
 		for (String wkName : bm.kategorieListe().keySet()){
 			Wirkungskategorie wk = bm.kategorieListe().get(wkName);
@@ -156,15 +152,15 @@ public class Produktkomponente implements Wirkungsvektor {
 	}
 	
 	/**
-	 * Liefert eine Produktkomponente
-	 * @param string
-	 * Name der Produktkomponente
+	 * Gibt eine bereits vorhandene Produktkomponente zurück.
+	 * @param name
+	 * Name der gesuchten Produktkomponente
 	 * @return
 	 * ... die gesuchte Produktkomponente
 	 */
 	
-	public static Produktkomponente get(String string) {
-		return allPKentes.get(string);		
+	public static Produktkomponente getInstance(String name) { 
+		return allPKentes.get(name);
 	}
 	
 	/**
@@ -173,5 +169,10 @@ public class Produktkomponente implements Wirkungsvektor {
 	
 	public static void clear() {
 		allPKentes.clear();
+	}
+
+	@Override
+	public void setName(String string) {
+		name = string;		
 	}
 }
