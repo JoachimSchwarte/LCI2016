@@ -14,7 +14,7 @@ import java.util.Set;
  * Instanzvariablen zur Verfügung.
  * 
  * @author Dr.-Ing. Joachim Schwarte
- * @version 0.93
+ * @version 0.935
  */
 
 public class Fluss {	
@@ -38,59 +38,14 @@ public class Fluss {
 		allInstances.put(name, this);
 	}
 	
-	// Methoden 
+	// Methoden:
 	
 	/**
-	 * Erzeugt ein vollständiges Flussobjekt durch Aufruf des
-	 * privaten Konstruktors sofern noch kein Fluss gleichem
-	 * Namens existiert. Ansonsten wird der existierende Fluss
-	 * zurückgegeben.
-	 * @param name
-	 * kann frei gewählt werden.
-	 * Auf Anwendungsebene ist Namenseindeutigkeit anzustreben. 
-	 * @param typ
-	 * dient vorrangig zur Unterscheidung von Elementar- 
-	 * und Produktflüssen.
-	 * @param einheit
-	 * legt die physikalische Einheit fest, in der der
-	 * Fluss quantifiziert wird.
-	 * @return
-	 * ... das Flussobjekt
+	 * Löscht alle Klassenvariablen
 	 */
 	
-	public static Fluss instance(String name, FlussTyp typ, FlussEinheit einheit) {
-		if (allInstances.containsKey(name) == false) {
-			new Fluss(name, typ, einheit);
-		}
-		return allInstances.get(name);
-	}
-	
-	/**
-	 * @return
-	 * ... den Namen des Flussobjektes.
-	 */
-	
-	public String getName() {
-		return name;
-	}
-	
-	/**
-	 * @return
-	 * ... den Typ des Flussobjektes.
-	 */
-	
-	public FlussTyp getTyp() {
-		return typ;
-	}
-	
-	/**
-	 * @return
-	 * ... die physikalische Einheit, in der die zugehörigen
-	 * Flüsse quantifiziert werden.
-	 */
-	
-	public FlussEinheit getEinheit() {
-		return einheit;
+	public static void clear() {
+		allInstances.clear();
 	}
 	
 	/**
@@ -104,14 +59,6 @@ public class Fluss {
 	
 	public static boolean containsName(String string) {
 		return allInstances.keySet().contains(string);
-	}
-	
-	/**
-	 * Löscht alle Klassenvariablen
-	 */
-	
-	public static void clear() {
-		allInstances.clear();
 	}
 	
 	/**
@@ -141,5 +88,58 @@ public class Fluss {
 	
 	public static Fluss getInstance(String name) {
 		return allInstances.get(name);
+	}
+	
+	/**
+	 * Erzeugt ein vollständiges Flussobjekt durch Aufruf des
+	 * privaten Konstruktors sofern noch kein Fluss gleichem
+	 * Namens existiert. Ansonsten wird der existierende Fluss
+	 * zurückgegeben.
+	 * @param name
+	 * kann frei gewählt werden.
+	 * Auf Anwendungsebene ist Namenseindeutigkeit anzustreben. 
+	 * @param typ
+	 * dient vorrangig zur Unterscheidung von Elementar- 
+	 * und Produktflüssen.
+	 * @param einheit
+	 * legt die physikalische Einheit fest, in der der
+	 * Fluss quantifiziert wird.
+	 * @return
+	 * ... das Flussobjekt
+	 */
+	
+	public static Fluss instance(String name, FlussTyp typ, FlussEinheit einheit) {
+		if (allInstances.containsKey(name) == false) {
+			new Fluss(name, typ, einheit);
+		}
+		return allInstances.get(name);
+	}
+	
+	/**
+	 * @return
+	 * ... die physikalische Einheit, in der die zugehörigen
+	 * Flüsse quantifiziert werden.
+	 */
+	
+	public FlussEinheit getEinheit() {
+		return einheit;
+	}
+	
+	/**
+	 * @return
+	 * ... den Namen des Flussobjektes.
+	 */
+	
+	public String getName() {
+		return name;
+	}
+	
+	/**
+	 * @return
+	 * ... den Typ des Flussobjektes.
+	 */
+	
+	public FlussTyp getTyp() {
+		return typ;
 	}
 }

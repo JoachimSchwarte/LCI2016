@@ -12,7 +12,7 @@ import java.util.HashMap;
  * Wirkungskategorien repräsentieren.
  * 
  * @author Dr.-Ing. Joachim Schwarte
- * @version 0.93
+ * @version 0.935
  */
 
 public class Wirkungskategorie {
@@ -35,7 +35,36 @@ public class Wirkungskategorie {
 		allInstances.put(name, this);
 	}
 	
-	// Methoden (Getter für die Instanzvariablen):
+	// Methoden:
+	
+	/**
+	 * Löscht alle Klassenvariablen
+	 */
+	
+	public static void clear() {
+		allInstances.clear();
+	}
+	
+	/**
+	 * Überprüft, ob bereits eine Wirkungskategorie
+	 * des gegebenen Namens existiert.
+	 * @param string
+	 * ist der zu prüfende Name
+	 * @return
+	 * ... den Wahrheitswert, den die Überprüfung liefert
+	 */
+	
+	public static boolean containsName(String string) {
+		return allInstances.keySet().contains(string);
+	}
+	/**
+	 * @return
+	 * ... alle vorhandenen Wirkungskategorien
+	 */
+	
+	public static HashMap<String, Wirkungskategorie> getAllInstances() {
+		return allInstances;
+	}
 	
 	/**
 	 * Erzeugt eine neue Wirkungskategorie.
@@ -52,15 +81,6 @@ public class Wirkungskategorie {
 		Wirkungskategorie wk = new Wirkungskategorie(name, einheit);
 		return wk;	
 	}
-
-	/**
-	 * @return
-	 * ... den Namen der Wirkungskategorie.
-	 */
-	
-	public String getName() {
-		return name;
-	}
 	
 	/**
 	 * @return
@@ -73,27 +93,11 @@ public class Wirkungskategorie {
 	}
 	
 	/**
-	 * Überprüft, ob bereits eine Wirkungskategorie
-	 * des gegebenen Namens existiert.
-	 * @param string
-	 * ist der zu prüfende Name
 	 * @return
-	 * ... den Wahrheitswert, den die Überprüfung liefert
+	 * ... den Namen der Wirkungskategorie.
 	 */
 	
-	public static boolean containsName(String string) {
-		return allInstances.keySet().contains(string);
-	}
-	
-	/**
-	 * Löscht alle Klassenvariablen
-	 */
-	
-	public static void clear() {
-		allInstances.clear();
-	}
-	
-	public static HashMap<String, Wirkungskategorie> getAllInstances() {
-		return allInstances;
+	public String getName() {
+		return name;
 	}
 }

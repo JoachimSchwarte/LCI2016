@@ -14,7 +14,7 @@ import java.util.HashMap;
  * zwischen Flüssen und Wirkungskategorien hergestellt.
  * 
  * @author Dr.-Ing. Joachim Schwarte
- * @version 0.93
+ * @version 0.935
  */
 
 public class CharakterFaktor {
@@ -41,7 +41,49 @@ public class CharakterFaktor {
 		allInstances.put(name, this);
 	}
 	
-	// Methoden (Getter für die Instanzvariablen):
+	// Methoden:
+	
+	/**
+	 * Löscht alle Klassenvariablen
+	 */
+	
+	public static void clear() {
+		allInstances.clear();
+	}
+	
+	/**
+	 * Überprüft, ob bereits ein Charakterisierungsfaktor
+	 * des gegebenen Namens existiert.
+	 * @param string
+	 * ist der zu prüfende Name
+	 * @return
+	 * ... den Wahrheitswert, den die Überprüfung liefert
+	 */
+	
+	public static boolean containsName(String string) {
+		return allInstances.containsKey(string);
+	}
+	
+	/**
+	 * @return
+	 * ... alle vorhandenen Charakterisierungsfaktoren
+	 */
+	
+	public static HashMap<String, CharakterFaktor> getAllInstances() {
+		return allInstances;
+	}
+	
+	/**
+	 * Liefert einen Charakterisierungsfaktor zurück
+	 * @param string
+	 * Name des gewünschten Charakterisierungsfaktors
+	 * @return
+	 * ... den gesuchten Charakterisierungsfaktor
+	 */
+	
+	public static CharakterFaktor getInstance(String string) {
+		return allInstances.get(string);
+	}
 	
 	/**
 	 * Erzeugt einen neuen Charakterisierungsfaktor
@@ -64,15 +106,6 @@ public class CharakterFaktor {
 	
 	/**
 	 * @return
-	 * ... den Namen des CharakterFaktor-Objekts.
-	 */
-
-	public String getName() {
-		return name;
-	}
-	
-	/**
-	 * @return
 	 * ... das Flussobjekt.
 	 */
 
@@ -82,11 +115,11 @@ public class CharakterFaktor {
 	
 	/**
 	 * @return
-	 * ... die Wirkungskategorie.
+	 * ... den Namen des CharakterFaktor-Objekts.
 	 */
 
-	public Wirkungskategorie getWirkung() {
-		return wirkung;
+	public String getName() {
+		return name;
 	}
 	
 	/**
@@ -97,34 +130,14 @@ public class CharakterFaktor {
 
 	public Double getWert() {
 		return wert;
-	}	
+	}
 
 	/**
-	 * Überprüft, ob bereits ein Charakterisierungsfaktor
-	 * des gegebenen Namens existiert.
-	 * @param string
-	 * ist der zu prüfende Name
 	 * @return
-	 * ... den Wahrheitswert, den die Überprüfung liefert
+	 * ... die Wirkungskategorie.
 	 */
-	
-	public static boolean containsName(String string) {
-		return allInstances.containsKey(string);
-	}
-	
-	/**
-	 * Löscht alle Klassenvariablen
-	 */
-	
-	public static void clear() {
-		allInstances.clear();
-	}
-	
-	public static CharakterFaktor getInstance(String string) {
-		return allInstances.get(string);
-	}
-	
-	public static HashMap<String, CharakterFaktor> getAllInstances() {
-		return allInstances;
+
+	public Wirkungskategorie getWirkung() {
+		return wirkung;
 	}
 }

@@ -14,7 +14,7 @@ import java.util.HashSet;
  * muss.
  * 
  * @author Dr.-Ing. Joachim Schwarte
- * @version 0.928
+ * @version 0.935
  */
 
 public class NameCheck {	
@@ -27,68 +27,15 @@ public class NameCheck {
 	
 	private NameCheck() {}
 	
-	// Methoden
+	// Methoden:
 	
 	/**
-	 * Erzeugt eine Instanz der Klasse, sofern diese nicht
-	 * bereits existiert.
-	 * @return
-	 * ... Instanz der Klasse NameCheck
+	 * Löscht alle Klassenvariablen
 	 */
 	
-	public static synchronized NameCheck getInstance() {
-	    if (NameCheck.instance == null) {
-	    	NameCheck.instance = new NameCheck();
-	    }
-	    return NameCheck.instance;
-	  }
-	
-	/**
-	 * Fügt den Namen eines Objekts vom Interfacetyp
-	 * Flussvektoren der entsprechenden Liste hinz.
-	 * @param name
-	 * Name eines Objekts vom Interfacetyp
-	 * Flussvektoren
-	 */
-	
-	public void addFVName(String name) {
-	    fvNames.add(name);		
-	}
-	
-	/**
-	 * Fügt den Namen eines Objekts vom Interfacetyp
-	 * Wirkungsvektor der entsprechenden Liste hinzu.
-	 * @param name
-	 * Name eines Objekts vom Interfacetyp
-	 * Wirkungsvektor
-	 */
-	
-	public void addWVName(String name) {
-	    wvNames.add(name);		
-	}
-	
-	/**
-	 * Entfernt den Namen eines Objekts vom Interfacetyp
-	 * Flussvektoren aus der entsprechenden Liste.
-	 * @param name
-	 * Name eines Objekts vom Interfacetyp
-	 * Flussvektoren
-	 */
-
-	public static void removeFVName(String name) {
-	    fvNames.remove(name);		
-	}
-	
-	/**
-	 * Entfernt den Namen eines Objekts vom Interfacetyp
-	 * Wirkungsvektor aus der entsprechenden Liste.
-	 * @param name
-	 * Name eines Objekts vom Interfacetyp
-	 * Wirkungsvektor
-	 */
-	
-	public static void removeWVName(String name) {
-	    wvNames.remove(name);			    
+	public static void clear() {
+		fvNames.clear();
+		wvNames.clear();
 	}
 	
 	/**
@@ -120,6 +67,44 @@ public class NameCheck {
 	}
 	
 	/**
+	 * Erzeugt eine Instanz der Klasse, sofern diese nicht
+	 * bereits existiert.
+	 * @return
+	 * ... Instanz der Klasse NameCheck
+	 */
+	
+	public static NameCheck getInstance() {
+	    if (NameCheck.instance == null) {
+	    	NameCheck.instance = new NameCheck();
+	    }
+	    return NameCheck.instance;	  
+	}
+	
+	/**
+	 * Entfernt den Namen eines Objekts vom Interfacetyp
+	 * Flussvektoren aus der entsprechenden Liste.
+	 * @param name
+	 * Name eines Objekts vom Interfacetyp
+	 * Flussvektoren
+	 */
+
+	public static void removeFVName(String name) {
+	    fvNames.remove(name);		
+	}
+	
+	/**
+	 * Entfernt den Namen eines Objekts vom Interfacetyp
+	 * Wirkungsvektor aus der entsprechenden Liste.
+	 * @param name
+	 * Name eines Objekts vom Interfacetyp
+	 * Wirkungsvektor
+	 */
+	
+	public static void removeWVName(String name) {
+	    wvNames.remove(name);			    
+	}
+	
+	/**
 	 * @return
 	 * ... die Anzahl der Namen der Objekts vom Interfacetyp
 	 * Flussvektoren, die in der entsprechenden Liste vorhanden.
@@ -140,13 +125,28 @@ public class NameCheck {
 	public static int sizeWVName() {
 	    return wvNames.size();			    
 	}
-	
+
 	/**
-	 * Löscht alle Klassenvariablen
+	 * Fügt den Namen eines Objekts vom Interfacetyp
+	 * Flussvektoren der entsprechenden Liste hinz.
+	 * @param name
+	 * Name eines Objekts vom Interfacetyp
+	 * Flussvektoren
 	 */
 	
-	public static void clear() {
-		fvNames.clear();
-		wvNames.clear();
+	public void addFVName(String name) {
+	    fvNames.add(name);		
+	}
+	
+	/**
+	 * Fügt den Namen eines Objekts vom Interfacetyp
+	 * Wirkungsvektor der entsprechenden Liste hinzu.
+	 * @param name
+	 * Name eines Objekts vom Interfacetyp
+	 * Wirkungsvektor
+	 */
+	
+	public void addWVName(String name) {
+	    wvNames.add(name);		
 	}
 }

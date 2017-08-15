@@ -15,7 +15,7 @@ import java.util.HashMap;
  * die zu einer Bewertungsmethode gehören, zusammen.
  * 
  * @author Dr.-Ing. Joachim Schwarte
- * @version 0.929
+ * @version 0.935
  */
 
 public class Bewertungsmethode {
@@ -43,77 +43,11 @@ public class Bewertungsmethode {
 	// Methoden:
 	
 	/**
-	 * Die instance-Methode erzeugt unter Verwendung des
-	 * privaten Konstruktors eine neue Bewertungsmethode
-	 * oder gibt eine bereits existierende Bewertungsmethode
-	 * zurück.
-	 * @param name
-	 * ist der Name der Bewertungsmethode.
-	 * @return
-	 * ... neue oder bereits zuvor existierende
-	 * Bewertungsmethode
+	 * Löscht alle Klassenvariablen
 	 */
 	
-	public static Bewertungsmethode instance(String name) {
-		if (allBWs.containsKey(name) == false) {
-			new Bewertungsmethode(name);
-		} 
-		return allBWs.get(name);
-	}
-	
-	/**
-	 * @return
-	 * ... den Namen der Bewertugsmethode
-	 */
-	
-	public String getName() {
-		return name;
-	}
-	
-	/**
-	 * Fügt der Bewertungsmethode einen weiteren
-	 * Charakterisierungsfaktor hinzu.
-	 * @param cv
-	 * Der Charakterisierungsfaktor, der der Bewertungsmethode 
-	 * hinzugefügt werden soll
-	 */
-	
-	public void addFaktor(CharakterFaktor cv) {
-		faktorSet.put(cv.getName(), cv);
-		wkl.put(cv.getWirkung().getName(), cv.getWirkung());	
-	}
-	
-	/**
-	 * Fügt der Liste der Wirkungskategorien einen Eintrag
-	 * hinzu.
-	 * @param wk
-	 * Die Wirkungskategorie, die der Liste hinzugefügt werden 
-	 * soll.
-	 */
-	
-	public void addWK(Wirkungskategorie wk) {
-		wkl.put(wk.getName(), wk);
-	}	
-	
-	/**
-	 * @return
-	 * ... Liste derjenigen Wirkungskategorien, denen durch die
-	 * vorhandenen Charakterisierungsfaktoren Flüsse quantifiziert
-	 * zugeordnet sind oder die durch Verwendung der Methode
-	 * addWK(...) explizit der Liste hinzugefügt wurden.
-	 */
-	
-	public HashMap<String, Wirkungskategorie> kategorieListe() {	
-		return wkl;
-	}
-	
-	/**
-	 * @return
-	 * ... Liste aller vorhandenen Charakterisierungsfaktoren
-	 */
-	
-	public HashMap<String, CharakterFaktor> getFaktorSet() {
-		return faktorSet;
+	public static void clear() {
+		allBWs.clear();
 	}
 	
 	/**
@@ -139,10 +73,76 @@ public class Bewertungsmethode {
 	}
 	
 	/**
-	 * Löscht alle Klassenvariablen
+	 * Die instance-Methode erzeugt unter Verwendung des
+	 * privaten Konstruktors eine neue Bewertungsmethode
+	 * oder gibt eine bereits existierende Bewertungsmethode
+	 * zurück.
+	 * @param name
+	 * ist der Name der Bewertungsmethode.
+	 * @return
+	 * ... neue oder bereits zuvor existierende
+	 * Bewertungsmethode
 	 */
 	
-	public static void clear() {
-		allBWs.clear();
+	public static Bewertungsmethode instance(String name) {
+		if (allBWs.containsKey(name) == false) {
+			new Bewertungsmethode(name);
+		} 
+		return allBWs.get(name);
+	}
+	
+	/**
+	 * Fügt der Bewertungsmethode einen weiteren
+	 * Charakterisierungsfaktor hinzu.
+	 * @param cv
+	 * Der Charakterisierungsfaktor, der der Bewertungsmethode 
+	 * hinzugefügt werden soll
+	 */
+	
+	public void addFaktor(CharakterFaktor cv) {
+		faktorSet.put(cv.getName(), cv);
+		wkl.put(cv.getWirkung().getName(), cv.getWirkung());	
+	}
+
+	/**
+	 * Fügt der Liste der Wirkungskategorien einen Eintrag
+	 * hinzu.
+	 * @param wk
+	 * Die Wirkungskategorie, die der Liste hinzugefügt werden 
+	 * soll.
+	 */
+	
+	public void addWK(Wirkungskategorie wk) {
+		wkl.put(wk.getName(), wk);
+	}
+	
+	/**
+	 * @return
+	 * ... Liste aller vorhandenen Charakterisierungsfaktoren
+	 */
+	
+	public HashMap<String, CharakterFaktor> getFaktorSet() {
+		return faktorSet;
+	}
+	
+	/**
+	 * @return
+	 * ... den Namen der Bewertugsmethode
+	 */
+	
+	public String getName() {
+		return name;
+	}
+		
+	/**
+	 * @return
+	 * ... Liste derjenigen Wirkungskategorien, denen durch die
+	 * vorhandenen Charakterisierungsfaktoren Flüsse quantifiziert
+	 * zugeordnet sind oder die durch Verwendung der Methode
+	 * addWK(...) explizit der Liste hinzugefügt wurden.
+	 */
+	
+	public HashMap<String, Wirkungskategorie> kategorieListe() {	
+		return wkl;
 	}
 }
