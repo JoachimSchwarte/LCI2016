@@ -12,7 +12,7 @@ import Jama.Matrix;
  * Diese Klasse dient zur Erzeugung von Produktsystemen.
  * 
  * @author Dr.-Ing. Joachim Schwarte
- * @version 0.935
+ * @version 0.936
  */
 
 public class Produktsystem 
@@ -334,6 +334,10 @@ implements Flussvektoren, Wirkungsvektor {
 	
 	@Override
 	public void setName(String string) {
+		NameCheck.removeFVName(this.name);
+		NameCheck.removeWVName(this.name);
+		NameCheck.getInstance().addFVName(string);
+		NameCheck.getInstance().addWVName(string);
 		this.name = string;			
 	}
 	

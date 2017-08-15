@@ -14,7 +14,7 @@ import java.util.HashSet;
  * muss.
  * 
  * @author Dr.-Ing. Joachim Schwarte
- * @version 0.935
+ * @version 0.936
  */
 
 public class NameCheck {	
@@ -104,28 +104,6 @@ public class NameCheck {
 	    wvNames.remove(name);			    
 	}
 	
-	/**
-	 * @return
-	 * ... die Anzahl der Namen der Objekts vom Interfacetyp
-	 * Flussvektoren, die in der entsprechenden Liste vorhanden.
-	 * sind
-	 */
-	
-	public static int sizeFVName() {
-	    return fvNames.size();
-	}
-	
-	/**
-	 * @return
-	 * ... die Anzahl der Namen der Objekts vom Interfacetyp
-	 * Wirkungsvektor, die in der entsprechenden Liste vorhanden.
-	 * sind
-	 */
-	
-	public static int sizeWVName() {
-	    return wvNames.size();			    
-	}
-
 	/**
 	 * Fügt den Namen eines Objekts vom Interfacetyp
 	 * Flussvektoren der entsprechenden Liste hinz.

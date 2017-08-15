@@ -14,7 +14,7 @@ import java.util.HashMap;
  * diese durch eine Mengenangabe.
  * 
  * @author Dr.-Ing. Joachim Schwarte
- * @version 0.935
+ * @version 0.936
  */
 
 public class Produktkomponente implements Wirkungsvektor {
@@ -183,6 +183,8 @@ public class Produktkomponente implements Wirkungsvektor {
 
 	@Override
 	public void setName(String string) {
-		name = string;		
+		NameCheck.removeWVName(this.name);
+		NameCheck.getInstance().addWVName(string);
+		this.name = string;		
 	}
 }

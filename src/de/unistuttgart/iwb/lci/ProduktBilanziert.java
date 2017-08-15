@@ -13,7 +13,7 @@ import java.util.HashMap;
  * Produkt").
  * 
  * @author Dr.-Ing. Joachim Schwarte
- * @version 0.935
+ * @version 0.936
  */
 
 public class ProduktBilanziert 
@@ -148,6 +148,8 @@ implements Wirkungsvektor {
 
 	@Override
 	public void setName(String string) {
+		NameCheck.removeWVName(this.name);
+		NameCheck.getInstance().addWVName(string);
 		this.name = string;		
 	}
 }
