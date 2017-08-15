@@ -13,7 +13,7 @@ import java.util.HashMap;
  * Produkt").
  * 
  * @author Dr.-Ing. Joachim Schwarte
- * @version 0.934
+ * @version 0.935
  */
 
 public class ProduktBilanziert 
@@ -41,71 +41,11 @@ implements Wirkungsvektor {
 	// Methoden:
 	
 	/**
-	 * Erzeugt ein benanntes 
-	 * Produktobjekt, das noch keine Daten aus einer 
-	 * Wirkungsabschätzung enthält.
-	 * @param name
-	 * ist der Name des bilanzierten Produkts.
-	 * @return
-	 * ... das Produktobjekt
+	 * Löscht alle Klassenvariablen
 	 */
 	
-	public static ProduktBilanziert instance(String name) {
-		return new ProduktBilanziert(name);
-	}
-	
-	/**
-	 * Legt die (wesentliche) Bewertungsmethode fest.
-	 * @param bm1
-	 * Die (wesentliche) Bewertungsmethode
-	 */
-	
-	public void setBM(Bewertungsmethode bm1) {
-		bm = bm1;
-	}
-	
-	/**
-	 * @return
-	 * ... die (wesentliche) Bewertungsmethode für das vorliegende
-	 * bilanzierte Produkt (= Produktdeklaration)
-	 */
-	
-	public Bewertungsmethode getBM() {
-		return bm;
-	}
-	
-	/**
-	 * Fügt dem bilanzierten Produkt eine Wirkungskategorie und
-	 * den dieser Kategorie zugeordneten Wert zu.
-	 * @param wk
-	 * Die hinzuzufügende Wirkungskategorie
-	 * @param wert
-	 * Der zur Wirkungskategorie gehörige Wert
-	 */
-	
-	public void addWirkung(Wirkungskategorie wk, Double wert){
-		wvAlle.put(wk, wert);
-		}
-	
-	/**
-	 * @return
-	 * ... den Namen des bilanzierten Produkts.
-	 */
-
-	public String getName() {
-		return name;
-	}
-
-	@Override
-	public HashMap<Wirkungskategorie, Double> getWirkungsvektor(Bewertungsmethode bm1) {
-		HashMap<Wirkungskategorie, Double> wvAktuell =
-				new HashMap<Wirkungskategorie, Double>();
-		for(Wirkungskategorie key : wvAlle.keySet()) {
-			if (bm1.kategorieListe().keySet().contains(key.getName())) {
-				wvAktuell.put(key, wvAlle.get(key));
-			}
-		}
-		return wvAktuell;	
+	public static void clear() {
+		allInstances.clear();
 	}
 	
 	/**
@@ -143,11 +83,67 @@ implements Wirkungsvektor {
 	}
 	
 	/**
-	 * Löscht alle Klassenvariablen
+	 * Erzeugt ein benanntes 
+	 * Produktobjekt, das noch keine Daten aus einer 
+	 * Wirkungsabschätzung enthält.
+	 * @param name
+	 * ist der Name des bilanzierten Produkts.
+	 * @return
+	 * ... das Produktobjekt
 	 */
 	
-	public static void clear() {
-		allInstances.clear();
+	public static ProduktBilanziert instance(String name) {
+		return new ProduktBilanziert(name);
+	}
+	
+	/**
+	 * Fügt dem bilanzierten Produkt eine Wirkungskategorie und
+	 * den dieser Kategorie zugeordneten Wert zu.
+	 * @param wk
+	 * Die hinzuzufügende Wirkungskategorie
+	 * @param wert
+	 * Der zur Wirkungskategorie gehörige Wert
+	 */
+	
+	public void addWirkung(Wirkungskategorie wk, Double wert){
+		wvAlle.put(wk, wert);
+	}
+	
+	/**
+	 * @return
+	 * ... die (wesentliche) Bewertungsmethode für das vorliegende
+	 * bilanzierte Produkt (= Produktdeklaration)
+	 */
+	
+	public Bewertungsmethode getBM() {
+		return bm;
+	}
+	
+	@Override
+	public String getName() {
+		return name;
+	}
+	
+	@Override
+	public HashMap<Wirkungskategorie, Double> getWirkungsvektor(Bewertungsmethode bm1) {
+		HashMap<Wirkungskategorie, Double> wvAktuell =
+				new HashMap<Wirkungskategorie, Double>();
+		for(Wirkungskategorie key : wvAlle.keySet()) {
+			if (bm1.kategorieListe().keySet().contains(key.getName())) {
+				wvAktuell.put(key, wvAlle.get(key));
+			}
+		}
+		return wvAktuell;	
+	}
+	
+	/**
+	 * Legt die (wesentliche) Bewertungsmethode fest.
+	 * @param bm1
+	 * Die (wesentliche) Bewertungsmethode
+	 */
+	
+	public void setBM(Bewertungsmethode bm1) {
+		bm = bm1;
 	}
 
 	@Override
