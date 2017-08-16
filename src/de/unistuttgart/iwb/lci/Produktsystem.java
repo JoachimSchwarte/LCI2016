@@ -12,7 +12,7 @@ import Jama.Matrix;
  * Diese Klasse dient zur Erzeugung von Produktsystemen.
  * 
  * @author Dr.-Ing. Joachim Schwarte
- * @version 0.936
+ * @version 0.937
  */
 
 public class Produktsystem 
@@ -211,6 +211,9 @@ implements Flussvektoren, Wirkungsvektor {
 		Matrix matrixS = matrixA.solve(matrixF);
 		Matrix matrixG = matrixB.times(matrixS);
 		double[][] arrayS = matrixS.getArray();
+		if (matrixA.getRowDimension() != matrixA.getColumnDimension()) {
+			throw new ArithmeticException("Matrix nicht quadratisch");
+		}
 		for (Integer i=0; i<arrayS.length; i++){
 			if (arrayS[i][0]<0){
 				throw new ArithmeticException("Vorzeichenfehler im Skalierungsvektor");			
