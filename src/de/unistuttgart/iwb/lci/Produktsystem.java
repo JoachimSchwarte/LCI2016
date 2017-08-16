@@ -12,7 +12,7 @@ import Jama.Matrix;
  * Diese Klasse dient zur Erzeugung von Produktsystemen.
  * 
  * @author Dr.-Ing. Joachim Schwarte
- * @version 0.937
+ * @version 0.938
  */
 
 public class Produktsystem 
@@ -119,11 +119,7 @@ implements Flussvektoren, Wirkungsvektor {
 		}
 		return allInstances.get(name);
 	}
-	
 
-	
-
-	
 	/**
 	 * Fügt dem Bedarfsvektor einen Eintrag hinzu
 	 * @param fluss
@@ -165,11 +161,15 @@ implements Flussvektoren, Wirkungsvektor {
 		for(Flussvektoren m : modulliste){
 			HashMap<Fluss, Double> modulVektor = m.getProduktflussvektor();
 			for (Fluss key : modulVektor.keySet()) {		
-				if ((produktFlussliste.contains(key) == false) &
-					(vorUndKoppelProdukte.contains(key) == false))	{
-					produktFlussliste.add(key);					
+				if ((produktFlussliste.contains(key) == false) &&
+					(vorUndKoppelProdukte.contains(key) == false) &&
+					(m.getProduktflussvektor().get(key) != 0))	{
+					produktFlussliste.add(key);	
 				}				
 			}
+		}
+		if (produktFlussliste.size() != modulliste.size()) {
+			throw new ArithmeticException("Matrix nicht quadratisch");
 		}
 		double[][] arrayA = new double[produktFlussliste.size()][modulliste.size()];
 		for(Flussvektoren m : modulliste){
@@ -211,9 +211,6 @@ implements Flussvektoren, Wirkungsvektor {
 		Matrix matrixS = matrixA.solve(matrixF);
 		Matrix matrixG = matrixB.times(matrixS);
 		double[][] arrayS = matrixS.getArray();
-		if (matrixA.getRowDimension() != matrixA.getColumnDimension()) {
-			throw new ArithmeticException("Matrix nicht quadratisch");
-		}
 		for (Integer i=0; i<arrayS.length; i++){
 			if (arrayS[i][0]<0){
 				throw new ArithmeticException("Vorzeichenfehler im Skalierungsvektor");			
@@ -227,8 +224,13 @@ implements Flussvektoren, Wirkungsvektor {
 		double[][] arrayA1 = new double[produktFlussliste.size()][modulliste.size()];
 		for(Flussvektoren m : modulliste){
 			HashMap<Fluss, Double> modulVektor = m.getProduktflussvektor();
-			for (Fluss key : modulVektor.keySet()) {
-				arrayA1[produktFlussliste.indexOf(key)][modulliste.indexOf(m)]=modulVektor.get(key);				
+			for (Fluss key : produktFlussliste) {
+				if (modulVektor.containsKey(key)) {
+					arrayA1[produktFlussliste.indexOf(key)][modulliste.indexOf(m)]=modulVektor.get(key);
+				} else {
+					arrayA1[produktFlussliste.indexOf(key)][modulliste.indexOf(m)]=0;
+				}
+								
 			}
 		}
 		Matrix matrixA1 = new Matrix(arrayA1);
@@ -256,7 +258,7 @@ implements Flussvektoren, Wirkungsvektor {
 
 	@Override
 	public HashMap<Fluss, Double> getElementarflussvektor() throws ArithmeticException {
-		aktualisiere();		// siehe unten
+		aktualisiere();		
 		return efv;
 	}
 	
@@ -354,27 +356,4 @@ implements Flussvektoren, Wirkungsvektor {
 	public void setVorUndKoppelProdukte(LinkedList<Fluss> vk) {
 		vorUndKoppelProdukte = vk;
 	}
-	
-
-	
-
-	
-
-	
-
-	
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-
 }
