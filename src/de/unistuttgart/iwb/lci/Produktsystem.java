@@ -16,7 +16,7 @@ import Jama.Matrix;
  */
 
 public class Produktsystem 
-implements Flussvektoren, Wirkungsvektor {
+implements FlowValueMaps, Wirkungsvektor {
 	
 	
 	// Klassenvariable:
@@ -26,8 +26,8 @@ implements Flussvektoren, Wirkungsvektor {
 	// Instanzvariablen:
 	
 	private String name;
-	private LinkedList<Flussvektoren> modulliste 
-			= new LinkedList<Flussvektoren>();
+	private LinkedList<FlowValueMaps> modulliste 
+			= new LinkedList<FlowValueMaps>();
 	private HashMap<Fluss, Double> bedarfsvektor 
 			= new HashMap<Fluss, Double>();
 	private LinkedList<Fluss> vorUndKoppelProdukte 
@@ -141,7 +141,7 @@ implements Flussvektoren, Wirkungsvektor {
 	 * Flussvektoren implementiert.
 	 */
 	
-	public void addProzessmodul(Flussvektoren modul) {
+	public void addProzessmodul(FlowValueMaps modul) {
 		modulliste.add(modul);
 	}
 	
@@ -158,7 +158,7 @@ implements Flussvektoren, Wirkungsvektor {
 	
 	private void aktualisiere() throws ArithmeticException {
 		LinkedList<Fluss> produktFlussliste = new LinkedList<Fluss>();
-		for(Flussvektoren m : modulliste){
+		for(FlowValueMaps m : modulliste){
 			HashMap<Fluss, Double> modulVektor = m.getProduktflussvektor();
 			for (Fluss key : modulVektor.keySet()) {		
 				if ((produktFlussliste.contains(key) == false) &&
@@ -172,7 +172,7 @@ implements Flussvektoren, Wirkungsvektor {
 			throw new ArithmeticException("Matrix nicht quadratisch");
 		}
 		double[][] arrayA = new double[produktFlussliste.size()][modulliste.size()];
-		for(Flussvektoren m : modulliste){
+		for(FlowValueMaps m : modulliste){
 			HashMap<Fluss, Double> modulVektor = m.getProduktflussvektor();
 			for (Fluss key : modulVektor.keySet()) {
  				if (produktFlussliste.contains(key)) {
@@ -181,7 +181,7 @@ implements Flussvektoren, Wirkungsvektor {
 			}
 		}
 		LinkedList<Fluss> elementarFlussliste = new LinkedList<Fluss>();
-		for(Flussvektoren m : modulliste){
+		for(FlowValueMaps m : modulliste){
 			HashMap<Fluss, Double> modulVektor = m.getElementarflussvektor();
 			for (Fluss key : modulVektor.keySet()) {
 				if (elementarFlussliste.contains(key) == false){
@@ -190,7 +190,7 @@ implements Flussvektoren, Wirkungsvektor {
 			}
 		}
 		double[][] arrayB = new double[elementarFlussliste.size()][modulliste.size()];
-		for(Flussvektoren m : modulliste){
+		for(FlowValueMaps m : modulliste){
 			HashMap<Fluss, Double> modulVektor = m.getElementarflussvektor();
 			for (Fluss key : modulVektor.keySet()) {
 				arrayB[elementarFlussliste.indexOf(key)][modulliste.indexOf(m)]=modulVektor.get(key);				
@@ -222,7 +222,7 @@ implements Flussvektoren, Wirkungsvektor {
 		}	
 		produktFlussliste.addAll(vorUndKoppelProdukte);
 		double[][] arrayA1 = new double[produktFlussliste.size()][modulliste.size()];
-		for(Flussvektoren m : modulliste){
+		for(FlowValueMaps m : modulliste){
 			HashMap<Fluss, Double> modulVektor = m.getProduktflussvektor();
 			for (Fluss key : produktFlussliste) {
 				if (modulVektor.containsKey(key)) {
@@ -277,7 +277,7 @@ implements Flussvektoren, Wirkungsvektor {
 	 * die Liste der im Produktsystem enthaltenden Module
 	 */
 	
-	public LinkedList<Flussvektoren> getModulliste() {
+	public LinkedList<FlowValueMaps> getModulliste() {
 		return modulliste;
 	}
 	

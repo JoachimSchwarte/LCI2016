@@ -2137,7 +2137,7 @@ public class IWBLCI {
 			productsTableModel.setRowCount(0);
 			for(String psn : Produktsystem.getAllInstances().keySet()) {
 				productsTableModel.addRow(new Object[] {psn, "", ""});
-				for (Flussvektoren mnif : Produktsystem.getInstance(psn).getModulliste()){
+				for (FlowValueMaps mnif : Produktsystem.getInstance(psn).getModulliste()){
 					String mni = mnif.getName();
 					boolean typmod = false;
 					for(String modn2 : Prozessmodul.getAllInstances().keySet()) {
@@ -2398,7 +2398,7 @@ public class IWBLCI {
 					name.appendChild(document.createTextNode(akProSys.getName()));
 					Element modullist = document.createElement("PS-Module");
 					produktsystem.appendChild(modullist);
-					for (Flussvektoren mod  : Produktsystem.getInstance(psm).getModulliste()) {
+					for (FlowValueMaps mod  : Produktsystem.getInstance(psm).getModulliste()) {
 						String modname = mod.getName();
 						Element modul = document.createElement("PS-Modul");
 						modullist.appendChild(modul);

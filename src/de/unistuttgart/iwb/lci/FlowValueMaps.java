@@ -9,7 +9,7 @@ import java.util.HashMap;
 /**
  * Dieses Interface muss von all jenen Klassen implementiert werden,
  * zu deren Objekten jeweils ein Elementarflussvektor 
- * und ein Produktflussvektor angeben oder berechnet werden kann, so 
+ * und ein Produktflussvektor angegeben oder berechnet werden kann, so 
  * dass diese Objekte als Prozessmodule innerhalb eines Produktsystems
  * auftreten können.
  * 
@@ -17,7 +17,7 @@ import java.util.HashMap;
  * @version 0.935
  */
 
-public interface Flussvektoren {
+public interface FlowValueMaps {
 	
 	/**
 	 * @return

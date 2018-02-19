@@ -14,7 +14,7 @@ import java.util.HashMap;
  */
 
 public class Prozessmodul 
-implements Flussvektoren, Wirkungsvektor {
+implements FlowValueMaps, Wirkungsvektor {
 	
 	// Klassenvariable:
 	
