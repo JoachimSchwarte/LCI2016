@@ -10,11 +10,12 @@ package de.unistuttgart.iwb.lci;
  * eines Objekt der Klasse Wirkungskategorie annehmen darf.
  *
  * @author Dr.-Ing. Joachim Schwarte
- * @version 0.924
+ * @version 0.94
  */
 
 public enum Wirkungsindikator {
 	kgCO2Aeqv,
 	kgSO2Aeqv,
-	kgR11Aeqv
+	kgR11Aeqv,
+	CAbbauAeqv
 }
