@@ -63,7 +63,7 @@ import org.apache.commons.io.FilenameUtils;
 
 /**
  * @author Dr.-Ing. Joachim Schwarte
- * @version 0.94
+ * @version 0.941
  */
 
 public class IWBLCI {
@@ -186,7 +186,7 @@ public class IWBLCI {
 	 */
 	private void initialize() {
 		frmIwblciVersion = new JFrame();
-		frmIwblciVersion.setTitle("IWB-LCI   Version 0.94");
+		frmIwblciVersion.setTitle("IWB-LCI   Version 0.941");
 		frmIwblciVersion.setBounds(100, 100, 600, 480);
 		frmIwblciVersion.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);		
 		
@@ -388,7 +388,7 @@ public class IWBLCI {
 		JLabel lblInfo4 = new JLabel("Universit\u00e4t Stuttgart");
 		lblInfo4.setFont(new Font("Tahoma", Font.BOLD, 14));
 		panel_4.add(lblInfo4, "cell 1 5,alignx center,aligny top");
-		JLabel lblInfo5 = new JLabel("Version 0.94   04.05.2018");
+		JLabel lblInfo5 = new JLabel("Version 0.941   04.05.2018");
 		lblInfo5.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		panel_4.add(lblInfo5, "cell 1 7,alignx center,aligny top");
 
@@ -470,7 +470,7 @@ public class IWBLCI {
 		JLabel lblTodo4 = new JLabel("");
 		lblTodo4.setFont(new Font("Tahoma", Font.BOLD, 14));
 		panel_9.add(lblTodo4, "cell 1 5,alignx center,aligny top");
-		JLabel lblTodo5 = new JLabel("Version 0.94   04.05.2018");
+		JLabel lblTodo5 = new JLabel("Version 0.941   04.05.2018");
 		lblTodo5.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		panel_9.add(lblTodo5, "cell 1 7,alignx center,aligny top");
 		
@@ -969,7 +969,7 @@ public class IWBLCI {
 		
 		JMenuItem mntmPB = new JMenuItem();
 		mntmPB.setAction(newPBAction);
-		mnNew.add(mntmPB);
+//		mnNew.add(mntmPB);
 		
 		JMenuItem mntmCF = new JMenuItem();
 		mntmCF.setAction(newCFAction);
@@ -981,11 +981,11 @@ public class IWBLCI {
 		
 		JMenuItem mntmPKente = new JMenuItem();
 		mntmPKente.setAction(newPKenteAction);
-		mnNew.add(mntmPKente);
+//		mnNew.add(mntmPKente);
 		
 		JMenuItem mntmPKtion = new JMenuItem();
 		mntmPKtion.setAction(newPKtionAction);
-		mnNew.add(mntmPKtion);				
+//		mnNew.add(mntmPKtion);				
 			
 		JMenu mnEdit = new JMenu("Edit");
 		menuBar.add(mnEdit);
@@ -1015,7 +1015,7 @@ public class IWBLCI {
 
 		JMenuItem mntmPBs = new JMenuItem();
 		mntmPBs.setAction(listPBsAction);
-		mnListe.add(mntmPBs);	
+//		mnListe.add(mntmPBs);	
 		
 		JMenuItem mntmCFs = new JMenuItem();
 		mntmCFs.setAction(listCFsAction);
@@ -1027,11 +1027,11 @@ public class IWBLCI {
 
 		JMenuItem mntmPKentes = new JMenuItem();
 		mntmPKentes.setAction(listPKentesAction);
-		mnListe.add(mntmPKentes);
+//		mnListe.add(mntmPKentes);
 
 		JMenuItem mntmPKtions = new JMenuItem();
 		mntmPKtions.setAction(listPKtionsAction);
-		mnListe.add(mntmPKtions);
+//		mnListe.add(mntmPKtions);
 		
 		JMenu mnBerechnen = new JMenu("Berechnen");
 		menuBar.add(mnBerechnen);
