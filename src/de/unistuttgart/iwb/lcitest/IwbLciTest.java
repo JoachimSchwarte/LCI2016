@@ -15,7 +15,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 
 import org.junit.Test;
-import de.unistuttgart.iwb.lci.*;
+
+import de.unistuttgart.iwb.lci2016.*;
 
 public class IwbLciTest {
 	Fluss a = Fluss.instance("A", FlussTyp.Elementar, FlussEinheit.kg);

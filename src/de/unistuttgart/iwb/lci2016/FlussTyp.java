@@ -3,7 +3,7 @@
  * Wintersemester 2016/2017
  */
 
-package de.unistuttgart.iwb.lci;
+package de.unistuttgart.iwb.lci2016;
 
 /**
  * Zusammenstellung derjenigen Werte, die der Parameter "typ"

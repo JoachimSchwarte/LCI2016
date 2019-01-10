@@ -6,7 +6,6 @@
 package de.unistuttgart.iwb.lcigui;
 
 import java.awt.EventQueue;
-import de.unistuttgart.iwb.lci.*;
 
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
@@ -48,6 +47,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+
+import de.unistuttgart.iwb.lci2016.*;
 
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
